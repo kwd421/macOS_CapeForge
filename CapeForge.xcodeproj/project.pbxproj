@@ -277,7 +277,7 @@
 				CODE_SIGN_ENTITLEMENTS = CapeForgeApp/CapeForge.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_LANGUAGE = en;
 				ENABLE_APP_SANDBOX = YES;
@@ -290,7 +290,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seinel.capeforge;
 				PRODUCT_NAME = "Cape Forge";
 				SDKROOT = macosx;
@@ -307,7 +307,7 @@
 				CODE_SIGN_ENTITLEMENTS = CapeForgeApp/CapeForge.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_LANGUAGE = en;
 				ENABLE_APP_SANDBOX = YES;
@@ -320,7 +320,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seinel.capeforge;
 				PRODUCT_NAME = "Cape Forge";
 				SDKROOT = macosx;
