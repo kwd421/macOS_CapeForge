@@ -1,5 +1,9 @@
 # Cape Forge App Store Connect Metadata
 
+> Legacy note: this metadata describes the old export-only App Store direction.
+> Current direct system cursor builds use private cursor APIs, run outside the
+> Mac App Store sandbox, and should be distributed outside the Mac App Store.
+
 ## Existing URLs
 
 - Support URL: `https://kwd421.github.io/mac_mouse_cursor/`

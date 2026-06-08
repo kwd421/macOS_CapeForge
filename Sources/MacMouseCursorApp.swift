@@ -5,11 +5,23 @@ struct CapeForgeApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @ObservedObject private var localization = LocalizationController.shared
 
+    init() {
+        if CommandLine.arguments.contains("--cursor-agent") {
+            CursorAgentRuntime.shared.run()
+        }
+        if let exitCode = CursorCommandLine.run() {
+            exit(exitCode)
+        }
+    }
+
     var body: some Scene {
         Settings {
             EmptyView()
         }
         .commands {
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesView(updater: sparkleUpdater.updaterController.updater)
+            }
             CommandMenu("Language") {
                 ForEach(AppLanguage.allCases) { language in
                     Button(Localized.string(language.titleKey)) {
@@ -19,6 +31,10 @@ struct CapeForgeApp: App {
                 }
             }
         }
+    }
+
+    private var sparkleUpdater: SparkleUpdaterController {
+        SparkleUpdaterController.shared
     }
 
     private var languageBinding: Binding<AppLanguage> {

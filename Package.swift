@@ -9,9 +9,15 @@ let package = Package(
     products: [
         .executable(name: "CapeForge", targets: ["CapeForge"])
     ],
+    dependencies: [
+        .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.9.2")
+    ],
     targets: [
         .executableTarget(
             name: "CapeForge",
+            dependencies: [
+                .product(name: "Sparkle", package: "Sparkle")
+            ],
             path: "Sources",
             resources: [
                 .process("Resources")

@@ -2,6 +2,8 @@ import AppKit
 import Foundation
 
 struct CapeExporter {
+    static let cursorRepresentationScales = [2.0, 5.0, 10.0]
+
     struct ExportMetrics: Equatable {
         let baseScale: Double
         let targetPixelWidth: Int
@@ -12,52 +14,6 @@ struct CapeExporter {
         let hotspotY: Double
     }
 
-    private let roleIdentifiers: [CursorRole: [String]] = [
-        .arrow: ["com.apple.coregraphics.Arrow", "com.apple.cursor.0"],
-        .text: ["com.apple.coregraphics.IBeam", "com.apple.coregraphics.IBeamXOR"],
-        .link: ["com.apple.cursor.2", "com.apple.cursor.13"],
-        .location: ["com.apple.coregraphics.Copy", "com.apple.cursor.5"],
-        .precision: ["com.apple.cursor.7", "com.apple.cursor.8"],
-        .move: ["com.apple.coregraphics.Move"],
-        .unavailable: ["com.apple.cursor.3"],
-        .busy: ["com.apple.cursor.4"],
-        .working: ["com.apple.coregraphics.Wait"],
-        .help: ["com.apple.cursor.40"],
-        .handwriting: ["com.apple.cursor.20"],
-        .person: ["com.apple.cursor.41"],
-        .alternate: ["com.apple.coregraphics.Alias"],
-        .verticalResize: ["com.apple.cursor.21", "com.apple.cursor.22", "com.apple.cursor.23", "com.apple.cursor.31", "com.apple.cursor.32", "com.apple.cursor.36"],
-        .horizontalResize: ["com.apple.cursor.17", "com.apple.cursor.18", "com.apple.cursor.19", "com.apple.cursor.27", "com.apple.cursor.28", "com.apple.cursor.38"],
-        .diagonalResizeNWSE: ["com.apple.cursor.33", "com.apple.cursor.34", "com.apple.cursor.35"],
-        .diagonalResizeNESW: ["com.apple.cursor.29", "com.apple.cursor.30", "com.apple.cursor.37"]
-    ]
-
-    private let supplementalIdentifiers: [SupplementalCursorRole: [String]] = [
-        .contextualMenu: ["com.apple.coregraphics.ArrowCtx"],
-        .contextMenuLegacy: ["com.apple.cursor.24"],
-        .dragCopy: ["com.apple.coregraphics.CopyDrag"],
-        .dragLink: ["com.apple.coregraphics.LinkDrag"],
-        .disappearingItem: ["com.apple.coregraphics.DisappearingItem"],
-        .empty: ["com.apple.coregraphics.Empty"],
-        .camera: ["com.apple.cursor.10"],
-        .camera2: ["com.apple.cursor.9"],
-        .iBeamHorizontal: ["com.apple.cursor.26"],
-        .countingUp: ["com.apple.cursor.14"],
-        .countingDown: ["com.apple.cursor.15"],
-        .countingUpDown: ["com.apple.cursor.16"],
-        .closeHand: ["com.apple.cursor.11"],
-        .openHand: ["com.apple.cursor.12"],
-        .poof: ["com.apple.cursor.25"],
-        .resizeSquare: ["com.apple.cursor.39"],
-        .resizeUp: ["com.apple.coregraphics.ResizeUp"],
-        .resizeDown: ["com.apple.coregraphics.ResizeDown"],
-        .resizeLeft: ["com.apple.coregraphics.ResizeLeft"],
-        .resizeRight: ["com.apple.coregraphics.ResizeRight"],
-        .verticalIBeam: ["com.apple.coregraphics.IBeamForVerticalLayout"],
-        .zoomIn: ["com.apple.cursor.42"],
-        .zoomOut: ["com.apple.cursor.43"]
-    ]
-
     func exportCape(
         name: String,
         author: String,
@@ -66,139 +22,35 @@ struct CapeExporter {
         sizeMultiplier: Double = 1.0,
         to url: URL
     ) throws {
-        var cursors: [String: Any] = [:]
-
-        for role in CursorRole.allCases {
-            guard let animation = theme[role], let identifiers = roleIdentifiers[role] else { continue }
-            for identifier in identifiers {
-                let exportAnimation = animationForExport(animation)
-                let dictionary = try cursorDictionary(for: exportAnimation, sizeMultiplier: sizeMultiplier)
-                cursors[identifier] = dictionary
-            }
-        }
-
-        for role in SupplementalCursorRole.allCases {
-            guard
-                let identifiers = supplementalIdentifiers[role],
-                let animation = theme[role]
-            else { continue }
-            for identifier in identifiers {
-                let exportAnimation = animationForExport(animation)
-                let dictionary = try cursorDictionary(for: exportAnimation, sizeMultiplier: sizeMultiplier)
-                cursors[identifier] = dictionary
-            }
-        }
-
-        guard !cursors.isEmpty else {
-            throw CursorError.invalidThemeSelection(Localized.string("error.noCursorsToExport"))
-        }
-
-        let cape: [String: Any] = [
-            "MinimumVersion": 2.0,
-            "Version": 2.0,
-            "CapeName": name,
-            "CapeVersion": 1.0,
-            "Cloud": false,
-            "Author": author,
-            "HiDPI": true,
-            "Identifier": identifier,
-            "Cursors": cursors
-        ]
-
+        let cape = try CursorCapeBuilder().makeCape(
+            name: name,
+            author: author,
+            identifier: identifier,
+            theme: theme,
+            sizeMultiplier: sizeMultiplier
+        )
         let data = try PropertyListSerialization.data(fromPropertyList: cape, format: .xml, options: 0)
         try data.write(to: url, options: .atomic)
     }
 
-    private func animationForExport(_ animation: CursorAnimation) -> CursorAnimation {
-        // Mousecape can import animated cursors, but long sequences may fall
-        // back to the red dot when a theme is applied. Cap all animated exports
-        // to a shorter, evenly sampled sequence.
-        guard animation.frames.count > 24 else {
-            return animation
-        }
-
-        return downsampleAnimation(animation, maxFrames: 24)
-    }
-
-    private func downsampleAnimation(_ animation: CursorAnimation, maxFrames: Int) -> CursorAnimation {
-        guard animation.frames.count > maxFrames, maxFrames > 0 else {
-            return animation
-        }
-
-        let sourceFrames = animation.frames
-        let sourceCount = sourceFrames.count
-        let totalDuration = sourceFrames.reduce(0.0) { $0 + $1.delay }
-        let targetDelay = totalDuration / Double(maxFrames)
-        var reducedFrames: [CursorFrame] = []
-        reducedFrames.reserveCapacity(maxFrames)
-
-        for bucket in 0..<maxFrames {
-            let startIndex = Int((Double(bucket) * Double(sourceCount)) / Double(maxFrames))
-            let endIndex = Int((Double(bucket + 1) * Double(sourceCount)) / Double(maxFrames))
-            let clampedEnd = max(endIndex, startIndex + 1)
-            let range = startIndex..<min(clampedEnd, sourceCount)
-            let representativeIndex = min(startIndex + range.count / 2, sourceCount - 1)
-            let representative = sourceFrames[representativeIndex]
-            reducedFrames.append(
-                CursorFrame(
-                    image: representative.image,
-                    delay: targetDelay > 0 ? targetDelay : representative.delay
-                )
-            )
-        }
-
-        return CursorAnimation(
-            frames: reducedFrames,
-            hotspot: animation.hotspot,
-            canvasSize: animation.canvasSize
-        )
-    }
-
-    private func cursorDictionary(for animation: CursorAnimation, sizeMultiplier: Double) throws -> [String: Any] {
-        let renderedFrames = try animation.frames.map { frame in
-            try autoreleasepool {
-                try bitmapRep(for: frame.image, canvasSize: animation.canvasSize)
-            }
-        }
-
-        let basePixelWidth = renderedFrames.map(\.pixelsWide).max() ?? 1
-        let basePixelHeight = renderedFrames.map(\.pixelsHigh).max() ?? 1
-        let metrics = Self.exportMetrics(
-            basePixelWidth: basePixelWidth,
-            basePixelHeight: basePixelHeight,
-            hotspot: animation.hotspot,
-            sizeMultiplier: sizeMultiplier
-        )
-        let scaledFrames = try renderedFrames.map { frame in
-            try autoreleasepool {
-                try scaledBitmapRep(for: frame, width: metrics.targetPixelWidth, height: metrics.targetPixelHeight)
-            }
-        }
-
-        let stacked = try stack(frames: scaledFrames, width: metrics.targetPixelWidth, height: metrics.targetPixelHeight)
-        guard let pngData = stacked.representation(using: .png, properties: [:]) else {
-            throw CursorError.unsupportedCursorPayload
-        }
-
-        return [
-            "FrameCount": animation.frames.count,
-            "FrameDuration": animation.frames.first?.delay ?? 1.0,
-            "HotSpotX": metrics.hotspotX,
-            "HotSpotY": metrics.hotspotY,
-            "PointsWide": metrics.pointsWidth,
-            "PointsHigh": metrics.pointsHeight,
-            "Representations": [pngData]
-        ]
-    }
-
     static func previewDisplaySize(for animation: CursorAnimation, sizeMultiplier: Double) -> CGSize {
+        let metrics = previewMetrics(for: animation, sizeMultiplier: sizeMultiplier)
+        return CGSize(width: metrics.pointsWidth, height: metrics.pointsHeight)
+    }
+
+    static func previewHotspot(for animation: CursorAnimation, sizeMultiplier: Double) -> CGPoint {
+        let metrics = previewMetrics(for: animation, sizeMultiplier: sizeMultiplier)
+        return CGPoint(x: metrics.hotspotX, y: metrics.hotspotY)
+    }
+
+    private static func previewMetrics(for animation: CursorAnimation, sizeMultiplier: Double) -> ExportMetrics {
         let metrics = exportMetrics(
             basePixelWidth: max(Int(animation.canvasSize.width.rounded(.up)), 1),
             basePixelHeight: max(Int(animation.canvasSize.height.rounded(.up)), 1),
             hotspot: animation.hotspot,
             sizeMultiplier: sizeMultiplier
         )
-        return CGSize(width: metrics.pointsWidth, height: metrics.pointsHeight)
+        return metrics
     }
 
     static func exportMetrics(
@@ -207,130 +59,43 @@ struct CapeExporter {
         hotspot: CGPoint,
         sizeMultiplier: Double
     ) -> ExportMetrics {
+        exportMetrics(
+            basePixelWidth: basePixelWidth,
+            basePixelHeight: basePixelHeight,
+            hotspot: hotspot,
+            sizeMultiplier: sizeMultiplier,
+            outputScale: max(suggestedScale(for: CGSize(width: basePixelWidth, height: basePixelHeight)), 2.0)
+        )
+    }
+
+    static func exportMetrics(
+        basePixelWidth: Int,
+        basePixelHeight: Int,
+        hotspot: CGPoint,
+        sizeMultiplier: Double,
+        outputScale: Double
+    ) -> ExportMetrics {
         let multiplier = min(max(sizeMultiplier, 1.0), 3.0)
-        let baseScale = suggestedScale(for: CGSize(width: basePixelWidth, height: basePixelHeight))
-        let targetPixelWidth = max(Int((Double(basePixelWidth) * multiplier).rounded(.up)), 1)
-        let targetPixelHeight = max(Int((Double(basePixelHeight) * multiplier).rounded(.up)), 1)
+        let sourceScale = suggestedScale(for: CGSize(width: basePixelWidth, height: basePixelHeight))
+        let outputScale = max(outputScale, 1.0)
+        let logicalWidth = Double(basePixelWidth) / sourceScale
+        let logicalHeight = Double(basePixelHeight) / sourceScale
+        let targetPixelWidth = max(Int((logicalWidth * multiplier * outputScale).rounded(.up)), 1)
+        let targetPixelHeight = max(Int((logicalHeight * multiplier * outputScale).rounded(.up)), 1)
+        let logicalHotspotX = Double(hotspot.x) / sourceScale
+        let logicalHotspotY = Double(hotspot.y) / sourceScale
         return ExportMetrics(
-            baseScale: baseScale,
+            baseScale: outputScale,
             targetPixelWidth: targetPixelWidth,
             targetPixelHeight: targetPixelHeight,
-            pointsWidth: Double(targetPixelWidth) / baseScale,
-            pointsHeight: Double(targetPixelHeight) / baseScale,
-            hotspotX: Double(hotspot.x) * multiplier,
-            hotspotY: Double(hotspot.y) * multiplier
+            pointsWidth: Double(targetPixelWidth) / outputScale,
+            pointsHeight: Double(targetPixelHeight) / outputScale,
+            hotspotX: logicalHotspotX * multiplier,
+            hotspotY: logicalHotspotY * multiplier
         )
     }
 
     private static func suggestedScale(for pixelSize: CGSize) -> Double {
         pixelSize.width >= 64 || pixelSize.height >= 64 ? 2.0 : 1.0
-    }
-
-    private func bitmapRep(for image: NSImage, canvasSize: CGSize) throws -> NSBitmapImageRep {
-        let pixelWidth = max(Int(canvasSize.width.rounded(.up)), 1)
-        let pixelHeight = max(Int(canvasSize.height.rounded(.up)), 1)
-        guard
-            let rep = NSBitmapImageRep(
-                bitmapDataPlanes: nil,
-                pixelsWide: pixelWidth,
-                pixelsHigh: pixelHeight,
-                bitsPerSample: 8,
-                samplesPerPixel: 4,
-                hasAlpha: true,
-                isPlanar: false,
-                colorSpaceName: .deviceRGB,
-                bytesPerRow: 0,
-                bitsPerPixel: 0
-            )
-        else {
-            throw CursorError.unsupportedCursorPayload
-        }
-
-        NSGraphicsContext.saveGraphicsState()
-        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
-        image.draw(in: NSRect(origin: .zero, size: NSSize(width: pixelWidth, height: pixelHeight)))
-        NSGraphicsContext.restoreGraphicsState()
-        return rep
-    }
-
-    private func scaledBitmapRep(for source: NSBitmapImageRep, width: Int, height: Int) throws -> NSBitmapImageRep {
-        guard source.pixelsWide == width, source.pixelsHigh == height else {
-            guard
-                let rep = NSBitmapImageRep(
-                    bitmapDataPlanes: nil,
-                    pixelsWide: width,
-                    pixelsHigh: height,
-                    bitsPerSample: 8,
-                    samplesPerPixel: 4,
-                    hasAlpha: true,
-                    isPlanar: false,
-                    colorSpaceName: .deviceRGB,
-                    bytesPerRow: 0,
-                    bitsPerPixel: 0
-                )
-            else {
-                throw CursorError.unsupportedCursorPayload
-            }
-
-            NSGraphicsContext.saveGraphicsState()
-            guard let context = NSGraphicsContext(bitmapImageRep: rep) else {
-                NSGraphicsContext.restoreGraphicsState()
-                throw CursorError.unsupportedCursorPayload
-            }
-            context.imageInterpolation = .none
-            NSGraphicsContext.current = context
-            source.draw(
-                in: NSRect(x: 0, y: 0, width: width, height: height),
-                from: NSRect(x: 0, y: 0, width: source.pixelsWide, height: source.pixelsHigh),
-                operation: .copy,
-                fraction: 1.0,
-                respectFlipped: true,
-                hints: nil
-            )
-            NSGraphicsContext.restoreGraphicsState()
-            return rep
-        }
-
-        return source
-    }
-
-    private func stack(frames: [NSBitmapImageRep], width: Int, height: Int) throws -> NSBitmapImageRep {
-        guard
-            let rep = NSBitmapImageRep(
-                bitmapDataPlanes: nil,
-                pixelsWide: width,
-                pixelsHigh: height * frames.count,
-                bitsPerSample: 8,
-                samplesPerPixel: 4,
-                hasAlpha: true,
-                isPlanar: false,
-                colorSpaceName: .deviceRGB,
-                bytesPerRow: 0,
-                bitsPerPixel: 0
-            )
-        else {
-            throw CursorError.unsupportedCursorPayload
-        }
-
-        NSGraphicsContext.saveGraphicsState()
-        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
-
-        var currentY = 0
-        for frame in frames.reversed() {
-            _ = autoreleasepool {
-                frame.draw(
-                    in: NSRect(x: 0, y: currentY, width: frame.pixelsWide, height: frame.pixelsHigh),
-                    from: .zero,
-                    operation: .sourceOver,
-                    fraction: 1.0,
-                    respectFlipped: true,
-                    hints: nil
-                )
-            }
-            currentY += frame.pixelsHigh
-        }
-
-        NSGraphicsContext.restoreGraphicsState()
-        return rep
     }
 }

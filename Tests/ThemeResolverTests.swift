@@ -3,6 +3,8 @@ import Foundation
 import Testing
 @testable import CapeForge
 
+private let defaultsSuiteNameKey = "__CapeForgeTestsSuiteName"
+
 struct ThemeResolverTests {
     @MainActor
     @Test
@@ -13,7 +15,7 @@ struct ThemeResolverTests {
         let fileURL = tempDirectory.appendingPathComponent("Text.ani")
         FileManager.default.createFile(atPath: fileURL.path, contents: Data("x".utf8))
 
-        let controller = CursorController()
+        let controller = CursorController(defaults: try makeIsolatedDefaults())
         controller.start()
 
         let handled = controller.handleDroppedItem(at: fileURL, selection: nil)
@@ -28,13 +30,58 @@ struct ThemeResolverTests {
         let tempDirectory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: tempDirectory) }
 
-        let controller = CursorController()
+        let controller = CursorController(defaults: try makeIsolatedDefaults())
         controller.start()
 
         let handled = controller.handleDroppedItem(at: tempDirectory, selection: nil)
 
         #expect(handled)
         #expect(controller.selectedFolderURL?.standardizedFileURL == tempDirectory.standardizedFileURL)
+    }
+
+    @MainActor
+    @Test
+    func startDoesNotReloadLastSelectedThemeFolder() throws {
+        let tempDirectory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: tempDirectory) }
+        let defaults = try makeIsolatedDefaults()
+        defer { cleanupIsolatedDefaults(defaults) }
+
+        let folder = tempDirectory.appendingPathComponent("Theme", isDirectory: true)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        try makeCursorFile(color: .white, size: 16, at: folder.appendingPathComponent("Normal.cur"))
+
+        let firstController = CursorController(defaults: defaults)
+        firstController.start()
+        firstController.setThemeFolder(folder)
+
+        let secondController = CursorController(defaults: defaults)
+        secondController.start()
+
+        #expect(secondController.selectedFolderURL == nil)
+        #expect(secondController.assignment(for: .arrow)?.appliedPreview == nil)
+    }
+
+    @MainActor
+    @Test
+    func startIgnoresCurrentSystemCursorPreviewsForPlaceholderState() throws {
+        let animation = CursorAnimation(
+            frames: [CursorFrame(image: solidImage(.yellow), delay: 0.1)],
+            hotspot: CGPoint(x: 1, y: 1),
+            canvasSize: CGSize(width: 16, height: 16)
+        )
+        let controller = CursorController(
+            currentCursorPreviewLoader: StubCurrentCursorPreviewLoader(
+                previews: CurrentCursorPreviews(primary: [.arrow: animation], supplemental: [:])
+            ),
+            defaults: try makeIsolatedDefaults()
+        )
+
+        controller.start()
+
+        #expect(controller.selectedFolderURL == nil)
+        #expect(!controller.selectedFolderIsValid)
+        #expect(controller.assignment(for: .arrow)?.appliedPreview == nil)
     }
 
     @MainActor
@@ -52,7 +99,7 @@ struct ThemeResolverTests {
         try makeCursorFile(color: .white, size: 16, at: arrowURL)
         try makeCursorFile(color: .red, size: 24, at: textURL)
 
-        let controller = CursorController()
+        let controller = CursorController(defaults: try makeIsolatedDefaults())
         controller.start()
         controller.setThemeFolder(folder)
 
@@ -75,7 +122,7 @@ struct ThemeResolverTests {
         let textURL = tempDirectory.appendingPathComponent("Text.cur")
         try makeCursorFile(color: .red, size: 24, at: textURL)
 
-        let controller = CursorController()
+        let controller = CursorController(defaults: try makeIsolatedDefaults())
         controller.start()
 
         let handled = controller.handleDroppedItem(at: textURL, selection: .primary(.text))
@@ -476,7 +523,6 @@ struct CapeExporterTests {
         let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any]
         let cursors = plist?["Cursors"] as? [String: Any]
         let arrow = cursors?["com.apple.coregraphics.Arrow"] as? [String: Any]
-        let legacyArrow = cursors?["com.apple.cursor.0"] as? [String: Any]
         let iBeam = cursors?["com.apple.coregraphics.IBeam"] as? [String: Any]
         let iBeamXOR = cursors?["com.apple.coregraphics.IBeamXOR"] as? [String: Any]
         let copy = cursors?["com.apple.coregraphics.Copy"] as? [String: Any]
@@ -489,7 +535,7 @@ struct CapeExporterTests {
         #expect(plist?["CapeName"] as? String == "Test Cape")
         #expect(plist?["Identifier"] as? String == "local.test.cape")
         #expect(arrow?["FrameCount"] as? Int == 1)
-        #expect(legacyArrow?["FrameCount"] as? Int == 1)
+        #expect(cursors?["com.apple.cursor.0"] == nil)
         #expect(iBeam == nil)
         #expect(iBeamXOR == nil)
         #expect(copy?["FrameCount"] as? Int == 1)
@@ -560,11 +606,15 @@ struct CapeExporterTests {
         #expect(cursors["com.apple.cursor.29"] != nil)
         #expect(cursors["com.apple.cursor.30"] != nil)
         #expect(cursors["com.apple.cursor.37"] != nil)
+        #expect(cursors["com.apple.coregraphics.ResizeUp"] != nil)
+        #expect(cursors["com.apple.coregraphics.ResizeDown"] != nil)
+        #expect(cursors["com.apple.coregraphics.ResizeLeft"] != nil)
+        #expect(cursors["com.apple.coregraphics.ResizeRight"] != nil)
     }
 
     @MainActor
     @Test
-    func leavesSupplementalMousecapeIdentifiersUnsetByDefault() throws {
+    func fillsMappedSupplementalMousecapeIdentifiersFromPrimaryRolesByDefault() throws {
         let image = NSImage(size: NSSize(width: 16, height: 16))
         image.lockFocus()
         NSColor.white.setFill()
@@ -605,29 +655,29 @@ struct CapeExporterTests {
         let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any]
         let cursors = plist?["Cursors"] as? [String: Any] ?? [:]
 
-        #expect(cursors["com.apple.coregraphics.ArrowCtx"] == nil)
-        #expect(cursors["com.apple.cursor.24"] == nil)
-        #expect(cursors["com.apple.coregraphics.CopyDrag"] == nil)
-        #expect(cursors["com.apple.coregraphics.LinkDrag"] == nil)
-        #expect(cursors["com.apple.coregraphics.DisappearingItem"] == nil)
-        #expect(cursors["com.apple.coregraphics.Empty"] == nil)
-        #expect(cursors["com.apple.cursor.10"] == nil)
-        #expect(cursors["com.apple.cursor.9"] == nil)
-        #expect(cursors["com.apple.cursor.26"] == nil)
-        #expect(cursors["com.apple.cursor.14"] == nil)
-        #expect(cursors["com.apple.cursor.15"] == nil)
-        #expect(cursors["com.apple.cursor.16"] == nil)
-        #expect(cursors["com.apple.cursor.25"] == nil)
-        #expect(cursors["com.apple.cursor.39"] == nil)
-        #expect(cursors["com.apple.coregraphics.ResizeUp"] == nil)
-        #expect(cursors["com.apple.coregraphics.ResizeDown"] == nil)
-        #expect(cursors["com.apple.coregraphics.ResizeLeft"] == nil)
-        #expect(cursors["com.apple.coregraphics.ResizeRight"] == nil)
-        #expect(cursors["com.apple.coregraphics.IBeamForVerticalLayout"] == nil)
-        #expect(cursors["com.apple.cursor.11"] == nil)
-        #expect(cursors["com.apple.cursor.12"] == nil)
-        #expect(cursors["com.apple.cursor.42"] == nil)
-        #expect(cursors["com.apple.cursor.43"] == nil)
+        #expect(cursors["com.apple.coregraphics.ArrowCtx"] != nil)
+        #expect(cursors["com.apple.cursor.24"] != nil)
+        #expect(cursors["com.apple.coregraphics.CopyDrag"] != nil)
+        #expect(cursors["com.apple.coregraphics.LinkDrag"] != nil)
+        #expect(cursors["com.apple.coregraphics.DisappearingItem"] != nil)
+        #expect(cursors["com.apple.coregraphics.Empty"] != nil)
+        #expect(cursors["com.apple.cursor.10"] != nil)
+        #expect(cursors["com.apple.cursor.9"] != nil)
+        #expect(cursors["com.apple.cursor.26"] != nil)
+        #expect(cursors["com.apple.cursor.14"] != nil)
+        #expect(cursors["com.apple.cursor.15"] != nil)
+        #expect(cursors["com.apple.cursor.16"] != nil)
+        #expect(cursors["com.apple.cursor.25"] != nil)
+        #expect(cursors["com.apple.cursor.39"] != nil)
+        #expect(cursors["com.apple.coregraphics.ResizeUp"] != nil)
+        #expect(cursors["com.apple.coregraphics.ResizeDown"] != nil)
+        #expect(cursors["com.apple.coregraphics.ResizeLeft"] != nil)
+        #expect(cursors["com.apple.coregraphics.ResizeRight"] != nil)
+        #expect(cursors["com.apple.coregraphics.IBeamForVerticalLayout"] != nil)
+        #expect(cursors["com.apple.cursor.11"] != nil)
+        #expect(cursors["com.apple.cursor.12"] != nil)
+        #expect(cursors["com.apple.cursor.42"] != nil)
+        #expect(cursors["com.apple.cursor.43"] != nil)
     }
 
     @MainActor
@@ -738,7 +788,7 @@ struct CapeExporterTests {
         try makeTestCursorFile(color: .white, size: 16, at: arrowURL)
         try makeTestCursorFile(color: .blue, size: 18, at: linkURL)
 
-        let controller = CursorController()
+        let controller = CursorController(defaults: try makeIsolatedDefaults())
         controller.start()
         controller.setThemeFolder(folder)
 
@@ -881,8 +931,12 @@ struct CapeExporterTests {
 
         #expect((baseArrow["PointsWide"] as? Double ?? 0) == 40)
         #expect((baseArrow["PointsHigh"] as? Double ?? 0) == 40)
+        #expect((baseArrow["HotSpotX"] as? Double ?? 0) == 4)
+        #expect((baseArrow["HotSpotY"] as? Double ?? 0) == 5)
         #expect((largeArrow["PointsWide"] as? Double ?? 0) == 60)
         #expect((largeArrow["PointsHigh"] as? Double ?? 0) == 60)
+        #expect((largeArrow["HotSpotX"] as? Double ?? 0) == 6)
+        #expect((largeArrow["HotSpotY"] as? Double ?? 0) == 7.5)
     }
 
     @MainActor
@@ -914,11 +968,29 @@ struct CapeExporterTests {
 
         let arrow = try exportedArrow(at: exportURL)
         let previewSize = CapeExporter.previewDisplaySize(for: animation, sizeMultiplier: 2.3)
+        let previewHotspot = CapeExporter.previewHotspot(for: animation, sizeMultiplier: 2.3)
         let exportedWidth = arrow["PointsWide"] as? Double ?? 0
         let exportedHeight = arrow["PointsHigh"] as? Double ?? 0
+        let exportedHotspotX = arrow["HotSpotX"] as? Double ?? 0
+        let exportedHotspotY = arrow["HotSpotY"] as? Double ?? 0
 
         #expect(abs(exportedWidth - previewSize.width) < 0.001)
         #expect(abs(exportedHeight - previewSize.height) < 0.001)
+        #expect(abs(exportedHotspotX - previewHotspot.x) < 0.001)
+        #expect(abs(exportedHotspotY - previewHotspot.y) < 0.001)
+    }
+
+    @MainActor
+    @Test
+    func actualSizePreviewCentersCursorImageInPane() {
+        let bounds = NSRect(x: 0, y: 0, width: 320, height: 220)
+        let frame = CursorPreviewLayout.actualSizeFrame(
+            in: bounds,
+            size: CGSize(width: 40, height: 40)
+        )
+
+        #expect(frame.midX == bounds.midX)
+        #expect(frame.midY == bounds.midY)
     }
 
     @MainActor
@@ -1016,7 +1088,7 @@ struct CapeExporterTests {
         NSBezierPath(rect: NSRect(x: 0, y: 0, width: 16, height: 16)).fill()
         image.unlockFocus()
 
-        let frames = (0..<36).map { _ in
+        let frames = (0..<72).map { _ in
             CursorFrame(image: image, delay: 0.1)
         }
         let animation = CursorAnimation(
@@ -1059,7 +1131,7 @@ struct CapeExporterTests {
             return image
         }
 
-        let frames: [CursorFrame] = (0..<36).map { index in
+        let frames: [CursorFrame] = (0..<72).map { index in
             let color: NSColor = index.isMultiple(of: 2) ? .white : .black
             return CursorFrame(image: solidImage(color), delay: 0.05)
         }
@@ -1090,7 +1162,69 @@ struct CapeExporterTests {
         let frameCount = wait?["FrameCount"] as? Int ?? 0
         let frameDuration = wait?["FrameDuration"] as? Double ?? 0
         #expect(frameCount == 24)
-        #expect(abs((Double(frameCount) * frameDuration) - 1.8) < 0.001)
+        #expect(abs((Double(frameCount) * frameDuration) - 3.6) < 0.001)
+    }
+
+    @MainActor
+    @Test
+    func previewTimelineDoesNotWakeForSingleFrameCursor() {
+        let animation = CursorAnimation(
+            frames: [CursorFrame(image: solidImage(.white), delay: 0.1)],
+            hotspot: CGPoint(x: 1, y: 1),
+            canvasSize: CGSize(width: 16, height: 16)
+        )
+
+        #expect(CursorPreviewTimeline.refreshInterval(for: animation) == nil)
+    }
+
+    @MainActor
+    @Test
+    func previewTimelineUsesShortestPositiveFrameDelay() {
+        let animation = CursorAnimation(
+            frames: [
+                CursorFrame(image: solidImage(.white), delay: 0.20),
+                CursorFrame(image: solidImage(.black), delay: 0.08),
+                CursorFrame(image: solidImage(.red), delay: 0.12)
+            ],
+            hotspot: CGPoint(x: 1, y: 1),
+            canvasSize: CGSize(width: 16, height: 16)
+        )
+
+        #expect(CursorPreviewTimeline.refreshInterval(for: animation) == 0.08)
+    }
+
+    @MainActor
+    @Test
+    func previewTimelineClampsVeryFastAnimationsToTwentyFourHertz() {
+        let animation = CursorAnimation(
+            frames: [
+                CursorFrame(image: solidImage(.white), delay: 0.005),
+                CursorFrame(image: solidImage(.black), delay: 0.005)
+            ],
+            hotspot: CGPoint(x: 1, y: 1),
+            canvasSize: CGSize(width: 16, height: 16)
+        )
+
+        let interval = CursorPreviewTimeline.refreshInterval(for: animation) ?? 0
+
+        #expect(abs(interval - (1.0 / 24.0)) < 0.000_001)
+    }
+
+    @MainActor
+    @Test
+    func previewTimelineSelectsFrameByAnimationDelay() {
+        let animation = CursorAnimation(
+            frames: [
+                CursorFrame(image: solidImage(.white), delay: 0.10),
+                CursorFrame(image: solidImage(.black), delay: 0.20)
+            ],
+            hotspot: CGPoint(x: 1, y: 1),
+            canvasSize: CGSize(width: 16, height: 16)
+        )
+
+        #expect(CursorPreviewTimeline.frameIndex(for: animation, at: Date(timeIntervalSinceReferenceDate: 0.09)) == 0)
+        #expect(CursorPreviewTimeline.frameIndex(for: animation, at: Date(timeIntervalSinceReferenceDate: 0.11)) == 1)
+        #expect(CursorPreviewTimeline.frameIndex(for: animation, at: Date(timeIntervalSinceReferenceDate: 0.31)) == 0)
     }
 }
 
@@ -1104,4 +1238,36 @@ private func exportedArrow(at url: URL) throws -> [String: Any] {
     let data = try Data(contentsOf: url)
     let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any]
     return ((plist?["Cursors"] as? [String: Any])?["com.apple.coregraphics.Arrow"] as? [String: Any]) ?? [:]
+}
+
+private func makeIsolatedDefaults() throws -> UserDefaults {
+    let suiteName = "CapeForgeTests-\(UUID().uuidString)"
+    let defaults = try #require(UserDefaults(suiteName: suiteName))
+    defaults.removePersistentDomain(forName: suiteName)
+    defaults.set(suiteName, forKey: defaultsSuiteNameKey)
+    return defaults
+}
+
+private func cleanupIsolatedDefaults(_ defaults: UserDefaults) {
+    guard let suiteName = defaults.string(forKey: defaultsSuiteNameKey) else {
+        return
+    }
+    defaults.removePersistentDomain(forName: suiteName)
+}
+
+private func solidImage(_ color: NSColor) -> NSImage {
+    let image = NSImage(size: NSSize(width: 16, height: 16))
+    image.lockFocus()
+    color.setFill()
+    NSBezierPath(rect: NSRect(x: 0, y: 0, width: 16, height: 16)).fill()
+    image.unlockFocus()
+    return image
+}
+
+private struct StubCurrentCursorPreviewLoader: CurrentCursorPreviewLoading {
+    let previews: CurrentCursorPreviews
+
+    func loadCurrentCursorPreviews() -> CurrentCursorPreviews {
+        previews
+    }
 }

@@ -282,10 +282,120 @@ struct UserFacingAlert: Identifiable {
     let message: String
 }
 
+struct SystemApplyProgress: Sendable {
+    let titleKey: String
+    let detailKey: String
+    let fraction: Double
+
+    static let preparing = SystemApplyProgress(
+        titleKey: "systemApply.progressTitle",
+        detailKey: "systemApply.progressPreparing",
+        fraction: 0.10
+    )
+    static let rendering = SystemApplyProgress(
+        titleKey: "systemApply.progressTitle",
+        detailKey: "systemApply.progressRendering",
+        fraction: 0.35
+    )
+    static let registering = SystemApplyProgress(
+        titleKey: "systemApply.progressTitle",
+        detailKey: "systemApply.progressRegistering",
+        fraction: 0.65
+    )
+    static let agent = SystemApplyProgress(
+        titleKey: "systemApply.progressTitle",
+        detailKey: "systemApply.progressAgent",
+        fraction: 0.90
+    )
+}
+
+struct CurrentCursorPreviews {
+    let primary: [CursorRole: CursorAnimation]
+    let supplemental: [SupplementalCursorRole: CursorAnimation]
+
+    static let empty = CurrentCursorPreviews(primary: [:], supplemental: [:])
+}
+
+protocol CurrentCursorPreviewLoading {
+    func loadCurrentCursorPreviews() -> CurrentCursorPreviews
+}
+
+struct LiveCurrentCursorPreviewLoader: CurrentCursorPreviewLoading {
+    func loadCurrentCursorPreviews() -> CurrentCursorPreviews {
+        guard let bridge = try? PrivateSystemCursorBridge() else {
+            return .empty
+        }
+
+        var primary: [CursorRole: CursorAnimation] = [:]
+        for role in CursorRole.allCases {
+            guard let payload = firstPayload(from: CursorSlotCatalog.identifiers(for: role), bridge: bridge) else { continue }
+            primary[role] = Self.animation(from: payload)
+        }
+
+        var supplemental: [SupplementalCursorRole: CursorAnimation] = [:]
+        for role in SupplementalCursorRole.allCases {
+            guard let payload = firstPayload(from: CursorSlotCatalog.identifiers(for: role), bridge: bridge) else { continue }
+            supplemental[role] = Self.animation(from: payload)
+        }
+
+        return CurrentCursorPreviews(primary: primary, supplemental: supplemental)
+    }
+
+    private func firstPayload(from identifiers: [String], bridge: PrivateSystemCursorBridge) -> RenderedCursorPayload? {
+        for identifier in identifiers {
+            if let payload = bridge.registeredPayload(for: identifier) {
+                return payload
+            }
+        }
+        return nil
+    }
+
+    static func animation(from payload: RenderedCursorPayload) -> CursorAnimation? {
+        guard let representation = payload.representations.max(by: { lhs, rhs in
+            pixelCount(for: lhs) < pixelCount(for: rhs)
+        }) else {
+            return nil
+        }
+        guard let bitmap = NSBitmapImageRep(data: representation), let image = bitmap.cgImage else {
+            return nil
+        }
+
+        let frameCount = max(payload.frameCount, 1)
+        let frameHeight = max(image.height / frameCount, 1)
+        let frameWidth = image.width
+        var frames: [CursorFrame] = []
+        frames.reserveCapacity(frameCount)
+
+        for index in 0..<frameCount {
+            let y = index * frameHeight
+            guard let cropped = image.cropping(to: CGRect(x: 0, y: y, width: frameWidth, height: frameHeight)) else {
+                continue
+            }
+            frames.append(
+                CursorFrame(
+                    image: NSImage(cgImage: cropped, size: payload.pointSize),
+                    delay: payload.frameDuration
+                )
+            )
+        }
+
+        guard !frames.isEmpty else {
+            return nil
+        }
+        return CursorAnimation(frames: frames, hotspot: payload.hotSpot, canvasSize: payload.pointSize)
+    }
+
+    private static func pixelCount(for data: Data) -> Int {
+        guard let bitmap = NSBitmapImageRep(data: data) else { return 0 }
+        return bitmap.pixelsWide * bitmap.pixelsHigh
+    }
+}
+
 @MainActor
 final class CursorController: ObservableObject {
     private enum DefaultsKey {
         static let exportAuthorName = "exportAuthorName"
+        static let selectedThemeFolderPath = "selectedThemeFolderPath"
     }
 
     private enum StatusState {
@@ -294,6 +404,9 @@ final class CursorController: ObservableObject {
         case supportedFiles
         case exportSuccess(String)
         case exportFailure(String)
+        case systemApplySuccess
+        case systemApplyWarning(String)
+        case systemApplyFailure(String)
         case loaded(folderName: String, resolvedRoleCount: Int, totalRoleCount: Int)
         case loadFailure(String)
     }
@@ -303,14 +416,16 @@ final class CursorController: ObservableObject {
     @Published private(set) var resolvedRoleCount = 0
     @Published private(set) var assignments: [CursorAssignment] = []
     @Published private(set) var statusText = Localized.string("status.startingUp")
+    @Published private(set) var isApplyingSystemCursors = false
+    @Published private(set) var systemApplyProgress = SystemApplyProgress.preparing
     @Published var activeAlert: UserFacingAlert?
     @Published var exportAuthorName: String {
         didSet {
             let trimmed = exportAuthorName.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmed.isEmpty {
-                UserDefaults.standard.removeObject(forKey: DefaultsKey.exportAuthorName)
+                defaults.removeObject(forKey: DefaultsKey.exportAuthorName)
             } else {
-                UserDefaults.standard.set(exportAuthorName, forKey: DefaultsKey.exportAuthorName)
+                defaults.set(exportAuthorName, forKey: DefaultsKey.exportAuthorName)
             }
         }
     }
@@ -325,15 +440,54 @@ final class CursorController: ObservableObject {
 
     private let parser = AniParser()
     private let capeExporter = CapeExporter()
+    private let cursorSystemApplyService: CursorSystemApplyService
+    private let currentCursorPreviewLoader: CurrentCursorPreviewLoading
     private let themeResolver = ThemeResolver()
+    private let defaults: UserDefaults
     private var overrideURLs: [CursorRole: URL] = [:]
     private var supplementalOverrideURLs: [SupplementalCursorRole: URL] = [:]
     private var currentTheme = CursorTheme(animations: [:], supplementalAnimations: [:])
+    private var currentPrimaryPreviews: [CursorRole: CursorAnimation] = [:]
+    private var currentSupplementalPreviews: [SupplementalCursorRole: CursorAnimation] = [:]
     private var statusState: StatusState = .startingUp
     private var securityScopedURLs: [URL: URL] = [:]
 
-    init() {
-        exportAuthorName = UserDefaults.standard.string(forKey: DefaultsKey.exportAuthorName) ?? ""
+    var hasMenuStatusWarning: Bool {
+        if case .loadFailure = statusState {
+            return true
+        }
+        return false
+    }
+
+    var menuStatusLabel: String {
+        if selectedFolderIsValid {
+            return Localized.string("app.rolesReady", resolvedRoleCount)
+        }
+        if hasMenuStatusWarning {
+            return Localized.string("app.folderRequired")
+        }
+        return Localized.string("app.currentSystemCursor")
+    }
+
+    var menuStatusSystemImage: String {
+        if selectedFolderIsValid {
+            return "checkmark.circle.fill"
+        }
+        if hasMenuStatusWarning {
+            return "exclamationmark.triangle.fill"
+        }
+        return "cursorarrow"
+    }
+
+    init(
+        cursorSystemApplyService: CursorSystemApplyService = CursorSystemApplyService(),
+        currentCursorPreviewLoader: CurrentCursorPreviewLoading = LiveCurrentCursorPreviewLoader(),
+        defaults: UserDefaults = .standard
+    ) {
+        self.cursorSystemApplyService = cursorSystemApplyService
+        self.currentCursorPreviewLoader = currentCursorPreviewLoader
+        self.defaults = defaults
+        exportAuthorName = defaults.string(forKey: DefaultsKey.exportAuthorName) ?? ""
         exportSizeMultiplier = 1.0
     }
 
@@ -346,12 +500,7 @@ final class CursorController: ObservableObject {
     func start() {
         clearLegacyDefaults()
         exportSizeMultiplier = 1.0
-        assignments = unresolvedAssignments()
-        selectedFolderURL = nil
-        selectedFolderIsValid = false
-        resolvedRoleCount = 0
-        overrideURLs = [:]
-        supplementalOverrideURLs = [:]
+        resetToLaunchPlaceholderState()
         setStatus(.chooseCursorFolder)
     }
 
@@ -372,11 +521,14 @@ final class CursorController: ObservableObject {
         setThemeFolder(url)
     }
 
-    func setThemeFolder(_ url: URL) {
+    func setThemeFolder(_ url: URL, persistSelection: Bool = true) {
         let normalizedNewURL = url.standardizedFileURL
         let previousURL = selectedFolderURL?.standardizedFileURL
         retainSecurityScopedAccess(to: url)
         selectedFolderURL = url
+        if persistSelection {
+            defaults.set(normalizedNewURL.path, forKey: DefaultsKey.selectedThemeFolderPath)
+        }
         if previousURL != normalizedNewURL, !overrideURLs.isEmpty {
             releaseSecurityScopedAccess(for: Array(overrideURLs.values))
             overrideURLs.removeAll()
@@ -489,6 +641,80 @@ final class CursorController: ObservableObject {
         }
     }
 
+    func applyToSystemCursors() {
+        guard !isApplyingSystemCursors else { return }
+        isApplyingSystemCursors = true
+        systemApplyProgress = .preparing
+
+        Task { @MainActor in
+            await Task.yield()
+
+            do {
+                systemApplyProgress = .rendering
+                let resolution = try loadTheme()
+                guard let executableURL = Bundle.main.executableURL else {
+                    throw CursorError.systemCursorApplyFailed(Localized.string("error.systemApplyExecutableMissing"))
+                }
+                let service = cursorSystemApplyService
+                let prepared = try service.prepareApply(
+                    theme: resolution.theme,
+                    sizeMultiplier: exportSizeMultiplier,
+                    author: defaultAuthorName(),
+                    bundleIdentifier: Bundle.main.bundleIdentifier,
+                    executableURL: executableURL
+                )
+                systemApplyProgress = .registering
+
+                Task.detached { [service, prepared] in
+                    do {
+                        let result = try service.applyPrepared(prepared) { progress in
+                            Task { @MainActor in
+                                self.systemApplyProgress = progress
+                            }
+                        }
+                        await MainActor.run {
+                            self.systemApplyProgress = SystemApplyProgress(
+                                titleKey: "systemApply.progressTitle",
+                                detailKey: "systemApply.progressDone",
+                                fraction: 1.0
+                            )
+                            self.isApplyingSystemCursors = false
+                            if let warning = result.agentWarning {
+                                self.setStatus(.systemApplyWarning(warning))
+                            } else {
+                                self.setStatus(.systemApplySuccess)
+                            }
+                        }
+                    } catch {
+                        await MainActor.run {
+                            self.isApplyingSystemCursors = false
+                            self.setStatus(.systemApplyFailure(error.localizedDescription))
+                            self.presentError(error.localizedDescription)
+                        }
+                    }
+                }
+            } catch {
+                isApplyingSystemCursors = false
+                setStatus(.systemApplyFailure(error.localizedDescription))
+                presentError(error.localizedDescription)
+            }
+        }
+    }
+
+    func openPointerSettings() {
+        let candidates = [
+            "x-apple.systempreferences:com.apple.Accessibility-Settings.extension?Seeing_Cursor",
+            "x-apple.systempreferences:com.apple.preference.universalaccess?Seeing_Cursor"
+        ]
+        for candidate in candidates {
+            guard let url = URL(string: candidate), NSWorkspace.shared.open(url) else {
+                continue
+            }
+            return
+        }
+        NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Applications/System Settings.app"))
+    }
+
     func reload() {
         do {
             let resolution = try loadTheme()
@@ -519,21 +745,6 @@ final class CursorController: ObservableObject {
 
     func assignment(for role: CursorRole) -> CursorAssignment? {
         assignments.first(where: { $0.role == role })
-    }
-
-    func startupPreview(for role: CursorRole) -> CursorAnimation? {
-        switch role {
-        case .diagonalResizeNWSE:
-            return bundledDiagonalResizeAnimation(degrees: -45)
-        case .diagonalResizeNESW:
-            return bundledDiagonalResizeAnimation(degrees: 45)
-        default:
-            return bundledDefaultCursorAnimation(for: role)
-        }
-    }
-
-    func startupPreview(for role: SupplementalCursorRole) -> CursorAnimation? {
-        nil
     }
 
     func supplementalAssignment(for role: SupplementalCursorRole) -> SupplementalCursorAssignment {
@@ -649,13 +860,46 @@ final class CursorController: ObservableObject {
         }
     }
 
+    private func resetToLaunchPlaceholderState() {
+        selectedFolderURL = nil
+        selectedFolderIsValid = false
+        resolvedRoleCount = 0
+        overrideURLs = [:]
+        supplementalOverrideURLs = [:]
+        currentTheme = CursorTheme(animations: [:], supplementalAnimations: [:])
+        currentPrimaryPreviews = [:]
+        currentSupplementalPreviews = [:]
+        assignments = unresolvedAssignments()
+    }
+
     private func clearLegacyDefaults() {
         [
             "calibrationOffsets",
             "isEnabled",
             "selectedBorder",
             "selectedStyle"
-        ].forEach { UserDefaults.standard.removeObject(forKey: $0) }
+        ].forEach { defaults.removeObject(forKey: $0) }
+    }
+
+    private func savedThemeFolderURL() -> URL? {
+        guard
+            let path = defaults.string(forKey: DefaultsKey.selectedThemeFolderPath),
+            !path.isEmpty
+        else {
+            return nil
+        }
+        let url = URL(fileURLWithPath: path, isDirectory: true)
+        guard isDirectory(at: url) else {
+            defaults.removeObject(forKey: DefaultsKey.selectedThemeFolderPath)
+            return nil
+        }
+        return url
+    }
+
+    private func reloadCurrentCursorPreviews() {
+        let previews = currentCursorPreviewLoader.loadCurrentCursorPreviews()
+        currentPrimaryPreviews = previews.primary
+        currentSupplementalPreviews = previews.supplemental
     }
 
     private func applyOverride(at url: URL, for role: CursorRole) {
@@ -770,6 +1014,12 @@ final class CursorController: ObservableObject {
             return Localized.string("status.exportSuccess", fileName)
         case .exportFailure(let message):
             return Localized.string("status.exportFailure", message)
+        case .systemApplySuccess:
+            return Localized.string("status.systemApplySuccess")
+        case .systemApplyWarning(let message):
+            return Localized.string("status.systemApplyWarning", message)
+        case .systemApplyFailure(let message):
+            return Localized.string("status.systemApplyFailure", message)
         case .loaded(let folderName, let resolvedRoleCount, let totalRoleCount):
             let displayFolder = folderName.isEmpty ? Localized.string("app.noFolderSelected") : folderName
             return Localized.string("status.loaded", displayFolder, resolvedRoleCount, totalRoleCount)
@@ -1082,6 +1332,7 @@ enum CursorError: LocalizedError {
     case invalidANI(String)
     case invalidThemeSelection(String)
     case unsupportedCursorPayload
+    case systemCursorApplyFailed(String)
 
     var errorDescription: String? {
         switch self {
@@ -1093,6 +1344,8 @@ enum CursorError: LocalizedError {
             return message
         case .unsupportedCursorPayload:
             return Localized.string("error.unsupportedCursorPayload")
+        case .systemCursorApplyFailed(let message):
+            return message
         }
     }
 }

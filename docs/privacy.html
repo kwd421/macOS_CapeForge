@@ -92,14 +92,16 @@
       <h2>Information Cape Forge accesses</h2>
       <ul>
         <li>Folders explicitly chosen by the user for reading cursor files</li>
-        <li>File locations explicitly chosen by the user for exporting <code>.cape</code> files</li>
+        <li>A local applied cursor theme file stored under the user's Application Support folder after applying system cursors</li>
+        <li>A user LaunchAgent plist stored under the user's LaunchAgents folder to keep the applied cursor theme active</li>
       </ul>
 
       <h2>How the app uses that information</h2>
       <ul>
         <li>To read <code>.ani</code> and <code>.cur</code> files selected by the user</li>
         <li>To preview cursor mappings inside the app</li>
-        <li>To export a Mousecape-compatible <code>.cape</code> file to a location selected by the user</li>
+        <li>To apply the selected cursor theme to macOS system cursors when the user chooses Apply</li>
+        <li>To restore default macOS cursors and remove Cape Forge's background cursor agent when the user chooses Restore Defaults</li>
       </ul>
 
       <h2>What Cape Forge does not do</h2>
@@ -107,7 +109,7 @@
         <li>It does not collect personal information</li>
         <li>It does not track users across apps or websites</li>
         <li>It does not upload cursor files or exported files to remote servers</li>
-        <li>It does not modify macOS cursor settings directly</li>
+        <li>It does not apply or restore system cursors without an explicit user action in the app</li>
       </ul>
 
       <h2>Contact</h2>

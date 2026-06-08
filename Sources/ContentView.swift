@@ -27,13 +27,11 @@ struct ContentView: View {
                 .lineLimit(1)
 
             Label(
-                controller.selectedFolderIsValid
-                    ? Localized.string("app.rolesReady", controller.resolvedRoleCount)
-                    : Localized.string("app.folderRequired"),
-                systemImage: controller.selectedFolderIsValid ? "checkmark.circle.fill" : "exclamationmark.triangle.fill"
+                controller.menuStatusLabel,
+                systemImage: controller.menuStatusSystemImage
             )
             .font(.footnote)
-            .foregroundStyle(controller.selectedFolderIsValid ? AnyShapeStyle(.secondary) : AnyShapeStyle(Color.orange))
+            .foregroundStyle(controller.hasMenuStatusWarning ? AnyShapeStyle(Color.orange) : AnyShapeStyle(.secondary))
 
             HStack(spacing: 8) {
                 Button(Localized.string("app.openSettings")) {
@@ -69,80 +67,89 @@ struct SettingsView: View {
 
     var body: some View {
         let _ = localization.selectedLanguage
-        VStack(spacing: 0) {
-            NavigationSplitView {
-                ScrollViewReader { proxy in
-                    List(selection: $selection) {
-                        ForEach(CursorRole.allCases) { role in
-                            if let assignment = controller.assignment(for: role) {
-                                CursorRoleRow(assignment: assignment)
-                                    .tag(SidebarCursorItem.primary(role))
-                                    .id(SidebarCursorItem.primary(role))
-                                    .contentShape(Rectangle())
-                            }
-                        }
-
-                        Section {
-                            Button {
-                                isSupplementalExpanded.toggle()
-                                if isSupplementalExpanded && !hasShownAdditionalCursorHintThisLaunch {
-                                    hasShownAdditionalCursorHintThisLaunch = true
-                                    controller.activeAlert = UserFacingAlert(
-                                        title: Localized.string("app.additionalCursors"),
-                                        message: Localized.string("app.additionalCursorHint")
+        ZStack {
+            VStack(spacing: 0) {
+                NavigationSplitView {
+                    ScrollViewReader { proxy in
+                        List(selection: $selection) {
+                            ForEach(CursorRole.allCases) { role in
+                                if let assignment = controller.assignment(for: role) {
+                                    CursorRoleRow(
+                                        assignment: assignment,
+                                        hasSelectedFolder: controller.selectedFolderIsValid
                                     )
+                                        .tag(SidebarCursorItem.primary(role))
+                                        .id(SidebarCursorItem.primary(role))
+                                        .contentShape(Rectangle())
                                 }
-                                if !isSupplementalExpanded {
-                                    if case .supplemental = selection {
-                                        selection = .primary(.arrow)
+                            }
+
+                            Section {
+                                Button {
+                                    isSupplementalExpanded.toggle()
+                                    if isSupplementalExpanded && !hasShownAdditionalCursorHintThisLaunch {
+                                        hasShownAdditionalCursorHintThisLaunch = true
+                                        controller.activeAlert = UserFacingAlert(
+                                            title: Localized.string("app.additionalCursors"),
+                                            message: Localized.string("app.additionalCursorHint")
+                                        )
+                                    }
+                                    if !isSupplementalExpanded {
+                                        if case .supplemental = selection {
+                                            selection = .primary(.arrow)
+                                        }
+                                    }
+                                } label: {
+                                    AdditionalCursorsHeader(isExpanded: isSupplementalExpanded)
+                                }
+                                .buttonStyle(.plain)
+                                .focusable(false)
+
+                                if isSupplementalExpanded {
+                                    ForEach(SupplementalCursorRole.allCases) { role in
+                                        SupplementalCursorRoleRow(assignment: controller.supplementalAssignment(for: role))
+                                            .contentShape(Rectangle())
+                                            .tag(SidebarCursorItem.supplemental(role))
+                                            .id(SidebarCursorItem.supplemental(role))
                                     }
                                 }
-                            } label: {
-                                AdditionalCursorsHeader(isExpanded: isSupplementalExpanded)
                             }
-                            .buttonStyle(.plain)
-                            .focusable(false)
-
-                            if isSupplementalExpanded {
-                                ForEach(SupplementalCursorRole.allCases) { role in
-                                    SupplementalCursorRoleRow(assignment: controller.supplementalAssignment(for: role))
-                                        .contentShape(Rectangle())
-                                        .tag(SidebarCursorItem.supplemental(role))
-                                        .id(SidebarCursorItem.supplemental(role))
-                                }
+                        }
+                        .frame(minWidth: 230)
+                        .navigationTitle(Localized.string("app.cursors"))
+                        .onSelectionChange(of: selection) { newValue in
+                            guard let newValue else { return }
+                            scrollSidebar(to: newValue, proxy: proxy)
+                        }
+                        .onAppear {
+                            if let selection {
+                                scrollSidebar(to: selection, proxy: proxy)
                             }
                         }
                     }
-                    .frame(minWidth: 230)
-                    .navigationTitle(Localized.string("app.cursors"))
-                    .onSelectionChange(of: selection) { newValue in
-                        guard let newValue else { return }
-                        scrollSidebar(to: newValue, proxy: proxy)
-                    }
-                    .onAppear {
-                        if let selection {
-                            scrollSidebar(to: selection, proxy: proxy)
+                } detail: {
+                    switch selection {
+                    case .primary(let role):
+                        if let assignment = controller.assignment(for: role) {
+                            CursorRoleDetailView(controller: controller, assignment: assignment)
+                        } else {
+                            EmptySelectionView()
                         }
-                    }
-                }
-            } detail: {
-                switch selection {
-                case .primary(let role):
-                    if let assignment = controller.assignment(for: role) {
-                        CursorRoleDetailView(controller: controller, assignment: assignment)
-                    } else {
+                    case .supplemental(let role):
+                        SupplementalCursorRoleDetailView(controller: controller, assignment: controller.supplementalAssignment(for: role))
+                    case nil:
                         EmptySelectionView()
                     }
-                case .supplemental(let role):
-                    SupplementalCursorRoleDetailView(controller: controller, assignment: controller.supplementalAssignment(for: role))
-                case nil:
-                    EmptySelectionView()
                 }
+                Divider()
+                SystemApplySection(controller: controller)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 10)
             }
-            Divider()
-            ExportSection(controller: controller)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 14)
+
+            if controller.isApplyingSystemCursors {
+                ApplyingOverlay(progress: controller.systemApplyProgress)
+            }
         }
         .frame(minWidth: 860, minHeight: 620)
         .alert(item: $controller.activeAlert) { alert in
@@ -253,6 +260,7 @@ struct SettingsView: View {
     }
 
     private func shouldHandleSidebarArrowKey(_ event: NSEvent) -> Bool {
+        guard !controller.isApplyingSystemCursors else { return false }
         guard event.keyCode == 125 || event.keyCode == 126 else { return false }
         guard NSApp.keyWindow != nil else { return false }
         if NSApp.keyWindow?.firstResponder is NSTextView {
@@ -351,33 +359,79 @@ struct EmptySelectionView: View {
     }
 }
 
-struct ExportSection: View {
+struct ApplyingOverlay: View {
+    let progress: SystemApplyProgress
+    @ObservedObject private var localization = LocalizationController.shared
+
+    var body: some View {
+        let _ = localization.selectedLanguage
+        ZStack {
+            Color.black.opacity(0.16)
+                .ignoresSafeArea()
+
+            VStack(spacing: 14) {
+                ProgressView()
+                    .controlSize(.large)
+                Text(Localized.string(progress.titleKey))
+                    .font(.headline)
+                Text(Localized.string(progress.detailKey))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                ProgressView(value: progress.fraction)
+                    .progressViewStyle(.linear)
+                    .frame(width: 240)
+                Text("\(Int((progress.fraction * 100).rounded()))%")
+                    .font(.footnote.monospacedDigit())
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal, 28)
+            .padding(.vertical, 24)
+            .frame(width: 320)
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .shadow(radius: 20, y: 10)
+        }
+    }
+}
+
+struct SystemApplySection: View {
     @ObservedObject var controller: CursorController
     @ObservedObject private var localization = LocalizationController.shared
 
     var body: some View {
         let _ = localization.selectedLanguage
         GroupBox {
-            HStack(alignment: .top, spacing: 16) {
+            HStack(alignment: .center, spacing: 12) {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(Localized.string("export.authorLabel"))
-                        .font(.headline)
-                    TextField(Localized.string("export.authorPlaceholder"), text: $controller.exportAuthorName)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(maxWidth: 320)
-                }
+                    Button {
+                        controller.openPointerSettings()
+                    } label: {
+                        Label(Localized.string("systemApply.openPointerSettings"), systemImage: "gearshape")
+                    }
+                    .buttonStyle(.bordered)
+                    .focusable(false)
+                    .disabled(controller.isApplyingSystemCursors)
 
-                Spacer(minLength: 24)
+                    Text(Localized.string("systemApply.pointerSettingsHint"))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Spacer(minLength: 12)
 
                 Button {
-                    controller.exportMousecapeCape(authorName: controller.exportAuthorName)
+                    controller.applyToSystemCursors()
                 } label: {
-                    Label(Localized.string("app.exportToMousecape"), systemImage: "square.and.arrow.up")
+                    Label(Localized.string("systemApply.apply"), systemImage: "cursorarrow.motionlines")
                 }
                 .buttonStyle(.borderedProminent)
+                .focusable(false)
+                .disabled(controller.isApplyingSystemCursors)
             }
             .padding(.horizontal, LayoutMetrics.cardHorizontalPadding)
-            .padding(.vertical, LayoutMetrics.cardVerticalPadding)
+            .padding(.vertical, 8)
             .frame(maxWidth: .infinity, alignment: .leading)
         } label: {
             EmptyView()
@@ -405,6 +459,7 @@ struct ExportScaleControl: View {
 
                 VStack(spacing: 8) {
                     Slider(value: $controller.exportSizeMultiplier, in: 1.0...3.0, step: 0.1)
+                        .focusable(false)
                 }
                 .padding(.vertical, 8)
             }
@@ -418,6 +473,7 @@ struct ExportScaleControl: View {
 
 struct CursorRoleRow: View {
     let assignment: CursorAssignment
+    let hasSelectedFolder: Bool
     @ObservedObject private var localization = LocalizationController.shared
 
     var body: some View {
@@ -441,24 +497,34 @@ struct CursorRoleRow: View {
     }
 
     private var statusSymbolName: String {
-        if !assignment.isResolved { return "exclamationmark.triangle.fill" }
+        if !assignment.isResolved {
+            return showsAutomaticMappingFailure ? "exclamationmark.triangle.fill" : "circle.dashed"
+        }
         if assignment.usesArrowFallback { return "exclamationmark.triangle.fill" }
         if assignment.isOverride { return "slider.horizontal.3" }
         return "checkmark.circle.fill"
     }
 
     private var statusColor: Color {
-        if !assignment.isResolved { return .orange }
+        if !assignment.isResolved {
+            return showsAutomaticMappingFailure ? .orange : .secondary
+        }
         if assignment.usesArrowFallback { return .orange }
         if assignment.isOverride { return .accentColor }
         return .secondary
     }
 
     private var subtitle: String {
-        if !assignment.isResolved { return Localized.string("app.automaticMatchFailed") }
+        if !assignment.isResolved {
+            return showsAutomaticMappingFailure ? Localized.string("app.automaticMatchFailed") : Localized.string("app.noCursorLoaded")
+        }
         if assignment.usesArrowFallback { return Localized.string("app.automaticMatchFailedArrowFallback") }
         if assignment.isOverride { return assignment.sourceURL?.lastPathComponent ?? Localized.string("app.manualOverride") }
         return assignment.sourceURL?.lastPathComponent ?? Localized.string("app.automaticallyMatched")
+    }
+
+    private var showsAutomaticMappingFailure: Bool {
+        hasSelectedFolder && !assignment.isResolved
     }
 }
 
@@ -527,18 +593,7 @@ struct CursorRoleDetailView: View {
                             controller.chooseOverride(for: assignment.role)
                         }
                         .buttonStyle(.bordered)
-                    }
-                } else if let startupPreview = controller.startupPreview(for: assignment.role) {
-                    PreviewGroup(
-                        subtitle: Localized.string("app.currentSystemCursor"),
-                        animation: startupPreview,
-                        exportSizeMultiplier: controller.exportSizeMultiplier,
-                        largePreviewScale: largePreviewScale
-                    ) {
-                        Button(Localized.string("app.changeCursorFile")) {
-                            controller.chooseOverride(for: assignment.role)
-                        }
-                        .buttonStyle(.bordered)
+                        .focusable(false)
                     }
                 } else {
                     EmptyPreviewGroup(
@@ -548,6 +603,7 @@ struct CursorRoleDetailView: View {
                             controller.chooseOverride(for: assignment.role)
                         }
                         .buttonStyle(.bordered)
+                        .focusable(false)
                     }
                 }
                 ExportScaleControl(controller: controller)
@@ -619,17 +675,7 @@ struct SupplementalCursorRoleDetailView: View {
                             controller.chooseOverride(for: assignment.role)
                         }
                         .buttonStyle(.bordered)
-                    }
-                } else if let startupPreview = controller.startupPreview(for: assignment.role) {
-                    PreviewGroup(
-                        subtitle: Localized.string("app.currentSystemCursor"),
-                        animation: startupPreview,
-                        exportSizeMultiplier: controller.exportSizeMultiplier
-                    ) {
-                        Button(Localized.string("app.changeCursorFile")) {
-                            controller.chooseOverride(for: assignment.role)
-                        }
-                        .buttonStyle(.bordered)
+                        .focusable(false)
                     }
                 } else {
                     EmptyPreviewGroup(
@@ -639,6 +685,7 @@ struct SupplementalCursorRoleDetailView: View {
                             controller.chooseOverride(for: assignment.role)
                         }
                         .buttonStyle(.bordered)
+                        .focusable(false)
                     }
                 }
                 ExportScaleControl(controller: controller)
@@ -692,13 +739,13 @@ struct SettingsHeader: View {
                             .font(.headline)
                         Text(controller.selectedFolderURL?.path ?? Localized.string("app.noFolderSelected"))
                             .foregroundStyle(.secondary)
-                            .textSelection(.enabled)
                     }
                     Spacer()
                     Button(Localized.string("app.chooseFolder")) {
                         controller.chooseThemeFolder()
                     }
                     .buttonStyle(.bordered)
+                    .focusable(false)
                 }
 
             }
@@ -874,30 +921,11 @@ struct CursorPreviewView: View {
     let previewScale: CGFloat
 
     var body: some View {
-        TimelineView(.animation) { context in
-            let index = currentIndex(at: context.date)
-            Image(nsImage: animation.frames[index].image)
-                .resizable()
-                .interpolation(.none)
-                .scaledToFit()
-                .scaleEffect(previewScale)
-                .padding(24)
-        }
-    }
-
-    private func currentIndex(at date: Date) -> Int {
-        guard animation.frames.count > 1 else { return 0 }
-        let total = animation.frames.reduce(0.0) { $0 + $1.delay }
-        guard total > 0 else { return 0 }
-        let elapsed = date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: total)
-        var running = 0.0
-        for (index, frame) in animation.frames.enumerated() {
-            running += frame.delay
-            if elapsed < running {
-                return index
-            }
-        }
-        return animation.frames.count - 1
+        CursorAnimatedImageView(
+            animation: animation,
+            displayMode: .scaledFit(scale: previewScale, padding: 24)
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
@@ -906,47 +934,226 @@ struct CursorActualSizePreviewView: View {
     let exportSizeMultiplier: Double
 
     var body: some View {
-        TimelineView(.animation) { context in
-            let index = currentIndex(at: context.date)
-            let displaySize = actualDisplaySize(for: animation, multiplier: exportSizeMultiplier)
+        let displaySize = actualDisplaySize(for: animation, multiplier: exportSizeMultiplier)
+        ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder(Color.secondary.opacity(0.2), lineWidth: 1)
+                .padding(24)
 
-            ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .strokeBorder(Color.secondary.opacity(0.2), lineWidth: 1)
-                    .padding(24)
+            Rectangle()
+                .fill(Color.secondary.opacity(0.18))
+                .frame(width: 1, height: 120)
+            Rectangle()
+                .fill(Color.secondary.opacity(0.18))
+                .frame(width: 120, height: 1)
 
-                Rectangle()
-                    .fill(Color.secondary.opacity(0.18))
-                    .frame(width: 1, height: 120)
-                Rectangle()
-                    .fill(Color.secondary.opacity(0.18))
-                    .frame(width: 120, height: 1)
-
-                Image(nsImage: animation.frames[index].image)
-                    .resizable()
-                    .interpolation(.none)
-                    .frame(width: displaySize.width, height: displaySize.height)
-            }
-            .padding(24)
+            CursorAnimatedImageView(
+                animation: animation,
+                displayMode: .actualSize(size: displaySize)
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-    }
-
-    private func currentIndex(at date: Date) -> Int {
-        guard animation.frames.count > 1 else { return 0 }
-        let total = animation.frames.reduce(0.0) { $0 + $1.delay }
-        guard total > 0 else { return 0 }
-        let elapsed = date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: total)
-        var running = 0.0
-        for (index, frame) in animation.frames.enumerated() {
-            running += frame.delay
-            if elapsed < running {
-                return index
-            }
-        }
-        return animation.frames.count - 1
+        .padding(24)
     }
 
     private func actualDisplaySize(for animation: CursorAnimation, multiplier: Double) -> CGSize {
         CapeExporter.previewDisplaySize(for: animation, sizeMultiplier: multiplier)
+    }
+
+}
+
+private struct CursorAnimatedImageView: NSViewRepresentable {
+    let animation: CursorAnimation
+    let displayMode: CursorPreviewDisplayMode
+
+    func makeNSView(context: Context) -> CursorAnimatedImageContainer {
+        CursorAnimatedImageContainer()
+    }
+
+    func updateNSView(_ nsView: CursorAnimatedImageContainer, context: Context) {
+        nsView.configure(animation: animation, displayMode: displayMode)
+    }
+}
+
+private enum CursorPreviewDisplayMode: Equatable {
+    case scaledFit(scale: CGFloat, padding: CGFloat)
+    case actualSize(size: CGSize)
+}
+
+@MainActor
+private final class CursorAnimatedImageContainer: NSView {
+    private struct Signature: Equatable {
+        let imageIDs: [ObjectIdentifier]
+        let delays: [TimeInterval]
+        let canvasSize: CGSize
+        let displayMode: CursorPreviewDisplayMode
+
+        init(animation: CursorAnimation, displayMode: CursorPreviewDisplayMode) {
+            imageIDs = animation.frames.map { ObjectIdentifier($0.image) }
+            delays = animation.frames.map(\.delay)
+            canvasSize = animation.canvasSize
+            self.displayMode = displayMode
+        }
+    }
+
+    private let imageView = PixelatedImageView()
+    private var animation: CursorAnimation?
+    private var displayMode = CursorPreviewDisplayMode.scaledFit(scale: 1, padding: 0)
+    private var signature: Signature?
+    private var frameTimer: Timer?
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        addSubview(imageView)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        updateFrameTimer()
+    }
+
+    override func viewWillMove(toWindow newWindow: NSWindow?) {
+        super.viewWillMove(toWindow: newWindow)
+        if newWindow == nil {
+            frameTimer?.invalidate()
+            frameTimer = nil
+        }
+    }
+
+    override func layout() {
+        super.layout()
+        layoutImageView()
+    }
+
+    func configure(animation: CursorAnimation, displayMode: CursorPreviewDisplayMode) {
+        let nextSignature = Signature(animation: animation, displayMode: displayMode)
+        guard nextSignature != signature else { return }
+
+        self.animation = animation
+        self.displayMode = displayMode
+        signature = nextSignature
+        updateImage(at: Date())
+        updateFrameTimer()
+        needsLayout = true
+    }
+
+    private func updateFrameTimer() {
+        frameTimer?.invalidate()
+        frameTimer = nil
+
+        guard
+            window != nil,
+            let animation,
+            let interval = CursorPreviewTimeline.refreshInterval(for: animation)
+        else {
+            return
+        }
+
+        let timer = Timer(timeInterval: interval, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                self?.updateImage(at: Date())
+            }
+        }
+        timer.tolerance = min(interval * 0.25, 0.02)
+        RunLoop.main.add(timer, forMode: .common)
+        frameTimer = timer
+    }
+
+    private func updateImage(at date: Date) {
+        guard let animation, !animation.frames.isEmpty else {
+            imageView.image = nil
+            return
+        }
+
+        let frameIndex = CursorPreviewTimeline.frameIndex(for: animation, at: date)
+        imageView.image = animation.frames[min(frameIndex, animation.frames.count - 1)].image
+    }
+
+    private func layoutImageView() {
+        switch displayMode {
+        case .scaledFit(let scale, let padding):
+            imageView.frame = scaledFitFrame(scale: scale, padding: padding)
+        case .actualSize(let size):
+            imageView.frame = CursorPreviewLayout.actualSizeFrame(
+                in: bounds,
+                size: size
+            )
+        }
+    }
+
+    private func scaledFitFrame(scale: CGFloat, padding: CGFloat) -> NSRect {
+        let available = bounds.insetBy(dx: padding, dy: padding)
+        guard
+            let image = imageView.image,
+            image.size.width > 0,
+            image.size.height > 0,
+            available.width > 0,
+            available.height > 0
+        else {
+            return available
+        }
+
+        let fitScale = min(available.width / image.size.width, available.height / image.size.height)
+        let finalScale = fitScale * scale
+        let size = NSSize(width: image.size.width * finalScale, height: image.size.height * finalScale)
+        return NSRect(
+            x: bounds.midX - size.width / 2,
+            y: bounds.midY - size.height / 2,
+            width: size.width,
+            height: size.height
+        ).integral
+    }
+}
+
+enum CursorPreviewLayout {
+    static func actualSizeFrame(in bounds: NSRect, size: CGSize) -> NSRect {
+        NSRect(
+            x: bounds.midX - size.width / 2,
+            y: bounds.midY - size.height / 2,
+            width: size.width,
+            height: size.height
+        ).integral
+    }
+}
+
+@MainActor
+private final class PixelatedImageView: NSView {
+    var image: NSImage? {
+        didSet {
+            needsDisplay = true
+        }
+    }
+
+    override var isFlipped: Bool {
+        true
+    }
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        wantsLayer = true
+        layer?.magnificationFilter = .nearest
+        layer?.minificationFilter = .nearest
+        layer?.contentsGravity = .resize
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func draw(_ dirtyRect: NSRect) {
+        guard let image else { return }
+        NSGraphicsContext.current?.imageInterpolation = .none
+        image.draw(
+            in: bounds,
+            from: NSRect(origin: .zero, size: image.size),
+            operation: .copy,
+            fraction: 1.0,
+            respectFlipped: true,
+            hints: [.interpolation: NSImageInterpolation.none]
+        )
     }
 }

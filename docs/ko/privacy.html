@@ -92,14 +92,16 @@
       <h2>앱이 접근하는 정보</h2>
       <ul>
         <li>사용자가 직접 선택한 커서 파일 폴더</li>
-        <li>사용자가 직접 선택한 <code>.cape</code> 파일 저장 위치</li>
+        <li>시스템 커서 적용 후 사용자의 Application Support 폴더에 저장되는 로컬 적용 커서 테마 파일</li>
+        <li>적용된 커서 테마를 유지하기 위해 사용자의 LaunchAgents 폴더에 저장되는 LaunchAgent plist</li>
       </ul>
 
       <h2>정보 사용 목적</h2>
       <ul>
         <li>사용자가 선택한 <code>.ani</code>, <code>.cur</code> 파일 읽기</li>
         <li>앱 안에서 역할별 커서 미리보기 표시</li>
-        <li>Mousecape 호환 <code>.cape</code> 파일 내보내기</li>
+        <li>사용자가 Apply를 선택했을 때 선택한 커서 테마를 macOS 시스템 커서에 적용</li>
+        <li>사용자가 Restore Defaults를 선택했을 때 macOS 기본 커서로 복구하고 Cape Forge 백그라운드 커서 agent 제거</li>
       </ul>
 
       <h2>Cape Forge가 하지 않는 일</h2>
@@ -107,7 +109,7 @@
         <li>개인정보를 수집하지 않습니다</li>
         <li>앱 또는 웹사이트 간 사용자 추적을 하지 않습니다</li>
         <li>커서 파일이나 내보낸 파일을 외부 서버에 업로드하지 않습니다</li>
-        <li>macOS 시스템 커서 설정을 직접 변경하지 않습니다</li>
+        <li>앱 안에서 사용자가 명시적으로 선택하지 않는 한 시스템 커서를 적용하거나 복구하지 않습니다</li>
       </ul>
 
       <h2>문의</h2>
