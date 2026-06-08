@@ -31,7 +31,7 @@
 	<key>SUEnableInstallerLauncherService</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://seinel.github.io/capeforge/appcast.xml</string>
+	<string>https://kwd421.github.io/macOS_CapeForge/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>qaATX1ws3KQtaqG+zkOC/nq2N891lCwFFq8Zqb0vC/0=</string>
 </dict>
