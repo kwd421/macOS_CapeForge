@@ -10,9 +10,9 @@ The screenshot above is an example of Cape Forge with a custom cursor pack loade
 
 ## Important System Cursor Notice
 
-Cape Forge now applies cursors directly through macOS private cursor APIs and keeps them active with a user LaunchAgent. This build is intended for direct distribution outside the Mac App Store.
+Cape Forge applies the selected cursor set directly to macOS system cursors. This build is intended for direct distribution outside the Mac App Store.
 
-Use `Restore Defaults` in the app to stop the background cursor agent and return macOS cursors to their default state.
+If your pointer colors look wrong, use `Open Pointer Reset` in the app and press `Reset Colors` in macOS Pointer settings.
 
 ## What It Does
 
@@ -25,7 +25,7 @@ Use `Restore Defaults` in the app to stop the background cursor agent and return
 - Leaves additional macOS cursor slots on the default cursor unless you assign them yourself
 - Downsamples long animated cursors to avoid system cursor registration issues
 - Applies the cursor theme directly to macOS system cursors
-- Reapplies the chosen cursor theme in the background after cursor resets
+- Prepares the selected cursor theme to be applied automatically when you sign in
 
 ## How To Use
 
@@ -35,7 +35,7 @@ Use `Restore Defaults` in the app to stop the background cursor agent and return
 4. If needed, select a role and click `Change Cursor File...` to replace it manually.
 5. Optionally adjust the cursor size.
 6. Click `Apply to System Cursors`.
-7. Use `Restore Defaults` if you want to remove Cape Forge's applied cursor theme.
+7. If pointer colors look wrong, open pointer reset from the app and use macOS `Reset Colors`.
 
 ## Tips
 
