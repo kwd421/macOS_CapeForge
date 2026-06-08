@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+     xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Cape Forge Updates</title>
+    <link>https://seinel.github.io/capeforge/appcast.xml</link>
+    <description>Updates for Cape Forge</description>
+    <language>en</language>
+    <item>
+      <title>Cape Forge 1.0.3</title>
+      <sparkle:version>3</sparkle:version>
+      <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
+      <pubDate>Tue, 09 Jun 2026 01:24:00 +0900</pubDate>
+      <sparkle:releaseNotesLink>https://seinel.github.io/capeforge/releases/1.0.3.html</sparkle:releaseNotesLink>
+      <enclosure
+        url="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/CapeForge.zip"
+        sparkle:edSignature="wY4tnw4YNqXxNJVRuZJrp7NLE3ceYLIvUvXncjJ0OHcZMjOmw4xCfobwnHJX22S1Hbz7eAR9LI2//n6MI+TmAQ=="
+        length="4416694"
+        type="application/octet-stream" />
+    </item>
+  </channel>
+</rss>
