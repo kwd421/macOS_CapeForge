@@ -8,7 +8,7 @@ APP_NAME="Cape Forge.app"
 APP_PATH="$DERIVED_DATA/Build/Products/Release/$APP_NAME"
 PRE_NOTARY_ZIP="$DIST_DIR/CapeForge-notary.zip"
 FINAL_ZIP="$DIST_DIR/CapeForge.zip"
-NOTARY_PROFILE="${NOTARY_PROFILE:-capeforge-notary}"
+NOTARY_PROFILE="${NOTARY_PROFILE:-seinel-notary}"
 
 cd "$ROOT_DIR"
 
