@@ -11,6 +11,7 @@ FINAL_ZIP="$DIST_DIR/CapeForge.zip"
 NOTARY_PROFILE="${NOTARY_PROFILE:-seinel-notary}"
 SPARKLE_ACCOUNT="${SPARKLE_ACCOUNT:-seinel-capeforge}"
 SPARKLE_SIGN_UPDATE="${SPARKLE_SIGN_UPDATE:-$ROOT_DIR/.build/artifacts/sparkle/Sparkle/bin/sign_update}"
+SIGNING_IDENTITY="${SIGNING_IDENTITY:-Developer ID Application: Wondong Ko (DRUFU8Q688)}"
 
 cd "$ROOT_DIR"
 
@@ -23,6 +24,14 @@ xcodebuild \
   -configuration Release \
   -derivedDataPath "$DERIVED_DATA" \
   build
+
+SPARKLE_FRAMEWORK="$APP_PATH/Contents/Frameworks/Sparkle.framework/Versions/B"
+codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime "$SPARKLE_FRAMEWORK/Autoupdate"
+codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime "$SPARKLE_FRAMEWORK/XPCServices/Downloader.xpc"
+codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime "$SPARKLE_FRAMEWORK/XPCServices/Installer.xpc"
+codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime "$SPARKLE_FRAMEWORK/Updater.app"
+codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime "$SPARKLE_FRAMEWORK"
+codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements CapeForgeApp/CapeForge.entitlements "$APP_PATH"
 
 codesign --verify --deep --strict --verbose=2 "$APP_PATH"
 
