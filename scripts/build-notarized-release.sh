@@ -9,6 +9,8 @@ APP_PATH="$DERIVED_DATA/Build/Products/Release/$APP_NAME"
 PRE_NOTARY_ZIP="$DIST_DIR/CapeForge-notary.zip"
 FINAL_ZIP="$DIST_DIR/CapeForge.zip"
 NOTARY_PROFILE="${NOTARY_PROFILE:-seinel-notary}"
+SPARKLE_ACCOUNT="${SPARKLE_ACCOUNT:-seinel-capeforge}"
+SPARKLE_SIGN_UPDATE="${SPARKLE_SIGN_UPDATE:-$ROOT_DIR/.build/artifacts/sparkle/Sparkle/bin/sign_update}"
 
 cd "$ROOT_DIR"
 
@@ -36,3 +38,10 @@ xcrun stapler validate "$APP_PATH"
 ditto -c -k --keepParent "$APP_PATH" "$FINAL_ZIP"
 
 echo "Notarized release archive: $FINAL_ZIP"
+if [[ -x "$SPARKLE_SIGN_UPDATE" ]]; then
+  echo "Sparkle enclosure attributes:"
+  "$SPARKLE_SIGN_UPDATE" --account "$SPARKLE_ACCOUNT" "$FINAL_ZIP"
+else
+  echo "Sparkle sign_update not found at: $SPARKLE_SIGN_UPDATE" >&2
+  echo "Run swift build or set SPARKLE_SIGN_UPDATE to Sparkle's sign_update tool." >&2
+fi
