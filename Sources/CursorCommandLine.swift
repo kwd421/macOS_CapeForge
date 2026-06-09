@@ -271,7 +271,7 @@ enum CursorCommandLine {
 
             return nil
         } catch {
-            fputs("Cape Forge command failed: \(error.localizedDescription)\n", stderr)
+            fputs("Cursie command failed: \(error.localizedDescription)\n", stderr)
             return EXIT_FAILURE
         }
     }

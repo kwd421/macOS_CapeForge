@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A00000000000000000000010"
-               BuildableName = "Cape Forge.app"
-               BlueprintName = "CapeForge"
+               BuildableName = "Cursie.app"
+               BlueprintName = "Cursie"
                ReferencedContainer = "container:CapeForge.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,8 +46,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A00000000000000000000010"
-            BuildableName = "Cape Forge.app"
-            BlueprintName = "CapeForge"
+            BuildableName = "Cursie.app"
+            BlueprintName = "Cursie"
             ReferencedContainer = "container:CapeForge.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -63,8 +63,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A00000000000000000000010"
-            BuildableName = "Cape Forge.app"
-            BlueprintName = "CapeForge"
+            BuildableName = "Cursie.app"
+            BlueprintName = "Cursie"
             ReferencedContainer = "container:CapeForge.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

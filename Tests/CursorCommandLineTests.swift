@@ -1,7 +1,7 @@
 import AppKit
 import Foundation
 import Testing
-@testable import CapeForge
+@testable import Cursie
 
 struct CursorCommandLineTests {
     @Test

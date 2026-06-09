@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct CapeForgeApp: App {
+struct CursieApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @ObservedObject private var localization = LocalizationController.shared
 

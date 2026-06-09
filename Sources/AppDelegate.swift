@@ -40,7 +40,7 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
         let contentView = SettingsView(controller: controller)
         let hostingController = NSHostingController(rootView: contentView)
         let window = NSWindow(contentViewController: hostingController)
-        window.title = "Cape Forge"
+        window.title = "Cursie"
         window.setContentSize(NSSize(width: 920, height: 680))
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
         window.center()

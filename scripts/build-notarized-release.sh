@@ -4,10 +4,11 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DERIVED_DATA="${DERIVED_DATA:-/tmp/CapeForgeNotaryDerivedData}"
 DIST_DIR="${DIST_DIR:-$ROOT_DIR/dist}"
-APP_NAME="Cape Forge.app"
+APP_NAME="Cursie.app"
 APP_PATH="$DERIVED_DATA/Build/Products/Release/$APP_NAME"
-PRE_NOTARY_ZIP="$DIST_DIR/CapeForge-notary.zip"
-FINAL_ZIP="$DIST_DIR/CapeForge.zip"
+PRE_NOTARY_ZIP="$DIST_DIR/Cursie-notary.zip"
+FINAL_ZIP="$DIST_DIR/Cursie.zip"
+FINAL_DMG="$DIST_DIR/Cursie.dmg"
 NOTARY_PROFILE="${NOTARY_PROFILE:-seinel-notary}"
 SPARKLE_ACCOUNT="${SPARKLE_ACCOUNT:-seinel-capeforge}"
 SPARKLE_SIGN_UPDATE="${SPARKLE_SIGN_UPDATE:-$ROOT_DIR/.build/artifacts/sparkle/Sparkle/bin/sign_update}"
@@ -20,7 +21,7 @@ mkdir -p "$DIST_DIR"
 
 xcodebuild \
   -project CapeForge.xcodeproj \
-  -scheme CapeForge \
+  -scheme Cursie \
   -configuration Release \
   -derivedDataPath "$DERIVED_DATA" \
   build
@@ -54,3 +55,28 @@ else
   echo "Sparkle sign_update not found at: $SPARKLE_SIGN_UPDATE" >&2
   echo "Run swift build or set SPARKLE_SIGN_UPDATE to Sparkle's sign_update tool." >&2
 fi
+
+# Create DMG for initial distribution (drag-to-Applications UX)
+echo ""
+echo "Creating DMG..."
+DMG_STAGING="$(mktemp -d)"
+cp -R "$APP_PATH" "$DMG_STAGING/"
+ln -s /Applications "$DMG_STAGING/Applications"
+
+hdiutil create \
+  -volname "Cursie" \
+  -srcfolder "$DMG_STAGING" \
+  -ov \
+  -format UDZO \
+  "$FINAL_DMG"
+
+rm -rf "$DMG_STAGING"
+
+# Notarize the DMG itself
+xcrun notarytool submit "$FINAL_DMG" \
+  --keychain-profile "$NOTARY_PROFILE" \
+  --wait
+
+xcrun stapler staple "$FINAL_DMG"
+
+echo "DMG for distribution: $FINAL_DMG"

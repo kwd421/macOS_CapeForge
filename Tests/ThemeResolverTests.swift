@@ -1,9 +1,9 @@
 import AppKit
 import Foundation
 import Testing
-@testable import CapeForge
+@testable import Cursie
 
-private let defaultsSuiteNameKey = "__CapeForgeTestsSuiteName"
+private let defaultsSuiteNameKey = "__CursieTestsSuiteName"
 
 struct ThemeResolverTests {
     @MainActor
@@ -1241,7 +1241,7 @@ private func exportedArrow(at url: URL) throws -> [String: Any] {
 }
 
 private func makeIsolatedDefaults() throws -> UserDefaults {
-    let suiteName = "CapeForgeTests-\(UUID().uuidString)"
+    let suiteName = "CursieTests-\(UUID().uuidString)"
     let defaults = try #require(UserDefaults(suiteName: suiteName))
     defaults.removePersistentDomain(forName: suiteName)
     defaults.set(suiteName, forKey: defaultsSuiteNameKey)

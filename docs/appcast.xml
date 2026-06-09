@@ -3,12 +3,12 @@
      xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
      xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>Cape Forge Updates</title>
+    <title>Cursie Updates</title>
     <link>https://kwd421.github.io/macOS_CapeForge/appcast.xml</link>
-    <description>Updates for Cape Forge</description>
+    <description>Updates for Cursie</description>
     <language>en</language>
     <item>
-      <title>Cape Forge 1.0.3</title>
+      <title>Cursie 1.0.3</title>
       <sparkle:version>3</sparkle:version>
       <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
       <pubDate>Tue, 09 Jun 2026 01:24:00 +0900</pubDate>

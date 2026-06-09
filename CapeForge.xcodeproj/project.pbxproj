@@ -26,7 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A00000000000000000000001 /* Cape Forge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cape Forge.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000001 /* Cursie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cursie.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000011 /* AniParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AniParser.swift; sourceTree = "<group>"; };
 		A00000000000000000000012 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A00000000000000000000013 /* CapeExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapeExporter.swift; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 		A00000000000000000000005 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000001 /* Cape Forge.app */,
+				A00000000000000000000001 /* Cursie.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,12 +121,12 @@
 			);
 			dependencies = (
 			);
-			name = CapeForge;
+			name = Cursie;
 			packageProductDependencies = (
 				A00000000000000000000062 /* Sparkle */,
 			);
-			productName = "Cape Forge";
-			productReference = A00000000000000000000001 /* Cape Forge.app */;
+			productName = Cursie;
+			productReference = A00000000000000000000001 /* Cursie.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -311,7 +311,7 @@
 				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CapeForgeApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Cape Forge";
+				INFOPLIST_KEY_CFBundleDisplayName = Cursie;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -319,8 +319,8 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.seinel.capeforge;
-				PRODUCT_NAME = "Cape Forge";
+				PRODUCT_BUNDLE_IDENTIFIER = com.seinel.cursie;
+				PRODUCT_NAME = Cursie;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
@@ -343,7 +343,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CapeForgeApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Cape Forge";
+				INFOPLIST_KEY_CFBundleDisplayName = Cursie;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -352,8 +352,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0.3;
 				OTHER_CODE_SIGN_FLAGS = "--timestamp";
-				PRODUCT_BUNDLE_IDENTIFIER = com.seinel.capeforge;
-				PRODUCT_NAME = "Cape Forge";
+				PRODUCT_BUNDLE_IDENTIFIER = com.seinel.cursie;
+				PRODUCT_NAME = Cursie;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;

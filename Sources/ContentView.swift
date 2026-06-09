@@ -18,7 +18,7 @@ struct ContentView: View {
     var body: some View {
         let _ = localization.selectedLanguage
         VStack(alignment: .leading, spacing: 14) {
-            Text("Cape Forge")
+            Text("Cursie")
                 .font(.headline)
 
             Text(controller.selectedFolderURL?.lastPathComponent ?? Localized.string("app.chooseCursorFolder"))

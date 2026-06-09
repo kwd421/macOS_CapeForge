@@ -244,9 +244,9 @@ enum Localized {
         "error.invalidCurHeader": "The file does not contain a valid CUR header.",
         "error.invalidCurEmbeddedRange": "The embedded CUR image range is invalid.",
         "error.noCursorsToExport": "There are no cursors to export.",
-        "error.systemApplyExecutableMissing": "Cape Forge could not locate its executable for the login cursor helper.",
-        "error.systemApplyAccessibilityRequired": "Cape Forge could not apply the system cursor.",
-        "error.mousecapeConflict": "Mousecape or mousecloak is currently running (%@). Quit it before applying Cape Forge cursors so the two apps do not fight over the system cursor."
+        "error.systemApplyExecutableMissing": "Cursie could not locate its executable for the login cursor helper.",
+        "error.systemApplyAccessibilityRequired": "Cursie could not apply the system cursor.",
+        "error.mousecapeConflict": "Mousecape or mousecloak is currently running (%@). Quit it before applying Cursie cursors so the two apps do not fight over the system cursor."
     ]
 
     private static let korean: [String: String] = [
@@ -375,9 +375,9 @@ enum Localized {
         "error.invalidCurHeader": "CUR 헤더가 아닙니다.",
         "error.invalidCurEmbeddedRange": "CUR 내부 이미지 범위가 잘못되었습니다.",
         "error.noCursorsToExport": "내보낼 커서가 없습니다.",
-        "error.systemApplyExecutableMissing": "로그인 커서 복구 헬퍼에 사용할 Cape Forge 실행 파일을 찾지 못했습니다.",
+        "error.systemApplyExecutableMissing": "로그인 커서 복구 헬퍼에 사용할 Cursie 실행 파일을 찾지 못했습니다.",
         "error.systemApplyAccessibilityRequired": "시스템 커서를 적용하지 못했습니다.",
-        "error.mousecapeConflict": "Mousecape 또는 mousecloak이 실행 중입니다(%@). 두 앱이 시스템 커서를 서로 다시 적용하지 않도록 종료한 뒤 Cape Forge 커서를 적용하세요."
+        "error.mousecapeConflict": "Mousecape 또는 mousecloak이 실행 중입니다(%@). 두 앱이 시스템 커서를 서로 다시 적용하지 않도록 종료한 뒤 Cursie 커서를 적용하세요."
     ]
 
     private static let japanese: [String: String] = [
@@ -506,9 +506,9 @@ enum Localized {
         "error.invalidCurHeader": "有効な CUR ヘッダーではありません。",
         "error.invalidCurEmbeddedRange": "CUR 内部画像の範囲が正しくありません。",
         "error.noCursorsToExport": "書き出すカーソルがありません。",
-        "error.systemApplyExecutableMissing": "ログイン用カーソルヘルパーに使用する Cape Forge 実行ファイルが見つかりません。",
+        "error.systemApplyExecutableMissing": "ログイン用カーソルヘルパーに使用する Cursie 実行ファイルが見つかりません。",
         "error.systemApplyAccessibilityRequired": "システムカーソルを適用できませんでした。",
-        "error.mousecapeConflict": "Mousecape または mousecloak が実行中です（%@）。2つのアプリがシステムカーソルを競合して再適用しないよう、終了してから Cape Forge カーソルを適用してください。"
+        "error.mousecapeConflict": "Mousecape または mousecloak が実行中です（%@）。2つのアプリがシステムカーソルを競合して再適用しないよう、終了してから Cursie カーソルを適用してください。"
     ]
 
     private static let simplifiedChinese: [String: String] = [
@@ -637,8 +637,8 @@ enum Localized {
         "error.invalidCurHeader": "不是有效的 CUR 头。",
         "error.invalidCurEmbeddedRange": "CUR 内嵌图像范围无效。",
         "error.noCursorsToExport": "没有可导出的光标。",
-        "error.systemApplyExecutableMissing": "Cape Forge 找不到用于登录光标辅助程序的可执行文件。",
-        "error.systemApplyAccessibilityRequired": "Cape Forge 无法应用系统光标。",
+        "error.systemApplyExecutableMissing": "Cursie 找不到用于登录光标辅助程序的可执行文件。",
+        "error.systemApplyAccessibilityRequired": "Cursie 无法应用系统光标。",
         "error.mousecapeConflict": "Mousecape 或 mousecloak 当前正在运行（%@）。请先退出它，以免两个应用争夺系统光标。"
     ]
 
@@ -768,8 +768,8 @@ enum Localized {
         "error.invalidCurHeader": "不是有效的 CUR 標頭。",
         "error.invalidCurEmbeddedRange": "CUR 內嵌影像範圍無效。",
         "error.noCursorsToExport": "沒有可匯出的游標。",
-        "error.systemApplyExecutableMissing": "Cape Forge 找不到登入游標輔助程式所需的執行檔。",
-        "error.systemApplyAccessibilityRequired": "Cape Forge 無法套用系統游標。",
+        "error.systemApplyExecutableMissing": "Cursie 找不到登入游標輔助程式所需的執行檔。",
+        "error.systemApplyAccessibilityRequired": "Cursie 無法套用系統游標。",
         "error.mousecapeConflict": "Mousecape 或 mousecloak 目前正在執行（%@）。請先結束它，以免兩個應用程式互相重套系統游標。"
     ]
 
@@ -899,9 +899,9 @@ enum Localized {
         "error.invalidCurHeader": "Die Datei enthält keinen gültigen CUR-Header.",
         "error.invalidCurEmbeddedRange": "Der eingebettete CUR-Bereich ist ungültig.",
         "error.noCursorsToExport": "Es gibt keine Cursor zum Exportieren.",
-        "error.systemApplyExecutableMissing": "Cape Forge konnte die ausführbare Datei für den Anmelde-Cursorhelfer nicht finden.",
-        "error.systemApplyAccessibilityRequired": "Cape Forge konnte den Systemcursor nicht anwenden.",
-        "error.mousecapeConflict": "Mousecape oder mousecloak läuft derzeit (%@). Beenden Sie es, bevor Sie Cape Forge-Cursor anwenden, damit die Apps nicht um den Systemcursor konkurrieren."
+        "error.systemApplyExecutableMissing": "Cursie konnte die ausführbare Datei für den Anmelde-Cursorhelfer nicht finden.",
+        "error.systemApplyAccessibilityRequired": "Cursie konnte den Systemcursor nicht anwenden.",
+        "error.mousecapeConflict": "Mousecape oder mousecloak läuft derzeit (%@). Beenden Sie es, bevor Sie Cursie-Cursor anwenden, damit die Apps nicht um den Systemcursor konkurrieren."
     ]
 
     private static let french: [String: String] = [
@@ -1030,9 +1030,9 @@ enum Localized {
         "error.invalidCurHeader": "Le fichier ne contient pas d’en-tête CUR valide.",
         "error.invalidCurEmbeddedRange": "La plage de l’image CUR intégrée est invalide.",
         "error.noCursorsToExport": "Aucun curseur à exporter.",
-        "error.systemApplyExecutableMissing": "Cape Forge n’a pas trouvé son exécutable pour l’assistant de curseur à l’ouverture de session.",
-        "error.systemApplyAccessibilityRequired": "Cape Forge n’a pas pu appliquer le curseur système.",
-        "error.mousecapeConflict": "Mousecape ou mousecloak est en cours d’exécution (%@). Quittez-le avant d’appliquer les curseurs Cape Forge afin que les deux apps ne se disputent pas le curseur système."
+        "error.systemApplyExecutableMissing": "Cursie n’a pas trouvé son exécutable pour l’assistant de curseur à l’ouverture de session.",
+        "error.systemApplyAccessibilityRequired": "Cursie n’a pas pu appliquer le curseur système.",
+        "error.mousecapeConflict": "Mousecape ou mousecloak est en cours d’exécution (%@). Quittez-le avant d’appliquer les curseurs Cursie afin que les deux apps ne se disputent pas le curseur système."
     ]
 
     private static let spanish: [String: String] = [
@@ -1161,9 +1161,9 @@ enum Localized {
         "error.invalidCurHeader": "El archivo no contiene un encabezado CUR válido.",
         "error.invalidCurEmbeddedRange": "El rango de la imagen CUR incrustada es inválido.",
         "error.noCursorsToExport": "No hay cursores para exportar.",
-        "error.systemApplyExecutableMissing": "Cape Forge no pudo localizar su ejecutable para el asistente de cursor al iniciar sesión.",
-        "error.systemApplyAccessibilityRequired": "Cape Forge no pudo aplicar el cursor del sistema.",
-        "error.mousecapeConflict": "Mousecape o mousecloak se está ejecutando (%@). Ciérralo antes de aplicar los cursores de Cape Forge para que ambas apps no compitan por el cursor del sistema."
+        "error.systemApplyExecutableMissing": "Cursie no pudo localizar su ejecutable para el asistente de cursor al iniciar sesión.",
+        "error.systemApplyAccessibilityRequired": "Cursie no pudo aplicar el cursor del sistema.",
+        "error.mousecapeConflict": "Mousecape o mousecloak se está ejecutando (%@). Ciérralo antes de aplicar los cursores de Cursie para que ambas apps no compitan por el cursor del sistema."
     ]
 
     private static let portugueseBrazil: [String: String] = [
@@ -1292,9 +1292,9 @@ enum Localized {
         "error.invalidCurHeader": "O arquivo não contém um cabeçalho CUR válido.",
         "error.invalidCurEmbeddedRange": "O intervalo da imagem CUR incorporada é inválido.",
         "error.noCursorsToExport": "Não há cursores para exportar.",
-        "error.systemApplyExecutableMissing": "O Cape Forge não encontrou seu executável para o auxiliar de cursor ao iniciar sessão.",
-        "error.systemApplyAccessibilityRequired": "O Cape Forge não conseguiu aplicar o cursor do sistema.",
-        "error.mousecapeConflict": "Mousecape ou mousecloak está em execução (%@). Encerre-o antes de aplicar os cursores do Cape Forge para que os dois apps não disputem o cursor do sistema."
+        "error.systemApplyExecutableMissing": "O Cursie não encontrou seu executável para o auxiliar de cursor ao iniciar sessão.",
+        "error.systemApplyAccessibilityRequired": "O Cursie não conseguiu aplicar o cursor do sistema.",
+        "error.mousecapeConflict": "Mousecape ou mousecloak está em execução (%@). Encerre-o antes de aplicar os cursores do Cursie para que os dois apps não disputem o cursor do sistema."
     ]
 
     private static let italian: [String: String] = [
@@ -1423,9 +1423,9 @@ enum Localized {
         "error.invalidCurHeader": "Il file non contiene un’intestazione CUR valida.",
         "error.invalidCurEmbeddedRange": "L’intervallo dell’immagine CUR incorporata non è valido.",
         "error.noCursorsToExport": "Non ci sono cursori da esportare.",
-        "error.systemApplyExecutableMissing": "Cape Forge non ha trovato il proprio eseguibile per l’helper cursore all’accesso.",
-        "error.systemApplyAccessibilityRequired": "Cape Forge non ha potuto applicare il cursore di sistema.",
-        "error.mousecapeConflict": "Mousecape o mousecloak è attualmente in esecuzione (%@). Chiudilo prima di applicare i cursori Cape Forge, così le due app non si contendono il cursore di sistema."
+        "error.systemApplyExecutableMissing": "Cursie non ha trovato il proprio eseguibile per l’helper cursore all’accesso.",
+        "error.systemApplyAccessibilityRequired": "Cursie non ha potuto applicare il cursore di sistema.",
+        "error.mousecapeConflict": "Mousecape o mousecloak è attualmente in esecuzione (%@). Chiudilo prima di applicare i cursori Cursie, così le due app non si contendono il cursore di sistema."
     ]
 
     private static let russian: [String: String] = [
@@ -1554,8 +1554,8 @@ enum Localized {
         "error.invalidCurHeader": "Файл не содержит корректный заголовок CUR.",
         "error.invalidCurEmbeddedRange": "Недопустимый диапазон встроенного изображения CUR.",
         "error.noCursorsToExport": "Нет курсоров для экспорта.",
-        "error.systemApplyExecutableMissing": "Cape Forge не удалось найти исполняемый файл для помощника курсора при входе.",
-        "error.systemApplyAccessibilityRequired": "Cape Forge не удалось применить системный курсор.",
-        "error.mousecapeConflict": "Mousecape или mousecloak сейчас запущен (%@). Закройте его перед применением курсоров Cape Forge, чтобы приложения не конфликтовали за системный курсор."
+        "error.systemApplyExecutableMissing": "Cursie не удалось найти исполняемый файл для помощника курсора при входе.",
+        "error.systemApplyAccessibilityRequired": "Cursie не удалось применить системный курсор.",
+        "error.mousecapeConflict": "Mousecape или mousecloak сейчас запущен (%@). Закройте его перед применением курсоров Cursie, чтобы приложения не конфликтовали за системный курсор."
     ]
 }

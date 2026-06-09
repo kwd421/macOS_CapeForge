@@ -958,14 +958,14 @@ final class CursorController: ObservableObject {
     }
 
     private func capeDisplayName() -> String {
-        selectedFolderURL?.lastPathComponent.isEmpty == false ? selectedFolderURL!.lastPathComponent : "Cape Forge Export"
+        selectedFolderURL?.lastPathComponent.isEmpty == false ? selectedFolderURL!.lastPathComponent : "Cursie Export"
     }
 
     private func sanitizedCapeFileName() -> String {
         let raw = capeDisplayName()
         let invalid = CharacterSet(charactersIn: "/:\\")
         let cleaned = raw.components(separatedBy: invalid).joined(separator: "-")
-        return cleaned.isEmpty ? "Cape Forge.cape" : "\(cleaned).cape"
+        return cleaned.isEmpty ? "Cursie.cape" : "\(cleaned).cape"
     }
 
     private func exportCapeDisplayName(for url: URL) -> String {

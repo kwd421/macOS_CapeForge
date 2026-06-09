@@ -28,7 +28,7 @@ struct CursorAgentManager {
         fileManager.homeDirectoryForCurrentUser
             .appendingPathComponent("Library", isDirectory: true)
             .appendingPathComponent("Application Support", isDirectory: true)
-            .appendingPathComponent("Cape Forge", isDirectory: true)
+            .appendingPathComponent("Cursie", isDirectory: true)
     }
 
     var appliedCapeURL: URL {
@@ -349,7 +349,7 @@ struct CursorSystemApplyService: @unchecked Sendable {
         let identifier = "local.\(bundleIdentifier ?? "capeforge").system.\(UUID().uuidString.lowercased())"
         let plan = try capeBuilder.makePlan(theme: theme, sizeMultiplier: sizeMultiplier)
         let cape = try capeBuilder.makeCape(
-            name: "Cape Forge Applied",
+            name: "Cursie Applied",
             author: author,
             identifier: identifier,
             plan: plan
@@ -411,7 +411,7 @@ final class CursorAgentRuntime {
             try? manager.writeAgentStatusActive()
         } catch {
             try? manager.writeAgentStatusFailed(error.localizedDescription)
-            fputs("Cape Forge cursor agent apply failed: \(error.localizedDescription)\n", stderr)
+            fputs("Cursie cursor agent apply failed: \(error.localizedDescription)\n", stderr)
         }
     }
 }
