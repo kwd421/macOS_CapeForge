@@ -159,16 +159,9 @@
 
     .about p + p { margin-top: 18px; }
 
-    .about-from {
-      display: block;
-      margin-top: 28px;
-      font-size: 0.82rem;
-      color: #AEABA6;
-    }
-
     /* FEATURES */
     .features {
-      padding: 72px max(28px, calc((100vw - 680px) / 2));
+      padding: 72px max(28px, calc((100vw - 720px) / 2));
       background: #fff;
       border-top: 1px solid #EBEBEB;
     }
@@ -177,34 +170,41 @@
       list-style: none;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 40px 56px;
+      border: 1px solid #E8E8E8;
+      border-radius: 14px;
+      overflow: hidden;
     }
 
-    .feat-list li { display: flex; flex-direction: column; gap: 6px; }
+    .feat-list li {
+      padding: 32px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-right: 1px solid #E8E8E8;
+      border-bottom: 1px solid #E8E8E8;
+    }
+    .feat-list li:nth-child(even) { border-right: none; }
+    .feat-list li:nth-child(3),
+    .feat-list li:nth-child(4) { border-bottom: none; }
+
+    .feat-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #4F46E5;
+    }
 
     .fl-title {
-      font-size: 0.97rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #111;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-    .fl-title::before {
-      content: '';
-      display: inline-block;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: #4F46E5;
-      flex-shrink: 0;
+      letter-spacing: -0.02em;
     }
 
     .fl-desc {
       font-size: 0.88rem;
       color: #777;
       line-height: 1.7;
-      padding-left: 14px;
     }
 
     /* CREDITS */
@@ -278,7 +278,10 @@
       .hero { grid-template-columns: 1fr; gap: 36px; min-height: auto; }
       .hero-shot { order: -1; }
       .hero-sub { max-width: 100%; }
-      .feat-list { grid-template-columns: 1fr; gap: 28px; }
+      .feat-list { grid-template-columns: 1fr; border-radius: 10px; }
+      .feat-list li:nth-child(odd) { border-right: none; }
+      .feat-list li:nth-child(3) { border-bottom: 1px solid #E8E8E8; }
+      .feat-list li:last-child { border-bottom: none; }
     }
   </style>
 </head>
@@ -317,25 +320,28 @@
     <p>
       Cursie는 그 변환 과정을 없앤 앱입니다. 폴더를 불러오고, 역할 배치를 확인하고, 적용합니다. 그것이 전부입니다.
     </p>
-    <span class="about-from">— kwd421</span>
   </section>
 
   <!-- FEATURES -->
   <section class="features">
     <ul class="feat-list">
       <li>
+        <span class="feat-num">01</span>
         <span class="fl-title">실시간 미리보기</span>
         <span class="fl-desc">적용 전 모든 역할을 실제 크기와 확대 화면으로 나란히 확인할 수 있습니다.</span>
       </li>
       <li>
+        <span class="feat-num">02</span>
         <span class="fl-title">한 번에 적용</span>
-        <span class="fl-desc">시스템 커서를 즉시 교체합니다. 버튼 하나로 기본값으로 복구됩니다.</span>
+        <span class="fl-desc">시스템 커서를 즉시 교체합니다. 기본값으로 되돌리려면 Cursie가 해당 시스템 설정 화면으로 안내합니다.</span>
       </li>
       <li>
+        <span class="feat-num">03</span>
         <span class="fl-title">드래그 앤 드롭</span>
         <span class="fl-desc">폴더나 파일을 앱 위에 바로 드래그할 수 있습니다. 개별 역할 교체도 가능합니다.</span>
       </li>
       <li>
+        <span class="feat-num">04</span>
         <span class="fl-title">자동 업데이트</span>
         <span class="fl-desc">업데이트가 앱 안에서 설치됩니다. GitHub 릴리즈 페이지를 방문할 필요가 없습니다.</span>
       </li>

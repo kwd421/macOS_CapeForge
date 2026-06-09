@@ -161,7 +161,7 @@ enum Localized {
         "systemApply.progressRegistering": "Registering cursors with macOS.",
         "systemApply.progressAgent": "Preparing automatic cursor apply at login.",
         "systemApply.progressDone": "Done.",
-        "preview.large": "Large Preview",
+        "preview.large": "Preview",
         "preview.actualSize": "Actual Size",
         "export.authorLabel": "Author",
         "export.authorPlaceholder": "Enter the author name",

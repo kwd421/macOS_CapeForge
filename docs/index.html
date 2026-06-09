@@ -160,16 +160,9 @@
 
     .about p + p { margin-top: 18px; }
 
-    .about-from {
-      display: block;
-      margin-top: 28px;
-      font-size: 0.82rem;
-      color: #AEABA6;
-    }
-
     /* FEATURES */
     .features {
-      padding: 72px max(28px, calc((100vw - 680px) / 2));
+      padding: 72px max(28px, calc((100vw - 720px) / 2));
       background: #fff;
       border-top: 1px solid #EBEBEB;
     }
@@ -178,34 +171,41 @@
       list-style: none;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 40px 56px;
+      border: 1px solid #E8E8E8;
+      border-radius: 14px;
+      overflow: hidden;
     }
 
-    .feat-list li { display: flex; flex-direction: column; gap: 6px; }
+    .feat-list li {
+      padding: 32px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-right: 1px solid #E8E8E8;
+      border-bottom: 1px solid #E8E8E8;
+    }
+    .feat-list li:nth-child(even) { border-right: none; }
+    .feat-list li:nth-child(3),
+    .feat-list li:nth-child(4) { border-bottom: none; }
+
+    .feat-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #4F46E5;
+    }
 
     .fl-title {
-      font-size: 0.97rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #111;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-    .fl-title::before {
-      content: '';
-      display: inline-block;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: #4F46E5;
-      flex-shrink: 0;
+      letter-spacing: -0.02em;
     }
 
     .fl-desc {
       font-size: 0.88rem;
       color: #777;
       line-height: 1.65;
-      padding-left: 14px;
     }
 
     /* CREDITS */
@@ -279,7 +279,11 @@
       .hero { grid-template-columns: 1fr; gap: 36px; min-height: auto; }
       .hero-shot { order: -1; }
       .hero-sub { max-width: 100%; }
-      .feat-list { grid-template-columns: 1fr; gap: 28px; }
+      .feat-list { grid-template-columns: 1fr; border-radius: 10px; }
+      .feat-list li:nth-child(even) { border-right: none; }
+      .feat-list li:nth-child(odd) { border-right: none; }
+      .feat-list li:nth-child(3) { border-bottom: 1px solid #E8E8E8; }
+      .feat-list li:last-child { border-bottom: none; }
     }
   </style>
 </head>
@@ -318,25 +322,28 @@
     <p>
       Cursie skips that step. Drop in the folder, see every role mapped out, and apply. That's it.
     </p>
-    <span class="about-from">— kwd421</span>
   </section>
 
   <!-- FEATURES -->
   <section class="features">
     <ul class="feat-list">
       <li>
+        <span class="feat-num">01</span>
         <span class="fl-title">Live preview</span>
         <span class="fl-desc">Every role mapped and visible before you apply. Actual size and zoomed side by side.</span>
       </li>
       <li>
+        <span class="feat-num">02</span>
         <span class="fl-title">One-click apply</span>
-        <span class="fl-desc">Replaces your system cursors instantly. One click to restore defaults if you change your mind.</span>
+        <span class="fl-desc">Replaces your system cursors instantly. To revert, Cursie opens the right System Settings screen.</span>
       </li>
       <li>
+        <span class="feat-num">03</span>
         <span class="fl-title">Drag &amp; drop</span>
         <span class="fl-desc">Drop a folder or file straight onto the app. Swap individual roles without starting over.</span>
       </li>
       <li>
+        <span class="feat-num">04</span>
         <span class="fl-title">Auto-update</span>
         <span class="fl-desc">Updates download and install inside the app. No manual trips to GitHub.</span>
       </li>
