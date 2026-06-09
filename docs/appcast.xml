@@ -4,7 +4,7 @@
      xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>Cursie Updates</title>
-    <link>https://kwd421.github.io/macOS_CapeForge/appcast.xml</link>
+    <link>https://cursie-appcast.pages.dev/appcast.xml</link>
     <description>Updates for Cursie</description>
     <language>en</language>
     <item>
@@ -14,9 +14,9 @@
       <pubDate>Tue, 09 Jun 2026 01:24:00 +0900</pubDate>
       <sparkle:releaseNotesLink>https://kwd421.github.io/macOS_CapeForge/releases/1.0.3.html</sparkle:releaseNotesLink>
       <enclosure
-        url="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/CapeForge.zip"
-        sparkle:edSignature="kKuh3/TkoSsXTJcHd4ALM9J9zY2oZfVZFbOFVrIQ+F+K9NilBU61JYyY954i6DDD0cR4PrzTZdbyjdpoJTHGAg=="
-        length="4416702"
+        url="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.zip"
+        sparkle:edSignature="qAi8cQdN+6p+17O9guEvUpXCOYOBJ7NAATR1iz0l1gzdPgjfLqHaDu86g6IyyTr+PtHPhNWRy1gdtsH6C/41Dg=="
+        length="4413708"
         type="application/octet-stream" />
     </item>
   </channel>
