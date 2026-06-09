@@ -8,180 +8,275 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
+    :root {
+      --ink: #3a3550;
+      --ink-soft: #6f6890;
+      --grape: #8b5cf6;
+      --grape-deep: #7c3aed;
+    }
+
     body {
       font-family: "Apple SD Gothic Neo", -apple-system, "Helvetica Neue", Arial, sans-serif;
-      background: #000; color: #1d1d1f;
-      -webkit-font-smoothing: antialiased; word-break: keep-all;
+      color: var(--ink);
+      background: #fff;
+      -webkit-font-smoothing: antialiased;
+      word-break: keep-all;
     }
+
+    /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      height: 44px; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 max(24px, calc((100vw - 980px) / 2));
-      background: rgba(0,0,0,0.72);
+      height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 max(24px, calc((100vw - 1000px) / 2));
+      background: rgba(255,255,255,0.7);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(140,120,200,0.12);
     }
-    .nav-logo { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.85); text-decoration: none; }
-    .nav-right { display: flex; align-items: center; gap: 20px; }
-    .nav-lang { font-size: 0.75rem; color: rgba(255,255,255,0.4); text-decoration: none; transition: color 120ms; }
-    .nav-lang:hover { color: rgba(255,255,255,0.8); }
+    .nav-brand { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .nav-brand img { width: 26px; height: 26px; border-radius: 7px; }
+    .nav-brand span { font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+    .nav-right { display: flex; align-items: center; gap: 18px; }
+    .nav-lang { font-size: 0.8rem; color: var(--ink-soft); text-decoration: none; transition: color 120ms; }
+    .nav-lang:hover { color: var(--grape); }
     .nav-dl {
-      padding: 5px 14px; background: #0071e3; color: #fff;
-      font-size: 0.75rem; font-weight: 600; border-radius: 980px;
-      text-decoration: none; transition: background 120ms;
+      padding: 7px 17px;
+      background: linear-gradient(135deg, var(--grape), #b06ff0);
+      color: #fff; font-size: 0.8rem; font-weight: 600;
+      border-radius: 980px; text-decoration: none;
+      box-shadow: 0 4px 14px rgba(124,58,237,0.28);
+      transition: transform 120ms, box-shadow 120ms;
     }
-    .nav-dl:hover { background: #0077ed; }
+    .nav-dl:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,0.36); }
 
+    /* ── HERO ── */
     .hero {
-      min-height: 100svh; background: #000;
+      position: relative;
+      min-height: 100svh;
       display: flex; flex-direction: column;
       align-items: center; text-align: center;
-      padding: 140px max(32px, calc((100vw - 820px) / 2)) 0;
+      padding: 132px max(24px, calc((100vw - 820px) / 2)) 0;
+      background:
+        radial-gradient(120% 80% at 50% 0%, #fbe6f3 0%, #e9ddfb 38%, #dcecfd 70%, #ffffff 100%);
+      overflow: hidden;
     }
+    .hero::before, .hero::after {
+      content: ''; position: absolute; border-radius: 50%;
+      filter: blur(60px); opacity: 0.55; z-index: 0; pointer-events: none;
+    }
+    .hero::before { width: 420px; height: 420px; background: #ffc8dd; top: -80px; left: -120px; }
+    .hero::after  { width: 460px; height: 460px; background: #bde0fe; top: 40px; right: -160px; }
+
+    .hero > * { position: relative; z-index: 1; }
+
+    .hero-icon {
+      width: 132px; height: 132px; border-radius: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 18px 50px rgba(124,58,237,0.30), 0 4px 12px rgba(124,58,237,0.16);
+      animation: float 5.5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
     .hero h1 {
-      font-size: clamp(3.4rem, 7.5vw, 7rem);
-      font-weight: 700; letter-spacing: -0.04em; line-height: 1.03;
-      color: #f5f5f7; margin-bottom: 24px;
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 800; letter-spacing: -0.04em; line-height: 1.08;
+      margin-bottom: 22px;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(120deg, #c264e8 0%, #ff8fb8 50%, #6aa8ff 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
     }
     .hero-sub {
-      font-size: clamp(1rem, 1.6vw, 1.2rem);
-      color: #86868b; line-height: 1.7; max-width: 460px; margin-bottom: 44px;
+      font-size: clamp(1rem, 1.7vw, 1.25rem);
+      color: var(--ink-soft); line-height: 1.7; max-width: 480px; margin-bottom: 40px;
     }
     .hero-sub code {
-      font-family: monospace; font-size: 0.88em;
-      background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius: 4px;
-      color: rgba(255,255,255,0.55);
+      font-family: monospace; font-size: 0.86em;
+      background: rgba(124,58,237,0.1); padding: 1px 7px; border-radius: 6px;
+      color: var(--grape-deep);
     }
-    .hero-cta { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; justify-content: center; margin-bottom: 80px; }
+    .hero-cta { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; justify-content: center; margin-bottom: 72px; }
     .btn-dl {
-      display: inline-block; padding: 14px 28px;
-      background: #0071e3; color: #fff;
-      font-size: 1rem; font-weight: 500; border-radius: 980px;
-      text-decoration: none; transition: background 120ms;
+      display: inline-block; padding: 15px 34px;
+      background: linear-gradient(135deg, var(--grape), #b06ff0);
+      color: #fff; font-size: 1.02rem; font-weight: 600;
+      border-radius: 980px; text-decoration: none;
+      box-shadow: 0 8px 26px rgba(124,58,237,0.34);
+      transition: transform 130ms, box-shadow 130ms;
     }
-    .btn-dl:hover { background: #0077ed; }
-    .hero-fine { font-size: 0.72rem; color: #48484a; }
-    .hero-img { width: 100%; max-width: 840px; position: relative; }
-    .hero-img::before {
-      content: ''; position: absolute; inset: 0 5% -20%;
-      background: radial-gradient(ellipse at 50% 50%, rgba(0,113,227,0.22), transparent 60%);
-      z-index: 0; pointer-events: none;
-    }
-    .hero-img img {
-      display: block; width: 100%; border-radius: 14px 14px 0 0;
-      position: relative; z-index: 1;
+    .btn-dl:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(124,58,237,0.42); }
+    .hero-fine { font-size: 0.74rem; color: var(--ink-soft); opacity: 0.85; }
+
+    .hero-shot { width: 100%; max-width: 860px; position: relative; }
+    .hero-shot img {
+      display: block; width: 100%;
+      border-radius: 18px 18px 0 0;
+      box-shadow: 0 -2px 0 rgba(255,255,255,0.6) inset, 0 24px 60px rgba(120,90,180,0.22);
     }
 
+    /* ── FEATURES ── */
     .features {
+      background: linear-gradient(180deg, #ffffff 0%, #faf6ff 100%);
+      padding: 110px max(24px, calc((100vw - 960px) / 2));
+    }
+    .feat-head { text-align: center; margin-bottom: 64px; }
+    .feat-eyebrow {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--grape); margin-bottom: 14px;
+    }
+    .feat-head h2 {
+      font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+      font-weight: 800; letter-spacing: -0.035em; color: var(--ink);
+    }
+    .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .feat-card {
       background: #fff;
-      padding: 96px max(48px, calc((100vw - 840px) / 2)) 100px;
+      border: 1px solid rgba(140,120,200,0.14);
+      border-radius: 24px;
+      padding: 40px 40px;
+      box-shadow: 0 10px 30px rgba(140,120,200,0.10);
     }
-    .feat-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      column-gap: 64px; row-gap: 56px;
+    .feat-dot {
+      width: 44px; height: 44px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 18px;
     }
-    .feat-item h3 {
-      font-size: 1.35rem; font-weight: 700;
-      letter-spacing: -0.025em; color: #1d1d1f; margin-bottom: 10px;
+    .feat-card:nth-child(1) .feat-dot { background: linear-gradient(135deg, #ffd2e0, #ffb3cd); }
+    .feat-card:nth-child(2) .feat-dot { background: linear-gradient(135deg, #d8c9f7, #c0a6f2); }
+    .feat-card:nth-child(3) .feat-dot { background: linear-gradient(135deg, #c9e7ff, #a8d4ff); }
+    .feat-card:nth-child(4) .feat-dot { background: linear-gradient(135deg, #c9f5d6, #a3e6b8); }
+    .feat-card h3 {
+      font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em;
+      color: var(--ink); margin-bottom: 9px;
     }
-    .feat-item p { font-size: 0.97rem; color: #6e6e73; line-height: 1.72; }
+    .feat-card p { font-size: 0.96rem; color: var(--ink-soft); line-height: 1.75; }
 
-    .bottom {
-      background: #1d1d1f;
-      padding: 72px max(48px, calc((100vw - 680px) / 2));
+    /* ── CREDITS ── */
+    .credits {
+      background: #faf6ff;
+      padding: 72px max(24px, calc((100vw - 600px) / 2));
+      text-align: center;
     }
-    .credit-p {
-      font-size: 0.9rem; line-height: 1.8; color: #86868b;
-      text-align: center; margin-bottom: 56px;
-    }
-    .credit-p a { color: rgba(255,255,255,0.55); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.15); }
-    .credit-p a:hover { color: rgba(255,255,255,0.8); }
-    .credit-p code {
+    .credits p { font-size: 0.97rem; line-height: 1.85; color: var(--ink-soft); }
+    .credits a { color: var(--grape); text-decoration: none; font-weight: 600; }
+    .credits a:hover { text-decoration: underline; }
+    .credits code {
       font-family: monospace; font-size: 0.88em;
-      background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 4px;
-      color: rgba(255,255,255,0.45);
+      background: rgba(124,58,237,0.09); padding: 1px 6px; border-radius: 6px; color: var(--grape-deep);
     }
-    .cl-label {
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 24px;
+
+    /* ── CHANGELOG ── */
+    .changelog {
+      background: linear-gradient(180deg, #faf6ff 0%, #f3ecfb 100%);
+      padding: 80px max(24px, calc((100vw - 600px) / 2));
+    }
+    .changelog h2 {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--grape); margin-bottom: 36px; text-align: center;
     }
     .cl-row {
-      display: grid; grid-template-columns: 68px 1fr; gap: 0 24px;
-      padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.08);
+      display: grid; grid-template-columns: 76px 1fr; gap: 0 26px;
+      padding: 22px 0; border-top: 1px solid rgba(140,120,200,0.16);
     }
-    .cl-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .cl-v  { font-size: 0.75rem; font-weight: 600; color: #0071e3; }
-    .cl-d  { font-size: 0.65rem; color: rgba(255,255,255,0.2); margin-top: 3px; }
-    .cl-t  { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
-    .cl-b  { font-size: 0.8rem; color: rgba(255,255,255,0.3); line-height: 1.6; }
-    .foot-line {
-      margin-top: 40px; font-size: 0.7rem; color: rgba(255,255,255,0.18);
-    }
-    .foot-line a { color: rgba(255,255,255,0.25); text-decoration: none; }
-    .foot-line a:hover { color: rgba(255,255,255,0.5); }
+    .cl-row:first-child { border-top: none; padding-top: 0; }
+    .cl-v { font-size: 0.8rem; font-weight: 700; color: var(--grape); }
+    .cl-d { font-size: 0.68rem; color: var(--ink-soft); opacity: 0.8; margin-top: 4px; }
+    .cl-t { font-weight: 700; font-size: 0.9rem; color: var(--ink); margin-bottom: 5px; }
+    .cl-b { font-size: 0.83rem; color: var(--ink-soft); line-height: 1.65; }
 
-    @media (max-width: 640px) {
-      .hero { padding-top: 96px; padding-left: 24px; padding-right: 24px; }
-      .hero h1 { font-size: 2.8rem; }
+    /* ── FOOTER ── */
+    footer {
+      background: #f3ecfb;
+      padding: 30px max(24px, calc((100vw - 600px) / 2));
+      font-size: 0.74rem; color: var(--ink-soft);
+      text-align: center;
+    }
+    footer a { color: var(--ink-soft); text-decoration: none; }
+    footer a:hover { color: var(--grape); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .hero { padding-top: 110px; padding-left: 22px; padding-right: 22px; }
+      .hero-icon { width: 104px; height: 104px; }
+      .hero h1 { font-size: 2.7rem; }
       .hero-cta { flex-direction: column; gap: 14px; }
-      .features { padding: 72px 28px; }
-      .feat-grid { grid-template-columns: 1fr; row-gap: 40px; }
-      .bottom { padding: 56px 28px; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .feat-card { padding: 32px 28px; }
     }
   </style>
 </head>
 <body>
 
   <nav>
-    <a class="nav-logo" href="#">Cursie</a>
+    <a class="nav-brand" href="#"><img src="../assets/app-icon.png" alt="Cursie 아이콘"><span>Cursie</span></a>
     <div class="nav-right">
       <a class="nav-lang" href="../index.html">English</a>
       <a class="nav-dl" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">다운로드</a>
     </div>
   </nav>
 
+  <!-- HERO -->
   <section class="hero">
-    <h1>커서도<br>내 취향대로.</h1>
+    <img class="hero-icon" src="../assets/app-icon.png" alt="Cursie 앱 아이콘">
+    <h1>커서도<br><span class="grad">내 취향대로.</span></h1>
     <p class="hero-sub">
       Windows <code>.cur</code>, <code>.ani</code> 커서팩을 불러와 macOS 시스템 커서에 바로 적용합니다.
     </p>
     <div class="hero-cta">
       <a class="btn-dl" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">무료 다운로드</a>
-      <span class="hero-fine">macOS 15 Sequoia 이상 &nbsp;·&nbsp; Apple Silicon &amp; Intel &nbsp;·&nbsp; 무료</span>
+      <span class="hero-fine">macOS 15 Sequoia 이상 · Apple Silicon &amp; Intel · 무료</span>
     </div>
-    <div class="hero-img">
+    <div class="hero-shot">
       <img src="../assets/capeforge-preview.png" alt="커서 역할이 매핑된 Cursie 앱 화면">
     </div>
   </section>
 
+  <!-- FEATURES -->
   <section class="features">
+    <div class="feat-head">
+      <p class="feat-eyebrow">기능</p>
+      <h2>필요한 것만,<br>딱 그만큼.</h2>
+    </div>
     <div class="feat-grid">
-      <div class="feat-item">
+      <div class="feat-card">
+        <div class="feat-dot">👀</div>
         <h3>실시간 미리보기</h3>
-        <p>모든 커서 역할을 실제 크기와 확대 화면으로 나란히 확인합니다. 시스템에 아무것도 바뀌기 전에.</p>
+        <p>적용 전 모든 역할을 실제 크기와 확대 화면으로 나란히 확인할 수 있습니다.</p>
       </div>
-      <div class="feat-item">
+      <div class="feat-card">
+        <div class="feat-dot">✨</div>
         <h3>한 번에 적용</h3>
-        <p>시스템 커서를 즉시 교체합니다. 되돌리려면 Cursie가 시스템 설정의 정확한 화면으로 안내합니다.</p>
+        <p>시스템 커서를 즉시 교체합니다. 기본값으로 되돌리려면 Cursie가 해당 시스템 설정 화면으로 안내합니다.</p>
       </div>
-      <div class="feat-item">
+      <div class="feat-card">
+        <div class="feat-dot">🎨</div>
         <h3>드래그 앤 드롭</h3>
-        <p>폴더나 파일을 앱 위에 바로 드래그하면 됩니다. 팩 전체를 다시 불러오지 않고 개별 역할만 교체할 수 있습니다.</p>
+        <p>폴더나 파일을 앱 위에 바로 드래그할 수 있습니다. 개별 역할 교체도 가능합니다.</p>
       </div>
-      <div class="feat-item">
+      <div class="feat-card">
+        <div class="feat-dot">🔄</div>
         <h3>자동 업데이트</h3>
-        <p>새 버전은 앱 안에서 바로 다운로드되고 설치됩니다. GitHub에 들어갈 필요가 없습니다.</p>
+        <p>업데이트가 앱 안에서 설치됩니다. GitHub 릴리즈 페이지를 방문할 필요가 없습니다.</p>
       </div>
     </div>
   </section>
 
-  <div class="bottom">
-    <p class="credit-p">
+  <!-- CREDITS -->
+  <section class="credits">
+    <p>
       Cursie는 <a href="https://github.com/alexzielenski/Mousecape" target="_blank" rel="noopener">Mousecape</a> 없이는 존재하지 못했을 것입니다 —
       Alex Zielenski가 개발한 이 오픈소스 커서 매니저는 macOS에서 <code>.cape</code> 테마를 처음 개척했습니다.
     </p>
+  </section>
 
-    <p class="cl-label">업데이트 내역</p>
+  <!-- CHANGELOG -->
+  <section class="changelog">
+    <h2>업데이트 내역</h2>
     <div class="cl-row">
       <div><div class="cl-v">v1.0.3</div><div class="cl-d">2026년 6월</div></div>
       <div><div class="cl-t">앱 이름 Cursie로 변경 · 자동 업데이트 · 새 아이콘</div><p class="cl-b">macOS 시스템 커서 직접 적용, Sparkle 자동 업데이트 추가, 새 앱 아이콘 및 커서 미리보기 개선.</p></div>
@@ -198,9 +293,11 @@
       <div><div class="cl-v">v1.0.0</div><div class="cl-d">2026년 3월</div></div>
       <div><div class="cl-t">첫 출시</div><p class="cl-b">Windows 커서팩 불러오기, 역할 미리보기, .cape 내보내기.</p></div>
     </div>
+  </section>
 
-    <p class="foot-line"><a href="../privacy.html">개인정보 처리방침</a> &nbsp;·&nbsp; © 2026 Cursie</p>
-  </div>
+  <footer>
+    <a href="../privacy.html">개인정보 처리방침</a> · © 2026 Cursie
+  </footer>
 
 </body>
 </html>
