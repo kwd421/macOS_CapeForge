@@ -138,27 +138,10 @@
     /* SCREENSHOT */
     .hero-shot { position: relative; }
 
-    .window-chrome {
-      background: #1c1c20;
-      border-radius: 11px 11px 0 0;
-      padding: 9px 13px 0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      border: 1px solid rgba(255,255,255,0.07);
-      border-bottom: none;
-    }
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot.r { background: #ff5f57; }
-    .dot.y { background: #febc2e; }
-    .dot.g { background: #28c840; }
-
     .hero-shot img {
       display: block;
       width: 100%;
-      border-radius: 0 0 11px 11px;
-      border: 1px solid rgba(255,255,255,0.07);
-      border-top: none;
+      border-radius: 11px;
     }
 
     /* ABOUT */
@@ -319,14 +302,9 @@
         Windows <code>.cur</code>, <code>.ani</code> 커서팩을 불러와 macOS 시스템 커서에 바로 적용합니다.
       </p>
       <a class="btn-primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">무료 다운로드</a>
-      <span class="hero-req">macOS 13 Ventura 이상 · Apple Silicon &amp; Intel</span>
+      <span class="hero-req">macOS 15 Sequoia 이상 · Apple Silicon &amp; Intel</span>
     </div>
     <div class="hero-shot">
-      <div class="window-chrome">
-        <span class="dot r"></span>
-        <span class="dot y"></span>
-        <span class="dot g"></span>
-      </div>
       <img src="../assets/capeforge-preview.png" alt="커서 역할이 매핑된 Cursie 앱 화면">
     </div>
   </section>
@@ -334,10 +312,10 @@
   <!-- ABOUT -->
   <section class="about">
     <p>
-      Mac에서 Windows 커서팩을 쓸 방법이 딱히 없었어요.
+      Mac에서 Windows 커서팩을 사용할 마땅한 방법이 없었습니다.
     </p>
     <p>
-      그래서 만들었습니다. 커서 폴더를 드래그해서 넣고, 역할 배치를 확인하고, 적용. 그게 전부예요.
+      Cursie는 그 필요에서 시작한 앱입니다. 커서 폴더를 불러오고, 역할 배치를 확인하고, 적용합니다. 그것이 전부입니다.
     </p>
     <span class="about-from">— kwd421</span>
   </section>
@@ -347,19 +325,19 @@
     <ul class="feat-list">
       <li>
         <span class="fl-title">실시간 미리보기</span>
-        <span class="fl-desc">적용 전에 모든 역할을 실제 크기와 확대 화면으로 나란히 확인할 수 있어요.</span>
+        <span class="fl-desc">적용 전 모든 역할을 실제 크기와 확대 화면으로 나란히 확인할 수 있습니다.</span>
       </li>
       <li>
         <span class="fl-title">한 번에 적용</span>
-        <span class="fl-desc">시스템 커서를 즉시 교체합니다. 마음에 안 들면 버튼 하나로 기본값으로 복구.</span>
+        <span class="fl-desc">시스템 커서를 즉시 교체합니다. 버튼 하나로 기본값으로 복구됩니다.</span>
       </li>
       <li>
         <span class="fl-title">드래그 앤 드롭</span>
-        <span class="fl-desc">폴더나 파일을 앱 위에 바로 드래그. 개별 역할만 골라서 바꿀 수도 있어요.</span>
+        <span class="fl-desc">폴더나 파일을 앱 위에 바로 드래그할 수 있습니다. 개별 역할 교체도 가능합니다.</span>
       </li>
       <li>
         <span class="fl-title">자동 업데이트</span>
-        <span class="fl-desc">앱 안에서 업데이트가 설치됩니다. GitHub 릴리즈 페이지 안 가도 돼요.</span>
+        <span class="fl-desc">업데이트가 앱 안에서 설치됩니다. GitHub 릴리즈 페이지를 방문할 필요가 없습니다.</span>
       </li>
     </ul>
   </section>
@@ -367,9 +345,9 @@
   <!-- CREDITS -->
   <section class="credits">
     <p>
-      Cursie는 <a href="https://github.com/alexzielenski/Mousecape" target="_blank" rel="noopener">Mousecape</a> 없이는 존재할 수 없었습니다.
-      Alex Zielenski가 만든 이 오픈소스 커서 매니저가 macOS에서 <code>.cape</code> 테마를 처음 개척했어요.
-      그 작업 위에 서 있습니다.
+      Cursie는 <a href="https://github.com/alexzielenski/Mousecape" target="_blank" rel="noopener">Mousecape</a> 없이는 존재하지 못했을 것입니다.
+      Alex Zielenski가 개발한 이 오픈소스 커서 매니저는 macOS에서 <code>.cape</code> 테마를 처음 개척했습니다.
+      그 토대 위에 만들어진 앱입니다.
     </p>
   </section>
 
