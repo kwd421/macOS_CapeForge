@@ -8,19 +8,14 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-
     body {
       font-family: "Apple SD Gothic Neo", -apple-system, "Helvetica Neue", Arial, sans-serif;
-      background: #fff; color: #1d1d1f;
-      -webkit-font-smoothing: antialiased;
-      word-break: keep-all;
+      background: #000; color: #1d1d1f;
+      -webkit-font-smoothing: antialiased; word-break: keep-all;
     }
-
-    /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      height: 44px;
-      display: flex; align-items: center; justify-content: space-between;
+      height: 44px; display: flex; align-items: center; justify-content: space-between;
       padding: 0 max(24px, calc((100vw - 980px) / 2));
       background: rgba(0,0,0,0.72);
       backdrop-filter: saturate(180%) blur(20px);
@@ -37,7 +32,6 @@
     }
     .nav-dl:hover { background: #0077ed; }
 
-    /* ── HERO ── */
     .hero {
       min-height: 100svh; background: #000;
       display: flex; flex-direction: column;
@@ -67,106 +61,72 @@
     }
     .btn-dl:hover { background: #0077ed; }
     .hero-fine { font-size: 0.72rem; color: #48484a; }
-
     .hero-img { width: 100%; max-width: 840px; position: relative; }
     .hero-img::before {
-      content: ''; position: absolute;
-      inset: 0 5% -20%;
+      content: ''; position: absolute; inset: 0 5% -20%;
       background: radial-gradient(ellipse at 50% 50%, rgba(0,113,227,0.22), transparent 60%);
       z-index: 0; pointer-events: none;
     }
     .hero-img img {
-      display: block; width: 100%;
-      border-radius: 14px 14px 0 0;
+      display: block; width: 100%; border-radius: 14px 14px 0 0;
       position: relative; z-index: 1;
     }
 
-    /* ── FEATURE SECTIONS ── */
-    .feat {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center;
-      padding: 120px max(32px, calc((100vw - 640px) / 2));
-      min-height: 52vh;
+    .features {
+      background: #fff;
+      padding: 96px max(48px, calc((100vw - 840px) / 2)) 100px;
     }
-    .feat--light { background: #fff; }
-    .feat--gray  { background: #f5f5f7; }
-    .feat--dark  { background: #1d1d1f; }
+    .feat-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      column-gap: 64px; row-gap: 56px;
+    }
+    .feat-item h3 {
+      font-size: 1.35rem; font-weight: 700;
+      letter-spacing: -0.025em; color: #1d1d1f; margin-bottom: 10px;
+    }
+    .feat-item p { font-size: 0.97rem; color: #6e6e73; line-height: 1.72; }
 
-    .feat-label {
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; margin-bottom: 20px;
+    .bottom {
+      background: #1d1d1f;
+      padding: 72px max(48px, calc((100vw - 680px) / 2));
     }
-    .feat--light .feat-label,
-    .feat--gray  .feat-label { color: #86868b; }
-    .feat--dark  .feat-label { color: rgba(255,255,255,0.35); }
-
-    .feat h2 {
-      font-size: clamp(2.4rem, 5vw, 4.2rem);
-      font-weight: 700; letter-spacing: -0.04em; line-height: 1.05;
-      margin-bottom: 20px;
+    .credit-p {
+      font-size: 0.9rem; line-height: 1.8; color: #86868b;
+      text-align: center; margin-bottom: 56px;
     }
-    .feat--light h2,
-    .feat--gray  h2 { color: #1d1d1f; }
-    .feat--dark  h2 { color: #f5f5f7; }
-
-    .feat p {
-      font-size: clamp(1rem, 1.4vw, 1.15rem);
-      line-height: 1.75; max-width: 480px;
+    .credit-p a { color: rgba(255,255,255,0.55); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.15); }
+    .credit-p a:hover { color: rgba(255,255,255,0.8); }
+    .credit-p code {
+      font-family: monospace; font-size: 0.88em;
+      background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 4px;
+      color: rgba(255,255,255,0.45);
     }
-    .feat--light p,
-    .feat--gray  p { color: #6e6e73; }
-    .feat--dark  p { color: rgba(255,255,255,0.5); }
-
-    /* ── CREDITS ── */
-    .credits {
-      background: #fff; border-top: 1px solid #d2d2d7;
-      padding: 72px max(32px, calc((100vw - 600px) / 2));
-      text-align: center;
-    }
-    .credits p { font-size: 0.95rem; line-height: 1.85; color: #6e6e73; }
-    .credits a { color: #0071e3; text-decoration: none; }
-    .credits a:hover { text-decoration: underline; }
-    .credits code {
-      font-size: 0.88em; font-family: monospace;
-      background: #f5f5f7; padding: 1px 5px; border-radius: 4px;
-    }
-
-    /* ── CHANGELOG ── */
-    .changelog {
-      background: #f5f5f7; border-top: 1px solid #d2d2d7;
-      padding: 80px max(32px, calc((100vw - 600px) / 2));
-    }
-    .changelog h2 {
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #86868b; margin-bottom: 40px;
+    .cl-label {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 24px;
     }
     .cl-row {
-      display: grid; grid-template-columns: 72px 1fr; gap: 0 28px;
-      padding: 22px 0; border-top: 1px solid #d2d2d7;
+      display: grid; grid-template-columns: 68px 1fr; gap: 0 24px;
+      padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.08);
     }
-    .cl-row:first-child { border-top: none; padding-top: 0; }
-    .cl-v  { font-size: 0.78rem; font-weight: 600; color: #0071e3; }
-    .cl-d  { font-size: 0.68rem; color: #86868b; margin-top: 4px; }
-    .cl-t  { font-weight: 600; font-size: 0.9rem; color: #1d1d1f; margin-bottom: 5px; }
-    .cl-b  { font-size: 0.82rem; color: #86868b; line-height: 1.65; }
-
-    /* ── FOOTER ── */
-    footer {
-      background: #000; border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 28px max(32px, calc((100vw - 600px) / 2));
-      font-size: 0.72rem; color: #515154;
+    .cl-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .cl-v  { font-size: 0.75rem; font-weight: 600; color: #0071e3; }
+    .cl-d  { font-size: 0.65rem; color: rgba(255,255,255,0.2); margin-top: 3px; }
+    .cl-t  { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    .cl-b  { font-size: 0.8rem; color: rgba(255,255,255,0.3); line-height: 1.6; }
+    .foot-line {
+      margin-top: 40px; font-size: 0.7rem; color: rgba(255,255,255,0.18);
     }
-    footer a { color: #515154; text-decoration: none; }
-    footer a:hover { color: #86868b; }
+    .foot-line a { color: rgba(255,255,255,0.25); text-decoration: none; }
+    .foot-line a:hover { color: rgba(255,255,255,0.5); }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
       .hero { padding-top: 96px; padding-left: 24px; padding-right: 24px; }
       .hero h1 { font-size: 2.8rem; }
       .hero-cta { flex-direction: column; gap: 14px; }
-      .feat { padding: 80px 28px; min-height: auto; }
-      .feat h2 { font-size: 2.2rem; }
+      .features { padding: 72px 28px; }
+      .feat-grid { grid-template-columns: 1fr; row-gap: 40px; }
+      .bottom { padding: 56px 28px; }
     }
   </style>
 </head>
@@ -180,7 +140,6 @@
     </div>
   </nav>
 
-  <!-- HERO -->
   <section class="hero">
     <h1>커서도<br>내 취향대로.</h1>
     <p class="hero-sub">
@@ -195,45 +154,34 @@
     </div>
   </section>
 
-  <!-- FEATURE 1 -->
-  <section class="feat feat--light">
-    <span class="feat-label">미리보기</span>
-    <h2>적용 전에<br>먼저 확인.</h2>
-    <p>모든 커서 역할을 실제 크기와 확대 화면으로 나란히 확인합니다. 시스템에 아무것도 바뀌기 전에.</p>
+  <section class="features">
+    <div class="feat-grid">
+      <div class="feat-item">
+        <h3>실시간 미리보기</h3>
+        <p>모든 커서 역할을 실제 크기와 확대 화면으로 나란히 확인합니다. 시스템에 아무것도 바뀌기 전에.</p>
+      </div>
+      <div class="feat-item">
+        <h3>한 번에 적용</h3>
+        <p>시스템 커서를 즉시 교체합니다. 되돌리려면 Cursie가 시스템 설정의 정확한 화면으로 안내합니다.</p>
+      </div>
+      <div class="feat-item">
+        <h3>드래그 앤 드롭</h3>
+        <p>폴더나 파일을 앱 위에 바로 드래그하면 됩니다. 팩 전체를 다시 불러오지 않고 개별 역할만 교체할 수 있습니다.</p>
+      </div>
+      <div class="feat-item">
+        <h3>자동 업데이트</h3>
+        <p>새 버전은 앱 안에서 바로 다운로드되고 설치됩니다. GitHub에 들어갈 필요가 없습니다.</p>
+      </div>
+    </div>
   </section>
 
-  <!-- FEATURE 2 -->
-  <section class="feat feat--dark">
-    <span class="feat-label">적용</span>
-    <h2>한 번에.<br>시스템 전체.</h2>
-    <p>시스템 커서를 즉시 교체합니다. 되돌리려면 Cursie가 시스템 설정의 정확한 화면으로 안내합니다.</p>
-  </section>
-
-  <!-- FEATURE 3 -->
-  <section class="feat feat--gray">
-    <span class="feat-label">가져오기</span>
-    <h2>드래그하면<br>끝.</h2>
-    <p>폴더나 파일을 앱 위에 바로 드래그하면 됩니다. 팩 전체를 다시 불러오지 않고 개별 역할만 교체할 수 있습니다.</p>
-  </section>
-
-  <!-- FEATURE 4 -->
-  <section class="feat feat--light">
-    <span class="feat-label">업데이트</span>
-    <h2>항상<br>최신 버전.</h2>
-    <p>새 버전은 앱 안에서 바로 다운로드되고 설치됩니다. GitHub에 들어갈 필요가 없습니다.</p>
-  </section>
-
-  <!-- CREDITS -->
-  <section class="credits">
-    <p>
+  <div class="bottom">
+    <p class="credit-p">
       Cursie는 <a href="https://github.com/alexzielenski/Mousecape" target="_blank" rel="noopener">Mousecape</a> 없이는 존재하지 못했을 것입니다 —
       Alex Zielenski가 개발한 이 오픈소스 커서 매니저는 macOS에서 <code>.cape</code> 테마를 처음 개척했습니다.
     </p>
-  </section>
 
-  <!-- CHANGELOG -->
-  <section class="changelog">
-    <h2>업데이트 내역</h2>
+    <p class="cl-label">업데이트 내역</p>
     <div class="cl-row">
       <div><div class="cl-v">v1.0.3</div><div class="cl-d">2026년 6월</div></div>
       <div><div class="cl-t">앱 이름 Cursie로 변경 · 자동 업데이트 · 새 아이콘</div><p class="cl-b">macOS 시스템 커서 직접 적용, Sparkle 자동 업데이트 추가, 새 앱 아이콘 및 커서 미리보기 개선.</p></div>
@@ -250,11 +198,9 @@
       <div><div class="cl-v">v1.0.0</div><div class="cl-d">2026년 3월</div></div>
       <div><div class="cl-t">첫 출시</div><p class="cl-b">Windows 커서팩 불러오기, 역할 미리보기, .cape 내보내기.</p></div>
     </div>
-  </section>
 
-  <footer>
-    <a href="../privacy.html">개인정보 처리방침</a> &nbsp;·&nbsp; © 2026 Cursie
-  </footer>
+    <p class="foot-line"><a href="../privacy.html">개인정보 처리방침</a> &nbsp;·&nbsp; © 2026 Cursie</p>
+  </div>
 
 </body>
 </html>

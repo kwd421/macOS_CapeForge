@@ -11,7 +11,7 @@
 
     body {
       font-family: -apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-      background: #fff;
+      background: #000;
       color: #1d1d1f;
       -webkit-font-smoothing: antialiased;
     }
@@ -39,8 +39,7 @@
 
     /* ── HERO ── */
     .hero {
-      min-height: 100svh;
-      background: #000;
+      min-height: 100svh; background: #000;
       display: flex; flex-direction: column;
       align-items: center; text-align: center;
       padding: 140px max(32px, calc((100vw - 820px) / 2)) 0;
@@ -68,111 +67,89 @@
     }
     .btn-dl:hover { background: #0077ed; }
     .hero-fine { font-size: 0.72rem; color: #48484a; }
-
-    .hero-img {
-      width: 100%; max-width: 840px; position: relative;
-    }
+    .hero-img { width: 100%; max-width: 840px; position: relative; }
     .hero-img::before {
-      content: ''; position: absolute;
-      inset: 0 5% -20%;
+      content: ''; position: absolute; inset: 0 5% -20%;
       background: radial-gradient(ellipse at 50% 50%, rgba(0,113,227,0.22), transparent 60%);
       z-index: 0; pointer-events: none;
     }
     .hero-img img {
-      display: block; width: 100%;
-      border-radius: 14px 14px 0 0;
+      display: block; width: 100%; border-radius: 14px 14px 0 0;
       position: relative; z-index: 1;
     }
 
-    /* ── FEATURE SECTIONS ── */
-    .feat {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center;
-      padding: 120px max(32px, calc((100vw - 640px) / 2));
-      min-height: 52vh;
-    }
-    .feat--light { background: #fff; }
-    .feat--gray  { background: #f5f5f7; }
-    .feat--dark  { background: #1d1d1f; }
-
-    .feat-label {
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; margin-bottom: 20px;
-    }
-    .feat--light .feat-label,
-    .feat--gray  .feat-label { color: #86868b; }
-    .feat--dark  .feat-label { color: rgba(255,255,255,0.35); }
-
-    .feat h2 {
-      font-size: clamp(2.4rem, 5vw, 4.2rem);
-      font-weight: 700; letter-spacing: -0.04em; line-height: 1.05;
-      margin-bottom: 20px;
-    }
-    .feat--light h2,
-    .feat--gray  h2 { color: #1d1d1f; }
-    .feat--dark  h2 { color: #f5f5f7; }
-
-    .feat p {
-      font-size: clamp(1rem, 1.4vw, 1.15rem);
-      line-height: 1.7; max-width: 480px;
-    }
-    .feat--light p,
-    .feat--gray  p { color: #6e6e73; }
-    .feat--dark  p { color: rgba(255,255,255,0.5); }
-
-    /* ── CREDITS ── */
-    .credits {
+    /* ── FEATURES ── */
+    .features {
       background: #fff;
-      border-top: 1px solid #d2d2d7;
-      padding: 72px max(32px, calc((100vw - 600px) / 2));
-      text-align: center;
+      padding: 96px max(48px, calc((100vw - 840px) / 2)) 100px;
     }
-    .credits p { font-size: 0.95rem; line-height: 1.85; color: #6e6e73; }
-    .credits a { color: #0071e3; text-decoration: none; }
-    .credits a:hover { text-decoration: underline; }
-    .credits code {
-      font-size: 0.88em; font-family: "SF Mono", monospace;
-      background: #f5f5f7; padding: 1px 5px; border-radius: 4px;
+    .feat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 64px;
+      row-gap: 56px;
+    }
+    .feat-item {}
+    .feat-item h3 {
+      font-size: 1.35rem; font-weight: 700;
+      letter-spacing: -0.025em; color: #1d1d1f;
+      margin-bottom: 10px;
+    }
+    .feat-item p {
+      font-size: 0.97rem; color: #6e6e73; line-height: 1.72;
     }
 
-    /* ── CHANGELOG ── */
-    .changelog {
-      background: #f5f5f7;
-      border-top: 1px solid #d2d2d7;
-      padding: 80px max(32px, calc((100vw - 600px) / 2));
+    /* ── DARK BOTTOM ── */
+    .bottom {
+      background: #1d1d1f;
+      padding: 72px max(48px, calc((100vw - 680px) / 2));
     }
-    .changelog h2 {
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #86868b; margin-bottom: 40px;
+
+    /* credits */
+    .credit-p {
+      font-size: 0.9rem; line-height: 1.8; color: #86868b;
+      text-align: center; margin-bottom: 56px;
+    }
+    .credit-p a { color: rgba(255,255,255,0.55); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.15); }
+    .credit-p a:hover { color: rgba(255,255,255,0.8); }
+    .credit-p code {
+      font-family: "SF Mono", monospace; font-size: 0.88em;
+      background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 4px;
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* changelog */
+    .cl-label {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.25);
+      margin-bottom: 24px;
     }
     .cl-row {
-      display: grid; grid-template-columns: 72px 1fr; gap: 0 28px;
-      padding: 22px 0; border-top: 1px solid #d2d2d7;
+      display: grid; grid-template-columns: 68px 1fr; gap: 0 24px;
+      padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.08);
     }
-    .cl-row:first-child { border-top: none; padding-top: 0; }
-    .cl-v  { font-size: 0.78rem; font-weight: 600; color: #0071e3; }
-    .cl-d  { font-size: 0.68rem; color: #86868b; margin-top: 4px; }
-    .cl-t  { font-weight: 600; font-size: 0.9rem; color: #1d1d1f; margin-bottom: 5px; }
-    .cl-b  { font-size: 0.82rem; color: #86868b; line-height: 1.65; }
+    .cl-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .cl-v  { font-size: 0.75rem; font-weight: 600; color: #0071e3; }
+    .cl-d  { font-size: 0.65rem; color: rgba(255,255,255,0.2); margin-top: 3px; }
+    .cl-t  { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    .cl-b  { font-size: 0.8rem; color: rgba(255,255,255,0.3); line-height: 1.6; }
 
-    /* ── FOOTER ── */
-    footer {
-      background: #000;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 28px max(32px, calc((100vw - 600px) / 2));
-      font-size: 0.72rem; color: #515154;
+    /* footer line */
+    .foot-line {
+      margin-top: 40px;
+      font-size: 0.7rem; color: rgba(255,255,255,0.18);
     }
-    footer a { color: #515154; text-decoration: none; }
-    footer a:hover { color: #86868b; }
+    .foot-line a { color: rgba(255,255,255,0.25); text-decoration: none; }
+    .foot-line a:hover { color: rgba(255,255,255,0.5); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
       .hero { padding-top: 96px; padding-left: 24px; padding-right: 24px; }
       .hero h1 { font-size: 2.8rem; }
       .hero-cta { flex-direction: column; gap: 14px; }
-      .feat { padding: 80px 28px; min-height: auto; }
-      .feat h2 { font-size: 2.2rem; }
+      .features { padding: 72px 28px; }
+      .feat-grid { grid-template-columns: 1fr; row-gap: 40px; }
+      .bottom { padding: 56px 28px; }
     }
   </style>
 </head>
@@ -201,52 +178,43 @@
     </div>
   </section>
 
-  <!-- FEATURE 1 -->
-  <section class="feat feat--light">
-    <span class="feat-label">Preview</span>
-    <h2>See it<br>before you apply.</h2>
-    <p>Every cursor role mapped and visible at actual size and zoomed — side by side, before anything changes on your system.</p>
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="feat-grid">
+      <div class="feat-item">
+        <h3>Live preview</h3>
+        <p>Every cursor role mapped and visible at actual size and zoomed — before anything changes on your system.</p>
+      </div>
+      <div class="feat-item">
+        <h3>One-click apply</h3>
+        <p>Replaces your system cursors instantly. To revert, Cursie opens exactly the right screen in System Settings.</p>
+      </div>
+      <div class="feat-item">
+        <h3>Drag &amp; drop</h3>
+        <p>Drop a folder or a single file straight onto the app. Swap individual roles without reloading the whole pack.</p>
+      </div>
+      <div class="feat-item">
+        <h3>Auto-update</h3>
+        <p>New versions download and install inside the app. No manual trips to GitHub.</p>
+      </div>
+    </div>
   </section>
 
-  <!-- FEATURE 2 -->
-  <section class="feat feat--dark">
-    <span class="feat-label">Apply</span>
-    <h2>One click.<br>System-wide.</h2>
-    <p>Replaces your system cursors instantly. To revert, Cursie opens exactly the right screen in System Settings.</p>
-  </section>
-
-  <!-- FEATURE 3 -->
-  <section class="feat feat--gray">
-    <span class="feat-label">Import</span>
-    <h2>Drop it<br>and go.</h2>
-    <p>Drag a folder or a single file straight onto the app. Swap individual roles without loading the whole pack again.</p>
-  </section>
-
-  <!-- FEATURE 4 -->
-  <section class="feat feat--light">
-    <span class="feat-label">Updates</span>
-    <h2>Always<br>up to date.</h2>
-    <p>New versions download and install right inside the app. No trips to GitHub, no manual DMG files.</p>
-  </section>
-
-  <!-- CREDITS -->
-  <section class="credits">
-    <p>
+  <!-- DARK BOTTOM: credits + changelog + footer -->
+  <div class="bottom">
+    <p class="credit-p">
       Cursie wouldn't exist without <a href="https://github.com/alexzielenski/Mousecape" target="_blank" rel="noopener">Mousecape</a> by Alex Zielenski —
       the open‑source cursor manager that pioneered <code>.cape</code> themes on macOS.
     </p>
-  </section>
 
-  <!-- CHANGELOG -->
-  <section class="changelog">
-    <h2>What's changed</h2>
+    <p class="cl-label">What's changed</p>
     <div class="cl-row">
       <div><div class="cl-v">v1.0.3</div><div class="cl-d">Jun 2026</div></div>
-      <div><div class="cl-t">App renamed to Cursie · Auto-update · New icon</div><p class="cl-b">Applies cursor themes directly to macOS system cursors. Added Sparkle auto-update. New app icon and improved cursor preview.</p></div>
+      <div><div class="cl-t">App renamed to Cursie · Auto-update · New icon</div><p class="cl-b">Applies cursor themes directly to macOS system cursors. Added Sparkle auto-update. New app icon.</p></div>
     </div>
     <div class="cl-row">
       <div><div class="cl-v">v1.0.2</div><div class="cl-d">May 2026</div></div>
-      <div><div class="cl-t">Default cursor preview fix</div><p class="cl-b">Recentered the bundled default arrow cursor. Fixed preview appearing slightly shifted.</p></div>
+      <div><div class="cl-t">Default cursor preview fix</div><p class="cl-b">Recentered the bundled default arrow cursor.</p></div>
     </div>
     <div class="cl-row">
       <div><div class="cl-v">v1.0.1</div><div class="cl-d">Apr 2026</div></div>
@@ -256,11 +224,9 @@
       <div><div class="cl-v">v1.0.0</div><div class="cl-d">Mar 2026</div></div>
       <div><div class="cl-t">Initial release</div><p class="cl-b">Load Windows cursor packs, preview roles, export as .cape for Mousecape.</p></div>
     </div>
-  </section>
 
-  <footer>
-    <a href="./privacy.html">Privacy Policy</a> &nbsp;·&nbsp; © 2026 Cursie
-  </footer>
+    <p class="foot-line"><a href="./privacy.html">Privacy Policy</a> &nbsp;·&nbsp; © 2026 Cursie</p>
+  </div>
 
 </body>
 </html>
