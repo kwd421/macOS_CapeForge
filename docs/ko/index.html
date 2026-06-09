@@ -3,188 +3,212 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cape Forge 지원</title>
+  <title>Cursie — Windows 커서팩을 macOS에</title>
   <style>
     :root {
       color-scheme: light;
-      --bg: #f5f7fb;
-      --card: rgba(255, 255, 255, 0.88);
-      --text: #162033;
-      --muted: #5e6a80;
-      --line: rgba(22, 32, 51, 0.12);
-      --accent: #1b7af3;
-      --accent-strong: #0a4db5;
+      --bg: #f4f6fb;
+      --card: rgba(255,255,255,0.9);
+      --text: #141c2e;
+      --muted: #5a6478;
+      --line: rgba(20,28,46,0.1);
+      --accent: #5b6af0;
+      --accent-soft: rgba(91,106,240,0.1);
+      --accent-strong: #3a48c8;
+      --green: #18a87a;
     }
-
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(27, 122, 243, 0.16), transparent 28rem),
-        radial-gradient(circle at bottom right, rgba(10, 77, 181, 0.14), transparent 24rem),
+        radial-gradient(ellipse at 10% 0%, rgba(91,106,240,0.14) 0%, transparent 55%),
+        radial-gradient(ellipse at 90% 100%, rgba(24,168,122,0.10) 0%, transparent 50%),
         var(--bg);
+      min-height: 100vh;
     }
-
     .wrap {
-      width: min(880px, calc(100vw - 32px));
+      width: min(860px, calc(100vw - 32px));
       margin: 0 auto;
-      padding: 56px 0 80px;
+      padding: 52px 0 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
-
     .card {
       background: var(--card);
-      backdrop-filter: blur(18px);
+      backdrop-filter: blur(20px);
       border: 1px solid var(--line);
       border-radius: 28px;
-      padding: 32px;
-      box-shadow: 0 18px 50px rgba(22, 32, 51, 0.08);
+      padding: 36px;
+      box-shadow: 0 12px 40px rgba(20,28,46,0.07);
     }
-
-    h1, h2 {
-      margin: 0 0 12px;
-      line-height: 1.08;
-    }
-
-    h1 {
-      font-size: clamp(2.4rem, 6vw, 4.2rem);
-      letter-spacing: -0.04em;
-    }
-
-    h2 {
-      font-size: 1.2rem;
-      letter-spacing: -0.02em;
-    }
-
-    p, li {
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.65;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(27, 122, 243, 0.09);
-      color: var(--accent-strong);
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 18px;
-    }
-
     .lang-switch {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
-
     .lang-switch a {
       color: var(--muted);
       text-decoration: none;
       font-weight: 600;
-      padding: 8px 12px;
+      font-size: 0.88rem;
+      padding: 6px 14px;
       border-radius: 999px;
-      background: rgba(22, 32, 51, 0.05);
+      background: rgba(20,28,46,0.05);
+      transition: background 120ms;
     }
-
-    .grid {
-      display: grid;
-      gap: 20px;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin-top: 20px;
+    .lang-switch a:hover { background: rgba(20,28,46,0.09); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: 0.01em;
     }
-
-    .panel {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.7);
+    .badge .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
     }
-
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      word-break: keep-all;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    p, li {
+      color: var(--muted);
+      font-size: 0.97rem;
+      line-height: 1.7;
+    }
+    p { margin: 0 0 6px; }
     .actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 22px;
+      gap: 10px;
+      margin-top: 24px;
     }
-
-    .button {
+    .btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      padding: 12px 18px;
+      gap: 7px;
+      padding: 11px 20px;
       border-radius: 14px;
       text-decoration: none;
-      font-weight: 600;
-      transition: transform 120ms ease, opacity 120ms ease;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform 120ms, opacity 120ms;
     }
-
-    .button:hover {
-      transform: translateY(-1px);
-      opacity: 0.95;
+    .btn:hover { transform: translateY(-1px); opacity: 0.92; }
+    .btn.primary { background: var(--accent); color: #fff; }
+    .btn.secondary { background: rgba(20,28,46,0.06); color: var(--text); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 24px;
     }
-
-    .button.primary {
-      background: var(--accent);
-      color: white;
+    .panel {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.65);
     }
-
-    .button.secondary {
-      background: rgba(22, 32, 51, 0.06);
-      color: var(--text);
+    ul { margin: 10px 0 0; padding-left: 18px; }
+    li { margin-bottom: 5px; }
+    code {
+      font-family: "SF Mono", ui-monospace, monospace;
+      font-size: 0.85em;
+      background: rgba(20,28,46,0.07);
+      padding: 1px 5px;
+      border-radius: 5px;
     }
-
-    ul {
-      margin: 12px 0 0;
-      padding-left: 18px;
+    .changelog { display: flex; flex-direction: column; }
+    .cl-item {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 0 20px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
     }
-
+    .cl-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .cl-item:first-child { padding-top: 0; }
+    .cl-ver {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--accent);
+      padding-top: 2px;
+    }
+    .cl-date {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .cl-title {
+      font-weight: 700;
+      font-size: 0.97rem;
+      margin-bottom: 4px;
+    }
+    .cl-body {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin: 0;
+    }
     footer {
-      margin-top: 18px;
       text-align: center;
       color: var(--muted);
-      font-size: 0.92rem;
+      font-size: 0.85rem;
     }
-
-    @media (max-width: 720px) {
+    footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+    @media (max-width: 640px) {
       .wrap { padding-top: 28px; }
-      .card { padding: 22px; border-radius: 24px; }
+      .card { padding: 22px; border-radius: 22px; }
       .grid { grid-template-columns: 1fr; }
+      .cl-item { grid-template-columns: 1fr; gap: 4px; }
     }
   </style>
 </head>
 <body>
   <main class="wrap">
+
     <section class="card">
-      <div class="lang-switch">
-        <a href="../index.html">English</a>
-      </div>
-      <div class="eyebrow">Cape Forge 지원</div>
-      <h1>Windows 커서팩을 미리보고 macOS에 직접 적용하세요.</h1>
-      <p>
-        Cape Forge는 Windows 커서팩을 불러와 역할별 커서를 미리보고,
-        선택한 테마를 macOS 시스템 커서에 직접 적용하는 유틸리티입니다.
-        앱은 사용자가 직접 선택한 폴더와 파일만 읽습니다.
-      </p>
+      <div class="lang-switch"><a href="../index.html">English</a></div>
+      <div class="badge"><span class="dot"></span> v1.0.3 — 최신</div>
+      <h1>Mac 커서에 Windows 스킨을 입혀보세요.</h1>
+      <p>Cursie는 <code>.cur</code>, <code>.ani</code> Windows 커서팩을 불러와 역할을 자동 매핑하고, 선택한 테마를 macOS 시스템 커서에 직접 적용합니다. App Store 없이, 샌드박스 없이.</p>
 
       <div class="actions">
-        <a class="button primary" href="./privacy.html">개인정보 처리방침</a>
-        <a class="button secondary" href="mailto:tonistark@naver.com?subject=Cape%20Forge%20Support">지원 문의</a>
+        <a class="btn primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">Mac용 다운로드</a>
+        <a class="btn secondary" href="https://github.com/kwd421/macOS_CapeForge/releases">전체 릴리즈</a>
+        <a class="btn secondary" href="mailto:tonistark@naver.com?subject=Cursie%20Support">지원 문의</a>
       </div>
 
       <div class="grid">
         <section class="panel">
-          <h2>Cape Forge가 하는 일</h2>
+          <h2>주요 기능</h2>
           <ul>
-            <li>사용자가 선택한 폴더에서 <code>.ani</code>, <code>.cur</code> 파일 읽기</li>
-            <li>커서 역할에 맞게 파일 자동 매핑</li>
-            <li>역할별 미리보기 및 개별 파일 변경</li>
-            <li>커서 테마 직접 적용 및 기본 커서 복구</li>
+            <li>폴더에서 <code>.ani</code>, <code>.cur</code> 파일 읽기</li>
+            <li>커서 역할 자동 매핑</li>
+            <li>적용 전 애니메이션 커서 미리보기</li>
+            <li>역할별 커서 파일 수동 변경</li>
+            <li>macOS 시스템 커서에 직접 적용</li>
+            <li>버튼 하나로 기본 커서 복구</li>
           </ul>
         </section>
 
@@ -192,16 +216,64 @@
           <h2>도움이 필요할 때</h2>
           <ul>
             <li>선택한 폴더 바로 아래에 <code>.ani</code> 또는 <code>.cur</code> 파일이 있어야 합니다</li>
-            <li>특정 역할이 맞지 않으면 <strong>커서 파일 변경…</strong>으로 직접 지정할 수 있습니다</li>
-            <li><strong>Restore Defaults</strong>로 Cape Forge 백그라운드 커서 agent를 멈출 수 있습니다</li>
+            <li>역할이 맞지 않으면 <strong>커서 파일 변경…</strong>으로 직접 지정하세요</li>
+            <li>포인터 색이 이상하면 <strong>Restore Defaults</strong> 후 macOS 포인터 설정에서 Reset Colors를 사용하세요</li>
+            <li>문의는 <a href="mailto:tonistark@naver.com?subject=Cursie%20Support" style="color:var(--accent);">이메일</a>로 주세요</li>
           </ul>
         </section>
       </div>
     </section>
 
+    <section class="card">
+      <h2 style="font-size:1.15rem; margin-bottom:20px;">업데이트 내역</h2>
+      <div class="changelog">
+        <div class="cl-item">
+          <div>
+            <div class="cl-ver">v1.0.3</div>
+            <div class="cl-date">2026년 6월</div>
+          </div>
+          <div>
+            <div class="cl-title">앱 이름 Cursie로 변경 · 자동 업데이트 · 새 아이콘</div>
+            <p class="cl-body">macOS 시스템 커서에 직접 적용하는 기능 추가. Sparkle 자동 업데이트 지원. 새 앱 아이콘 및 커서 미리보기, 애니메이션 다운샘플링 개선.</p>
+          </div>
+        </div>
+        <div class="cl-item">
+          <div>
+            <div class="cl-ver">v1.0.2</div>
+            <div class="cl-date">2026년 5월</div>
+          </div>
+          <div>
+            <div class="cl-title">기본 커서 미리보기 수정</div>
+            <p class="cl-body">기본 화살표 커서 이미지가 왼쪽 위로 약간 치우쳐 보이던 문제를 수정했습니다.</p>
+          </div>
+        </div>
+        <div class="cl-item">
+          <div>
+            <div class="cl-ver">v1.0.1</div>
+            <div class="cl-date">2026년 4월</div>
+          </div>
+          <div>
+            <div class="cl-title">애니메이션 커서 호환성 개선</div>
+            <p class="cl-body">Mousecape에서 내보낸 <code>.cape</code> 파일에 빨간 점이 표시되던 문제 수정. 24프레임 초과 애니메이션 커서 다운샘플링 방식 개선.</p>
+          </div>
+        </div>
+        <div class="cl-item">
+          <div>
+            <div class="cl-ver">v1.0.0</div>
+            <div class="cl-date">2026년 3월</div>
+          </div>
+          <div>
+            <div class="cl-title">첫 출시</div>
+            <p class="cl-body">Windows 커서팩을 불러와 역할별로 미리보고 <code>.cape</code>로 내보내는 기능.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <footer>
-      Cape Forge 지원 페이지
+      <a href="../privacy.html">개인정보 처리방침</a> &nbsp;·&nbsp; &copy; 2026 Cursie
     </footer>
+
   </main>
 </body>
 </html>
