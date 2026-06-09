@@ -20,47 +20,31 @@
     /* NAV */
     nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 max(24px, calc((100vw - 980px) / 2));
       height: 44px;
-      background: rgba(0, 0, 0, 0.72);
+      background: rgba(0,0,0,0.72);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
     }
-
     .nav-logo {
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: rgba(255,255,255,0.85);
-      text-decoration: none;
+      font-size: 0.85rem; font-weight: 600; letter-spacing: -0.01em;
+      color: rgba(255,255,255,0.85); text-decoration: none;
     }
-
     .nav-right { display: flex; align-items: center; gap: 20px; }
-
     .nav-lang {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.4);
-      text-decoration: none;
-      transition: color 120ms;
+      font-size: 0.75rem; color: rgba(255,255,255,0.4);
+      text-decoration: none; transition: color 120ms;
     }
     .nav-lang:hover { color: rgba(255,255,255,0.8); }
-
     .nav-dl {
-      padding: 5px 14px;
-      background: #0071e3;
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 600;
-      border-radius: 980px;
-      text-decoration: none;
-      transition: background 120ms;
+      padding: 5px 14px; background: #0071e3; color: #fff;
+      font-size: 0.75rem; font-weight: 600; border-radius: 980px;
+      text-decoration: none; transition: background 120ms;
     }
     .nav-dl:hover { background: #0077ed; }
 
@@ -74,16 +58,6 @@
       text-align: center;
       padding: 140px max(32px, calc((100vw - 860px) / 2)) 0;
     }
-
-    .hero-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #6e6e73;
-      margin-bottom: 20px;
-    }
-
     .hero h1 {
       font-size: clamp(3.2rem, 7.5vw, 7rem);
       font-weight: 700;
@@ -92,179 +66,135 @@
       color: #f5f5f7;
       margin-bottom: 28px;
     }
-
     .hero-sub {
       font-size: clamp(0.95rem, 1.5vw, 1.15rem);
-      color: #86868b;
-      line-height: 1.7;
-      max-width: 480px;
-      margin-bottom: 40px;
+      color: #86868b; line-height: 1.7;
+      max-width: 480px; margin-bottom: 44px;
     }
-
     .hero-sub code {
       font-size: 0.9em;
       background: rgba(255,255,255,0.1);
-      padding: 1px 6px;
-      border-radius: 4px;
+      padding: 1px 6px; border-radius: 4px;
       font-family: monospace;
       color: rgba(255,255,255,0.55);
     }
-
     .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: flex; align-items: center; gap: 20px;
+      flex-wrap: wrap; justify-content: center;
       margin-bottom: 80px;
     }
-
     .btn-primary {
-      display: inline-block;
-      padding: 13px 28px;
-      background: #0071e3;
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 500;
-      border-radius: 980px;
-      text-decoration: none;
+      display: inline-block; padding: 13px 28px;
+      background: #0071e3; color: #fff;
+      font-size: 0.95rem; font-weight: 500;
+      border-radius: 980px; text-decoration: none;
       transition: background 120ms;
     }
     .btn-primary:hover { background: #0077ed; }
-
-    .hero-meta {
-      font-size: 0.72rem;
-      color: #515154;
-    }
+    .hero-meta { font-size: 0.72rem; color: #515154; }
 
     .hero-shot {
-      width: 100%;
-      max-width: 820px;
-      position: relative;
+      width: 100%; max-width: 820px; position: relative;
     }
-
     .hero-shot::before {
       content: '';
       position: absolute;
       inset: -10% 0 -30%;
-      background: radial-gradient(ellipse at 50% 40%, rgba(0, 113, 227, 0.18), transparent 60%);
-      z-index: 0;
-      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 40%, rgba(0,113,227,0.18), transparent 60%);
+      z-index: 0; pointer-events: none;
     }
-
     .hero-shot img {
-      display: block;
-      width: 100%;
+      display: block; width: 100%;
       border-radius: 14px 14px 0 0;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
     }
 
     /* FEATURES */
     .features {
-      background: #f5f5f7;
-      padding: 100px max(24px, calc((100vw - 960px) / 2));
+      background: #fff;
+      padding: 120px max(48px, calc((100vw - 920px) / 2));
     }
-
+    .feat-eyebrow {
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #86868b; margin-bottom: 16px;
+    }
+    .feat-headline {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 700; letter-spacing: -0.03em;
+      color: #1d1d1f; margin-bottom: 72px;
+    }
     .feat-list {
       list-style: none;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
     }
-
     .feat-list li {
-      background: #fff;
-      border-radius: 20px;
-      padding: 52px 52px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+      padding: 56px 48px;
+      display: flex; flex-direction: column; gap: 16px;
+      border-top: 1px solid #d2d2d7;
+      border-right: 1px solid #d2d2d7;
     }
-
-    .feat-num {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #6e6e73;
-    }
+    .feat-list li:nth-child(even) { border-right: none; }
+    .feat-list li:nth-child(1),
+    .feat-list li:nth-child(2) { border-top: none; }
 
     .fl-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
+      font-size: 1.75rem; font-weight: 700;
+      letter-spacing: -0.03em; line-height: 1.1;
       color: #1d1d1f;
     }
-
     .fl-desc {
-      font-size: 0.95rem;
-      color: #6e6e73;
-      line-height: 1.7;
+      font-size: 1rem; color: #6e6e73; line-height: 1.75;
     }
 
     /* CREDITS */
     .credits {
-      padding: 80px max(24px, calc((100vw - 640px) / 2));
-      background: #fff;
+      padding: 80px max(48px, calc((100vw - 640px) / 2));
+      background: #f5f5f7;
       border-top: 1px solid #d2d2d7;
     }
-
     .credits p {
-      font-size: 0.95rem;
-      line-height: 1.85;
-      color: #6e6e73;
-      text-align: center;
+      font-size: 1rem; line-height: 1.85;
+      color: #6e6e73; text-align: center;
     }
-
     .credits a { color: #0071e3; text-decoration: none; }
     .credits a:hover { text-decoration: underline; }
-
     .credits code {
-      font-size: 0.88em;
-      background: #f5f5f7;
-      padding: 1px 5px;
-      border-radius: 4px;
+      font-size: 0.88em; background: #e8e8e8;
+      padding: 1px 5px; border-radius: 4px;
       font-family: monospace;
     }
 
     /* CHANGELOG */
     .changelog {
-      padding: 80px max(24px, calc((100vw - 640px) / 2));
-      background: #f5f5f7;
+      padding: 80px max(48px, calc((100vw - 640px) / 2));
+      background: #fff;
       border-top: 1px solid #d2d2d7;
     }
-
     .changelog h2 {
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      color: #6e6e73;
-      margin-bottom: 32px;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: #86868b; margin-bottom: 40px;
     }
-
     .cl-row {
       display: grid;
       grid-template-columns: 72px 1fr;
-      gap: 0 28px;
-      padding: 20px 0;
-      border-bottom: 1px solid #d2d2d7;
+      gap: 0 32px;
+      padding: 24px 0;
+      border-top: 1px solid #d2d2d7;
     }
-    .cl-row:last-child { border-bottom: none; }
-    .cl-row:first-child { padding-top: 0; }
+    .cl-row:first-child { border-top: none; padding-top: 0; }
     .cl-v { font-size: 0.78rem; font-weight: 600; color: #0071e3; }
     .cl-d { font-size: 0.68rem; color: #86868b; margin-top: 4px; }
-    .cl-t { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; color: #1d1d1f; }
+    .cl-t { font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; color: #1d1d1f; }
     .cl-b { font-size: 0.82rem; color: #86868b; line-height: 1.65; }
 
     /* FOOTER */
     footer {
       background: #000;
-      padding: 28px max(24px, calc((100vw - 640px) / 2));
-      font-size: 0.72rem;
-      color: #515154;
+      padding: 28px max(48px, calc((100vw - 640px) / 2));
+      font-size: 0.72rem; color: #515154;
       border-top: 1px solid rgba(255,255,255,0.06);
     }
     footer a { color: #515154; text-decoration: none; }
@@ -272,25 +202,23 @@
 
     /* RESPONSIVE */
     @media (max-width: 680px) {
-      .hero {
-        padding-top: 100px;
-        padding-left: 24px;
-        padding-right: 24px;
-        padding-bottom: 0;
-      }
-      .hero h1 { font-size: 3rem; letter-spacing: -0.035em; }
-      .hero-actions { flex-direction: column; align-items: center; gap: 14px; }
+      .hero { padding-top: 100px; padding-left: 24px; padding-right: 24px; padding-bottom: 0; }
+      .hero h1 { font-size: 2.8rem; }
+      .hero-actions { flex-direction: column; gap: 14px; }
       .hero-meta { text-align: center; }
+      .features { padding: 80px 24px; }
+      .feat-headline { font-size: 1.6rem; margin-bottom: 48px; }
       .feat-list { grid-template-columns: 1fr; }
-      .feat-list li { padding: 40px 32px; }
-      .features { padding: 72px 20px; }
-      .changelog, .credits { padding-left: 20px; padding-right: 20px; }
+      .feat-list li { padding: 40px 0; border-right: none !important; }
+      .feat-list li:nth-child(1) { border-top: none; }
+      .feat-list li:nth-child(2) { border-top: 1px solid #d2d2d7; }
+      .fl-title { font-size: 1.4rem; }
+      .credits, .changelog { padding-left: 24px; padding-right: 24px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <a class="nav-logo" href="#">Cursie</a>
     <div class="nav-right">
@@ -299,49 +227,43 @@
     </div>
   </nav>
 
-  <!-- HERO -->
   <section class="hero">
-    <span class="hero-label">무료 Mac 앱</span>
     <h1>커서도<br>내 취향대로.</h1>
     <p class="hero-sub">
       Windows <code>.cur</code>, <code>.ani</code> 커서팩을 불러와 macOS 시스템 커서에 바로 적용합니다.
     </p>
     <div class="hero-actions">
       <a class="btn-primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">무료 다운로드</a>
-      <span class="hero-meta">macOS 15 Sequoia 이상 · Apple Silicon &amp; Intel</span>
+      <span class="hero-meta">macOS 15 Sequoia 이상 · Apple Silicon &amp; Intel · 무료</span>
     </div>
     <div class="hero-shot">
       <img src="../assets/capeforge-preview.png" alt="커서 역할이 매핑된 Cursie 앱 화면">
     </div>
   </section>
 
-  <!-- FEATURES -->
   <section class="features">
+    <p class="feat-eyebrow">기능</p>
+    <h2 class="feat-headline">필요한 것만,<br>딱 그만큼.</h2>
     <ul class="feat-list">
       <li>
-        <span class="feat-num">01</span>
         <span class="fl-title">실시간 미리보기</span>
         <span class="fl-desc">적용 전 모든 역할을 실제 크기와 확대 화면으로 나란히 확인할 수 있습니다.</span>
       </li>
       <li>
-        <span class="feat-num">02</span>
         <span class="fl-title">한 번에 적용</span>
         <span class="fl-desc">시스템 커서를 즉시 교체합니다. 기본값으로 되돌리려면 Cursie가 해당 시스템 설정 화면으로 안내합니다.</span>
       </li>
       <li>
-        <span class="feat-num">03</span>
         <span class="fl-title">드래그 앤 드롭</span>
         <span class="fl-desc">폴더나 파일을 앱 위에 바로 드래그할 수 있습니다. 개별 역할 교체도 가능합니다.</span>
       </li>
       <li>
-        <span class="feat-num">04</span>
         <span class="fl-title">자동 업데이트</span>
         <span class="fl-desc">업데이트가 앱 안에서 설치됩니다. GitHub 릴리즈 페이지를 방문할 필요가 없습니다.</span>
       </li>
     </ul>
   </section>
 
-  <!-- CREDITS -->
   <section class="credits">
     <p>
       Cursie는 <a href="https://github.com/alexzielenski/Mousecape" target="_blank" rel="noopener">Mousecape</a> 없이는 존재하지 못했을 것입니다 —
@@ -349,7 +271,6 @@
     </p>
   </section>
 
-  <!-- CHANGELOG -->
   <section class="changelog">
     <h2>업데이트 내역</h2>
     <div class="cl-row">
@@ -370,7 +291,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <a href="../privacy.html">개인정보 처리방침</a> · © 2026 Cursie
   </footer>
