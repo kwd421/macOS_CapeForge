@@ -4,276 +4,215 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cursie — Windows 커서팩을 macOS에</title>
+  <meta name="description" content="Windows .cur, .ani 커서팩을 macOS 시스템 커서에 직접 적용. 무료, App Store 불필요.">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      color-scheme: light;
-      --bg: #f4f6fb;
-      --card: rgba(255,255,255,0.9);
-      --text: #141c2e;
-      --muted: #5a6478;
-      --line: rgba(20,28,46,0.1);
-      --accent: #5b6af0;
-      --accent-soft: rgba(91,106,240,0.1);
-      --accent-strong: #3a48c8;
-      --green: #18a87a;
+      --ink: #0d1117; --ink2: #1c2333;
+      --accent: #6c6ff5; --accent-glow: rgba(108,111,245,0.35);
+      --muted: #8b95a8; --line: rgba(255,255,255,0.08);
+      --surface: #f6f8fc; --card: #fff;
+      --text: #1a2030; --text-muted: #6b7489;
     }
-    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(ellipse at 10% 0%, rgba(91,106,240,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse at 90% 100%, rgba(24,168,122,0.10) 0%, transparent 50%),
-        var(--bg);
-      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Apple SD Gothic Neo", "Helvetica Neue", Arial, sans-serif;
+      background: var(--ink); color: #fff;
+      -webkit-font-smoothing: antialiased;
     }
-    .wrap {
-      width: min(860px, calc(100vw - 32px));
-      margin: 0 auto;
-      padding: 52px 0 80px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .card {
-      background: var(--card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 36px;
-      box-shadow: 0 12px 40px rgba(20,28,46,0.07);
-    }
-    .lang-switch {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 20px;
-    }
-    .lang-switch a {
-      color: var(--muted);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.88rem;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: rgba(20,28,46,0.05);
-      transition: background 120ms;
-    }
-    .lang-switch a:hover { background: rgba(20,28,46,0.09); }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent-strong);
-      font-size: 0.82rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      letter-spacing: 0.01em;
-    }
-    .badge .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-    }
-    h1 {
-      margin: 0 0 14px;
-      font-size: clamp(2rem, 5vw, 3.4rem);
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      word-break: keep-all;
-    }
-    h2 {
-      margin: 0 0 10px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-    p, li {
-      color: var(--muted);
-      font-size: 0.97rem;
-      line-height: 1.7;
-    }
-    p { margin: 0 0 6px; }
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 11px 20px;
-      border-radius: 14px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      transition: transform 120ms, opacity 120ms;
-    }
-    .btn:hover { transform: translateY(-1px); opacity: 0.92; }
-    .btn.primary { background: var(--accent); color: #fff; }
-    .btn.secondary { background: rgba(20,28,46,0.06); color: var(--text); }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-top: 24px;
-    }
-    .panel {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(255,255,255,0.65);
-    }
-    ul { margin: 10px 0 0; padding-left: 18px; }
-    li { margin-bottom: 5px; }
-    code {
-      font-family: "SF Mono", ui-monospace, monospace;
-      font-size: 0.85em;
-      background: rgba(20,28,46,0.07);
-      padding: 1px 5px;
-      border-radius: 5px;
-    }
-    .changelog { display: flex; flex-direction: column; }
-    .cl-item {
-      display: grid;
-      grid-template-columns: 90px 1fr;
-      gap: 0 20px;
-      padding: 18px 0;
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 max(24px, calc((100vw - 960px) / 2));
+      height: 56px;
+      background: rgba(13,17,23,0.82);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--line);
     }
-    .cl-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .cl-item:first-child { padding-top: 0; }
-    .cl-ver {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--accent);
-      padding-top: 2px;
-    }
-    .cl-date {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-    .cl-title {
-      font-weight: 700;
-      font-size: 0.97rem;
-      margin-bottom: 4px;
-    }
-    .cl-body {
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      margin: 0;
-    }
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-    footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
-    @media (max-width: 640px) {
-      .wrap { padding-top: 28px; }
-      .card { padding: 22px; border-radius: 22px; }
-      .grid { grid-template-columns: 1fr; }
-      .cl-item { grid-template-columns: 1fr; gap: 4px; }
+    .nav-logo { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; color: #fff; text-decoration: none; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-lang { font-size: 0.82rem; font-weight: 600; color: var(--muted); text-decoration: none; padding: 5px 10px; border-radius: 8px; transition: color 150ms; }
+    .nav-lang:hover { color: #fff; }
+    .btn-dl { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 10px; background: var(--accent); color: #fff; font-size: 0.88rem; font-weight: 700; text-decoration: none; transition: opacity 150ms, transform 150ms; }
+    .btn-dl:hover { opacity: 0.88; transform: translateY(-1px); }
+    .hero { text-align: center; padding: 96px 24px 80px; background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(108,111,245,0.28), transparent), var(--ink); }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; border: 1px solid rgba(108,111,245,0.4); background: rgba(108,111,245,0.12); color: #a5a8ff; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.02em; margin-bottom: 28px; }
+    .hero-badge .pulse { width: 6px; height: 6px; border-radius: 50%; background: #6ee7b7; box-shadow: 0 0 6px #6ee7b7; }
+    .hero h1 { font-size: clamp(2.2rem, 6.5vw, 4.6rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.08; margin-bottom: 20px; word-break: keep-all; background: linear-gradient(160deg, #fff 40%, rgba(255,255,255,0.55)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: clamp(1rem, 2.2vw, 1.15rem); color: var(--muted); line-height: 1.7; max-width: 520px; margin: 0 auto 36px; word-break: keep-all; }
+    .hero-actions { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 64px; }
+    .btn-hero { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 14px; font-size: 1rem; font-weight: 700; text-decoration: none; transition: opacity 150ms, transform 150ms, box-shadow 150ms; }
+    .btn-hero:hover { opacity: 0.9; transform: translateY(-2px); }
+    .btn-hero.primary { background: var(--accent); color: #fff; box-shadow: 0 8px 30px var(--accent-glow); }
+    .btn-hero.primary:hover { box-shadow: 0 12px 40px var(--accent-glow); }
+    .hero-meta { font-size: 0.82rem; color: var(--muted); padding: 12px 18px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--line); }
+    .screenshot-wrap { max-width: 780px; margin: 0 auto; position: relative; }
+    .window-chrome { background: #1e2029; border-radius: 14px 14px 0 0; padding: 12px 16px 0; display: flex; align-items: center; gap: 7px; border: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.red { background: #ff5f57; } .dot.yellow { background: #febc2e; } .dot.green { background: #28c840; }
+    .screenshot-wrap img { display: block; width: 100%; border-radius: 0 0 14px 14px; border: 1px solid rgba(255,255,255,0.1); border-top: none; }
+    .screenshot-glow { position: absolute; inset: 20% 10% -10%; background: radial-gradient(ellipse, var(--accent-glow), transparent 70%); z-index: -1; filter: blur(40px); }
+    .features { background: var(--surface); color: var(--text); padding: 96px 24px; }
+    .section-label { text-align: center; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-title { text-align: center; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em; color: var(--text); margin-bottom: 56px; word-break: keep-all; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 960px; margin: 0 auto; }
+    .feat-card { background: var(--card); border: 1px solid rgba(0,0,0,0.07); border-radius: 20px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 200ms, box-shadow 200ms; }
+    .feat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .feat-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(108,111,245,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 16px; }
+    .feat-card h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
+    .feat-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; word-break: keep-all; }
+    .steps { background: var(--ink); padding: 96px 24px; text-align: center; }
+    .steps .section-title { color: #fff; }
+    .steps-row { display: flex; align-items: flex-start; justify-content: center; gap: 0; max-width: 760px; margin: 0 auto; }
+    .step { flex: 1; padding: 0 20px; position: relative; }
+    .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.9rem; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+    .step-connector { position: absolute; top: 19px; left: calc(50% + 20px); right: calc(-50% + 20px); height: 1px; background: rgba(255,255,255,0.12); }
+    .step:last-child .step-connector { display: none; }
+    .step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+    .step p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; word-break: keep-all; }
+    .cta { background: var(--ink2); padding: 80px 24px; text-align: center; border-top: 1px solid var(--line); }
+    .cta h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; word-break: keep-all; }
+    .cta p { color: var(--muted); margin-bottom: 32px; font-size: 1rem; }
+    .changelog { background: var(--surface); color: var(--text); padding: 80px 24px; }
+    .changelog-inner { max-width: 680px; margin: 0 auto; }
+    .cl-row { display: grid; grid-template-columns: 100px 1fr; gap: 0 24px; padding: 20px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .cl-row:last-child { border-bottom: none; } .cl-row:first-child { padding-top: 0; }
+    .cl-v { font-size: 0.85rem; font-weight: 700; color: var(--accent); }
+    .cl-d { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+    .cl-t { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .cl-b { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; word-break: keep-all; }
+    footer { background: var(--ink); padding: 28px 24px; text-align: center; border-top: 1px solid var(--line); font-size: 0.82rem; color: var(--muted); }
+    footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid rgba(139,149,168,0.3); }
+    footer a:hover { color: #fff; }
+    @media (max-width: 720px) {
+      .hero { padding: 72px 24px 56px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .steps-row { flex-direction: column; align-items: center; gap: 32px; }
+      .step-connector { display: none; }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
 
-    <section class="card">
-      <div class="lang-switch"><a href="../index.html">English</a></div>
-      <div class="badge"><span class="dot"></span> v1.0.3 — 최신</div>
-      <h1>Mac 커서에 Windows 스킨을 입혀보세요.</h1>
-      <p>Cursie는 <code>.cur</code>, <code>.ani</code> Windows 커서팩을 불러와 역할을 자동 매핑하고, 선택한 테마를 macOS 시스템 커서에 직접 적용합니다. App Store 없이, 샌드박스 없이.</p>
+  <nav>
+    <a class="nav-logo" href="#">Cursie</a>
+    <div class="nav-right">
+      <a class="nav-lang" href="../index.html">English</a>
+      <a class="btn-dl" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">다운로드</a>
+    </div>
+  </nav>
 
-      <div class="actions">
-        <a class="btn primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">Mac용 다운로드</a>
-        <a class="btn secondary" href="https://github.com/kwd421/macOS_CapeForge/releases">전체 릴리즈</a>
-        <a class="btn secondary" href="mailto:tonistark@naver.com?subject=Cursie%20Support">지원 문의</a>
+  <section class="hero">
+    <div class="hero-badge"><span class="pulse"></span> v1.0.3 — 최신 릴리즈</div>
+    <h1>Mac 커서에<br>Windows 스킨을 입히세요.</h1>
+    <p><code style="font-family:monospace;font-size:0.9em;background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:5px;">.cur</code>, <code style="font-family:monospace;font-size:0.9em;background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:5px;">.ani</code> Windows 커서팩을 불러와 역할을 미리보고, macOS 시스템 커서에 직접 적용합니다. App Store 없이, 샌드박스 없이.</p>
+    <div class="hero-actions">
+      <a class="btn-hero primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">Cursie 무료 다운로드</a>
+      <span class="hero-meta">macOS 13 Ventura 이상 · Apple Silicon &amp; Intel</span>
+    </div>
+    <div class="screenshot-wrap">
+      <div class="window-chrome">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
       </div>
+      <img src="../assets/capeforge-preview.png" alt="Cursie 앱 — 픽셀 아트 커서를 macOS 커서 역할에 매핑한 화면">
+      <div class="screenshot-glow"></div>
+    </div>
+  </section>
 
-      <div class="grid">
-        <section class="panel">
-          <h2>주요 기능</h2>
-          <ul>
-            <li>폴더에서 <code>.ani</code>, <code>.cur</code> 파일 읽기</li>
-            <li>커서 역할 자동 매핑</li>
-            <li>적용 전 애니메이션 커서 미리보기</li>
-            <li>역할별 커서 파일 수동 변경</li>
-            <li>macOS 시스템 커서에 직접 적용</li>
-            <li>버튼 하나로 기본 커서 복구</li>
-          </ul>
-        </section>
-
-        <section class="panel">
-          <h2>도움이 필요할 때</h2>
-          <ul>
-            <li>선택한 폴더 바로 아래에 <code>.ani</code> 또는 <code>.cur</code> 파일이 있어야 합니다</li>
-            <li>역할이 맞지 않으면 <strong>커서 파일 변경…</strong>으로 직접 지정하세요</li>
-            <li>포인터 색이 이상하면 <strong>Restore Defaults</strong> 후 macOS 포인터 설정에서 Reset Colors를 사용하세요</li>
-            <li>문의는 <a href="mailto:tonistark@naver.com?subject=Cursie%20Support" style="color:var(--accent);">이메일</a>로 주세요</li>
-          </ul>
-        </section>
+  <section class="features">
+    <p class="section-label">Features</p>
+    <h2 class="section-title">필요한 건 다 있고,<br>필요 없는 건 없어요.</h2>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🗂</div>
+        <h3>자동 매핑</h3>
+        <p>폴더를 선택하면 커서 파일을 macOS 역할에 자동으로 매핑합니다. Normal, Text, Link, Resize 등.</p>
       </div>
-    </section>
-
-    <section class="card">
-      <h2 style="font-size:1.15rem; margin-bottom:20px;">업데이트 내역</h2>
-      <div class="changelog">
-        <div class="cl-item">
-          <div>
-            <div class="cl-ver">v1.0.3</div>
-            <div class="cl-date">2026년 6월</div>
-          </div>
-          <div>
-            <div class="cl-title">앱 이름 Cursie로 변경 · 자동 업데이트 · 새 아이콘</div>
-            <p class="cl-body">macOS 시스템 커서에 직접 적용하는 기능 추가. Sparkle 자동 업데이트 지원. 새 앱 아이콘 및 커서 미리보기, 애니메이션 다운샘플링 개선.</p>
-          </div>
-        </div>
-        <div class="cl-item">
-          <div>
-            <div class="cl-ver">v1.0.2</div>
-            <div class="cl-date">2026년 5월</div>
-          </div>
-          <div>
-            <div class="cl-title">기본 커서 미리보기 수정</div>
-            <p class="cl-body">기본 화살표 커서 이미지가 왼쪽 위로 약간 치우쳐 보이던 문제를 수정했습니다.</p>
-          </div>
-        </div>
-        <div class="cl-item">
-          <div>
-            <div class="cl-ver">v1.0.1</div>
-            <div class="cl-date">2026년 4월</div>
-          </div>
-          <div>
-            <div class="cl-title">애니메이션 커서 호환성 개선</div>
-            <p class="cl-body">Mousecape에서 내보낸 <code>.cape</code> 파일에 빨간 점이 표시되던 문제 수정. 24프레임 초과 애니메이션 커서 다운샘플링 방식 개선.</p>
-          </div>
-        </div>
-        <div class="cl-item">
-          <div>
-            <div class="cl-ver">v1.0.0</div>
-            <div class="cl-date">2026년 3월</div>
-          </div>
-          <div>
-            <div class="cl-title">첫 출시</div>
-            <p class="cl-body">Windows 커서팩을 불러와 역할별로 미리보고 <code>.cape</code>로 내보내는 기능.</p>
-          </div>
-        </div>
+      <div class="feat-card">
+        <div class="feat-icon">👁</div>
+        <h3>실시간 미리보기</h3>
+        <p>애니메이션 커서 포함, 적용 전에 실제 크기와 확대 미리보기로 모든 커서를 확인할 수 있어요.</p>
       </div>
-    </section>
+      <div class="feat-card">
+        <div class="feat-icon">⚡️</div>
+        <h3>직접 적용</h3>
+        <p>macOS 시스템 커서에 바로 적용. Mousecape 불필요. 버튼 하나로 기본값 복구.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🎬</div>
+        <h3>애니메이션 지원</h3>
+        <p><code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px;">.ani</code> 포맷 완벽 지원. macOS 호환을 위한 스마트 다운샘플링 내장.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🖱</div>
+        <h3>드래그 앤 드롭</h3>
+        <p>폴더나 파일을 앱에 바로 드래그. 개별 역할을 처음부터 다시 시작하지 않고 바꿀 수 있어요.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔄</div>
+        <h3>자동 업데이트</h3>
+        <p>Sparkle 업데이터 내장. 새 버전이 나오면 앱 안에서 바로 업데이트됩니다.</p>
+      </div>
+    </div>
+  </section>
 
-    <footer>
-      <a href="../privacy.html">개인정보 처리방침</a> &nbsp;·&nbsp; &copy; 2026 Cursie
-    </footer>
+  <section class="steps">
+    <p class="section-label" style="color:#a5a8ff;">How it works</p>
+    <h2 class="section-title">세 단계로 커서를 바꾸세요.</h2>
+    <div class="steps-row">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-connector"></div>
+        <h3>폴더 선택</h3>
+        <p><code style="font-size:0.85em;background:rgba(255,255,255,0.1);padding:1px 5px;border-radius:4px;">.cur</code> 또는 <code style="font-size:0.85em;background:rgba(255,255,255,0.1);padding:1px 5px;border-radius:4px;">.ani</code> 파일이 있는 커서팩 폴더를 선택합니다.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-connector"></div>
+        <h3>미리보기 &amp; 조정</h3>
+        <p>역할이 자동으로 매핑됩니다. 원하는 역할은 직접 교체할 수 있어요.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-connector"></div>
+        <h3>시스템에 적용</h3>
+        <p><em>시스템 커서에 적용</em>을 누르면 즉시 새 테마가 적용됩니다.</p>
+      </div>
+    </div>
+  </section>
 
-  </main>
+  <section class="cta">
+    <h2>커서를 바꿀 준비됐나요?</h2>
+    <p>무료 다운로드. 계정 불필요.</p>
+    <a class="btn-hero primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">Cursie 다운로드</a>
+  </section>
+
+  <section class="changelog">
+    <div class="changelog-inner">
+      <p class="section-label">Changelog</p>
+      <h2 class="section-title" style="font-size:1.6rem; margin-bottom:32px;">업데이트 내역</h2>
+      <div class="cl-row">
+        <div><div class="cl-v">v1.0.3</div><div class="cl-d">2026년 6월</div></div>
+        <div><div class="cl-t">앱 이름 Cursie로 변경 · 자동 업데이트 · 새 아이콘</div><p class="cl-b">macOS 시스템 커서 직접 적용, Sparkle 자동 업데이트 추가, 새 앱 아이콘 및 커서 미리보기 개선.</p></div>
+      </div>
+      <div class="cl-row">
+        <div><div class="cl-v">v1.0.2</div><div class="cl-d">2026년 5월</div></div>
+        <div><div class="cl-t">기본 커서 미리보기 수정</div><p class="cl-b">기본 화살표 커서가 왼쪽 위로 치우쳐 보이던 문제 수정.</p></div>
+      </div>
+      <div class="cl-row">
+        <div><div class="cl-v">v1.0.1</div><div class="cl-d">2026년 4월</div></div>
+        <div><div class="cl-t">애니메이션 커서 호환성 개선</div><p class="cl-b">Mousecape 내보내기 빨간 점 문제 수정. 24프레임 초과 애니메이션 다운샘플링 개선.</p></div>
+      </div>
+      <div class="cl-row">
+        <div><div class="cl-v">v1.0.0</div><div class="cl-d">2026년 3월</div></div>
+        <div><div class="cl-t">첫 출시</div><p class="cl-b">Windows 커서팩 불러오기, 역할 미리보기, .cape 내보내기.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <a href="../privacy.html">개인정보 처리방침</a> &nbsp;·&nbsp; &copy; 2026 Cursie
+  </footer>
+
 </body>
 </html>
