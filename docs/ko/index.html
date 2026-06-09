@@ -4,18 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cursie — Windows 커서팩을 macOS에서</title>
-  <meta name="description" content="Windows .cur, .ani 커서팩을 macOS 시스템 커서에 직접 적용. 무료, App Store 불필요.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="description" content="Windows .cur, .ani 커서팩을 macOS 시스템 커서에 직접 적용합니다. 무료, App Store 불필요.">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: "Figtree", "Apple SD Gothic Neo", -apple-system, sans-serif;
+      font-family: "Apple SD Gothic Neo", -apple-system, "Helvetica Neue", Arial, sans-serif;
       background: #fff;
-      color: #1a1a1a;
+      color: #1d1d1f;
       -webkit-font-smoothing: antialiased;
       word-break: keep-all;
     }
@@ -28,260 +25,247 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 max(28px, calc((100vw - 1020px) / 2));
-      height: 52px;
-      background: rgba(11, 11, 13, 0.92);
-      backdrop-filter: blur(14px);
+      padding: 0 max(24px, calc((100vw - 1024px) / 2));
+      height: 48px;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: saturate(180%) blur(20px);
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
     .nav-logo {
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #f5f5f7;
       text-decoration: none;
     }
 
     .nav-right { display: flex; align-items: center; gap: 20px; }
 
     .nav-lang {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.35);
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
       text-decoration: none;
-      transition: color 150ms;
+      transition: color 120ms;
     }
-    .nav-lang:hover { color: rgba(255,255,255,0.75); }
+    .nav-lang:hover { color: rgba(255,255,255,0.85); }
 
     .nav-dl {
-      padding: 7px 16px;
-      background: #fff;
-      color: #111;
-      font-size: 0.84rem;
-      font-weight: 700;
-      border-radius: 8px;
+      padding: 6px 16px;
+      background: #0071e3;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 980px;
       text-decoration: none;
-      letter-spacing: -0.01em;
-      transition: opacity 150ms;
+      transition: background 120ms;
     }
-    .nav-dl:hover { opacity: 0.85; }
+    .nav-dl:hover { background: #0077ed; }
 
     /* HERO */
     .hero {
-      background: #0b0b0d;
-      padding: 72px max(28px, calc((100vw - 1020px) / 2));
-      display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 56px;
-      align-items: center;
-      min-height: 520px;
+      background: #000;
+      padding: 96px max(24px, calc((100vw - 1024px) / 2)) 0;
+      text-align: center;
     }
 
-    .hero-version {
+    .hero-chip {
       display: inline-block;
       font-size: 0.72rem;
-      font-weight: 700;
-      color: rgba(255,255,255,0.3);
-      letter-spacing: 0.08em;
+      font-weight: 600;
+      color: #86868b;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
 
     .hero h1 {
-      font-size: clamp(2.2rem, 4.5vw, 3.6rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      color: #fff;
-      margin-bottom: 18px;
+      font-size: clamp(2.8rem, 6vw, 5.2rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: #f5f5f7;
+      margin-bottom: 20px;
     }
 
     .hero-sub {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.38);
-      line-height: 1.8;
-      margin-bottom: 38px;
-      max-width: 380px;
+      font-size: clamp(1rem, 1.8vw, 1.25rem);
+      color: #86868b;
+      line-height: 1.6;
+      max-width: 520px;
+      margin: 0 auto 36px;
     }
 
     .hero-sub code {
-      font-size: 0.88em;
+      font-size: 0.9em;
       background: rgba(255,255,255,0.1);
       padding: 1px 6px;
       border-radius: 4px;
-      font-family: monospace;
-      color: rgba(255,255,255,0.65);
+      font-family: "SF Mono", monospace;
+      color: rgba(255,255,255,0.6);
     }
 
-    .btn-primary {
+    .btn-cta {
       display: inline-block;
-      padding: 12px 24px;
-      background: #fff;
-      color: #111;
-      font-size: 0.92rem;
-      font-weight: 700;
-      border-radius: 9px;
+      padding: 12px 28px;
+      background: #0071e3;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 980px;
       text-decoration: none;
-      letter-spacing: -0.01em;
-      transition: opacity 150ms, transform 150ms;
+      transition: background 120ms;
     }
-    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-cta:hover { background: #0077ed; }
 
     .hero-req {
       display: block;
-      margin-top: 13px;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.2);
+      margin-top: 14px;
+      font-size: 0.72rem;
+      color: #515154;
     }
 
-    /* SCREENSHOT */
-    .hero-shot { position: relative; }
+    .hero-shot {
+      margin-top: 64px;
+      max-width: 860px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+
+    .hero-shot::before {
+      content: '';
+      position: absolute;
+      inset: 0 5% -20%;
+      background: radial-gradient(ellipse at 50% 60%, rgba(79,70,229,0.25), transparent 65%);
+      z-index: 0;
+      filter: blur(24px);
+    }
 
     .hero-shot img {
       display: block;
       width: 100%;
-      border-radius: 11px;
+      border-radius: 14px 14px 0 0;
+      position: relative;
+      z-index: 1;
     }
-
-    /* ABOUT */
-    .about {
-      padding: 72px max(28px, calc((100vw - 680px) / 2));
-      background: #F9F8F5;
-      border-top: 1px solid #EDECEA;
-    }
-
-    .about p {
-      font-size: 1.12rem;
-      line-height: 1.85;
-      color: #2C2C2C;
-    }
-
-    .about p + p { margin-top: 18px; }
 
     /* FEATURES */
     .features {
-      padding: 72px max(28px, calc((100vw - 720px) / 2));
-      background: #fff;
-      border-top: 1px solid #EBEBEB;
+      background: #f5f5f7;
+      padding: 80px max(24px, calc((100vw - 960px) / 2));
     }
 
     .feat-list {
       list-style: none;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      border: 1px solid #E8E8E8;
-      border-radius: 14px;
-      overflow: hidden;
+      gap: 12px;
     }
 
     .feat-list li {
-      padding: 32px 36px;
+      background: #fff;
+      border-radius: 18px;
+      padding: 40px 44px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      border-right: 1px solid #E8E8E8;
-      border-bottom: 1px solid #E8E8E8;
     }
-    .feat-list li:nth-child(even) { border-right: none; }
-    .feat-list li:nth-child(3),
-    .feat-list li:nth-child(4) { border-bottom: none; }
 
     .feat-num {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      letter-spacing: 0.06em;
-      color: #4F46E5;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6e6e73;
     }
 
     .fl-title {
-      font-size: 1.1rem;
+      font-size: 1.35rem;
       font-weight: 700;
-      color: #111;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.025em;
+      color: #1d1d1f;
     }
 
     .fl-desc {
-      font-size: 0.88rem;
-      color: #777;
-      line-height: 1.7;
+      font-size: 0.92rem;
+      color: #6e6e73;
+      line-height: 1.65;
     }
 
     /* CREDITS */
     .credits {
-      padding: 56px max(28px, calc((100vw - 680px) / 2));
-      background: #F2F1EC;
-      border-top: 1px solid #E5E3DC;
+      padding: 56px max(24px, calc((100vw - 680px) / 2));
+      background: #fff;
+      border-top: 1px solid #d2d2d7;
     }
 
     .credits p {
-      font-size: 0.97rem;
-      line-height: 1.85;
-      color: #555;
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: #6e6e73;
+      text-align: center;
     }
 
     .credits a {
-      color: #4F46E5;
+      color: #0071e3;
       text-decoration: none;
-      border-bottom: 1px solid currentColor;
     }
+    .credits a:hover { text-decoration: underline; }
+
     .credits code {
       font-size: 0.88em;
-      background: rgba(0,0,0,0.06);
+      background: #f5f5f7;
       padding: 1px 5px;
       border-radius: 4px;
-      font-family: monospace;
+      font-family: "SF Mono", monospace;
+      color: #1d1d1f;
     }
 
     /* CHANGELOG */
     .changelog {
-      padding: 72px max(28px, calc((100vw - 680px) / 2));
-      background: #fff;
-      border-top: 1px solid #EBEBEB;
+      padding: 72px max(24px, calc((100vw - 680px) / 2));
+      background: #f5f5f7;
+      border-top: 1px solid #d2d2d7;
     }
 
     .changelog h2 {
-      font-size: 1rem;
-      font-weight: 700;
+      font-size: 0.95rem;
+      font-weight: 600;
       letter-spacing: -0.01em;
       margin-bottom: 28px;
-      color: #111;
+      color: #1d1d1f;
     }
 
     .cl-row {
       display: grid;
-      grid-template-columns: 84px 1fr;
+      grid-template-columns: 80px 1fr;
       gap: 0 24px;
       padding: 18px 0;
-      border-bottom: 1px solid #F2F2F2;
+      border-bottom: 1px solid #d2d2d7;
     }
     .cl-row:last-child { border-bottom: none; }
     .cl-row:first-child { padding-top: 0; }
-    .cl-v { font-size: 0.8rem; font-weight: 700; color: #4F46E5; }
-    .cl-d { font-size: 0.72rem; color: #BDBDBD; margin-top: 3px; }
-    .cl-t { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; color: #111; }
-    .cl-b { font-size: 0.84rem; color: #888; line-height: 1.6; }
+    .cl-v { font-size: 0.78rem; font-weight: 600; color: #0071e3; }
+    .cl-d { font-size: 0.7rem; color: #86868b; margin-top: 3px; }
+    .cl-t { font-weight: 600; font-size: 0.88rem; margin-bottom: 4px; color: #1d1d1f; }
+    .cl-b { font-size: 0.82rem; color: #86868b; line-height: 1.6; }
 
     /* FOOTER */
     footer {
-      background: #0b0b0d;
-      padding: 26px max(28px, calc((100vw - 680px) / 2));
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.2);
-      border-top: 1px solid rgba(255,255,255,0.05);
+      background: #000;
+      padding: 24px max(24px, calc((100vw - 680px) / 2));
+      font-size: 0.75rem;
+      color: #515154;
+      border-top: 1px solid rgba(255,255,255,0.06);
     }
-    footer a { color: rgba(255,255,255,0.3); text-decoration: none; }
-    footer a:hover { color: rgba(255,255,255,0.65); }
+    footer a { color: #515154; text-decoration: none; }
+    footer a:hover { color: #86868b; }
 
     /* RESPONSIVE */
-    @media (max-width: 720px) {
-      .hero { grid-template-columns: 1fr; gap: 36px; min-height: auto; }
-      .hero-shot { order: -1; }
-      .hero-sub { max-width: 100%; }
-      .feat-list { grid-template-columns: 1fr; border-radius: 10px; }
-      .feat-list li:nth-child(odd) { border-right: none; }
-      .feat-list li:nth-child(3) { border-bottom: 1px solid #E8E8E8; }
-      .feat-list li:last-child { border-bottom: none; }
+    @media (max-width: 700px) {
+      .hero { padding-bottom: 0; }
+      .feat-list { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -298,28 +282,17 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-text">
-      <span class="hero-version">v1.0.3</span>
-      <h1>커서도<br>내 취향대로.</h1>
-      <p class="hero-sub">
-        Windows <code>.cur</code>, <code>.ani</code> 커서팩을 불러와 macOS 시스템 커서에 바로 적용합니다.
-      </p>
-      <a class="btn-primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">무료 다운로드</a>
-      <span class="hero-req">macOS 15 Sequoia 이상 · Apple Silicon &amp; Intel</span>
-    </div>
+    <span class="hero-chip">v1.0.3 — 무료</span>
+    <h1>커서도<br>내 취향대로.</h1>
+    <p class="hero-sub">
+      Windows <code>.cur</code>, <code>.ani</code> 커서팩을 불러와 macOS 시스템 커서에 바로 적용합니다.
+    </p>
+    <a class="btn-cta" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">무료 다운로드</a>
+    <span class="hero-req">macOS 15 Sequoia 이상 · Apple Silicon &amp; Intel · 무료</span>
+
     <div class="hero-shot">
       <img src="../assets/capeforge-preview.png" alt="커서 역할이 매핑된 Cursie 앱 화면">
     </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="about">
-    <p>
-      Mac에서 쓰고 싶은 Windows 커서팩이 있었습니다. 기존 방법 — 파일을 .cape 포맷으로 변환한 뒤 Mousecape에 불러오는 과정 — 이 번거로워 실제로는 쓰지 못하고 있었습니다.
-    </p>
-    <p>
-      Cursie는 그 변환 과정을 없앤 앱입니다. 폴더를 불러오고, 역할 배치를 확인하고, 적용합니다. 그것이 전부입니다.
-    </p>
   </section>
 
   <!-- FEATURES -->
@@ -351,9 +324,8 @@
   <!-- CREDITS -->
   <section class="credits">
     <p>
-      Cursie는 <a href="https://github.com/alexzielenski/Mousecape" target="_blank" rel="noopener">Mousecape</a> 없이는 존재하지 못했을 것입니다.
+      Cursie는 <a href="https://github.com/alexzielenski/Mousecape" target="_blank" rel="noopener">Mousecape</a> 없이는 존재하지 못했을 것입니다 —
       Alex Zielenski가 개발한 이 오픈소스 커서 매니저는 macOS에서 <code>.cape</code> 테마를 처음 개척했습니다.
-      그 토대 위에 만들어진 앱입니다.
     </p>
   </section>
 
@@ -366,7 +338,7 @@
     </div>
     <div class="cl-row">
       <div><div class="cl-v">v1.0.2</div><div class="cl-d">2026년 5월</div></div>
-      <div><div class="cl-t">기본 커서 미리보기 수정</div><p class="cl-b">기본 화살표 커서가 왼쪽 위로 치우쳐 보이던 문제 수정.</p></div>
+      <div><div class="cl-t">기본 커서 미리보기 수정</div><p class="cl-b">기본 화살표 커서가 왼쪽 위로 치우쳐 보이던 문제를 수정했습니다.</p></div>
     </div>
     <div class="cl-row">
       <div><div class="cl-v">v1.0.1</div><div class="cl-d">2026년 4월</div></div>
