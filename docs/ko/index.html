@@ -55,7 +55,7 @@
     .features { background: var(--surface); color: var(--text); padding: 96px 24px; }
     .section-label { text-align: center; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
     .section-title { text-align: center; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em; color: var(--text); margin-bottom: 56px; word-break: keep-all; }
-    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 960px; margin: 0 auto; }
+    .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 960px; margin: 0 auto; }
     .feat-card { background: var(--card); border: 1px solid rgba(0,0,0,0.07); border-radius: 20px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 200ms, box-shadow 200ms; }
     .feat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
     .feat-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(108,111,245,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 16px; }
@@ -124,24 +124,14 @@
     <h2 class="section-title">필요한 건 다 있고,<br>필요 없는 건 없어요.</h2>
     <div class="features-grid">
       <div class="feat-card">
-        <div class="feat-icon">🗂</div>
-        <h3>자동 매핑</h3>
-        <p>폴더를 선택하면 커서 파일을 macOS 역할에 자동으로 매핑합니다. Normal, Text, Link, Resize 등.</p>
-      </div>
-      <div class="feat-card">
         <div class="feat-icon">👁</div>
         <h3>실시간 미리보기</h3>
-        <p>애니메이션 커서 포함, 적용 전에 실제 크기와 확대 미리보기로 모든 커서를 확인할 수 있어요.</p>
+        <p>적용 전에 실제 크기와 확대 미리보기로 모든 커서를 확인할 수 있어요.</p>
       </div>
       <div class="feat-card">
         <div class="feat-icon">⚡️</div>
-        <h3>직접 적용</h3>
-        <p>macOS 시스템 커서에 바로 적용. Mousecape 불필요. 버튼 하나로 기본값 복구.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🎬</div>
-        <h3>애니메이션 지원</h3>
-        <p><code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px;">.ani</code> 포맷 완벽 지원. macOS 호환을 위한 스마트 다운샘플링 내장.</p>
+        <h3>한 번에 적용</h3>
+        <p>macOS 시스템 커서에 바로 적용. 버튼 하나로 기본값 복구.</p>
       </div>
       <div class="feat-card">
         <div class="feat-icon">🖱</div>
