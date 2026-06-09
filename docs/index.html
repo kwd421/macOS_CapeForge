@@ -5,32 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cursie — Windows cursor packs on macOS</title>
   <meta name="description" content="Load Windows .cur and .ani cursor packs and apply them directly to macOS system cursors. Free, no App Store.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --ink: #0d1117;
-      --ink2: #1c2333;
-      --accent: #6c6ff5;
-      --accent-glow: rgba(108,111,245,0.35);
-      --muted: #8b95a8;
-      --line: rgba(255,255,255,0.08);
-      --surface: #f6f8fc;
-      --card: #fff;
-      --text: #1a2030;
-      --text-muted: #6b7489;
-    }
-
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-      background: var(--ink);
-      color: #fff;
+      font-family: "Figtree", -apple-system, sans-serif;
+      background: #fff;
+      color: #1a1a1a;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── NAV ── */
+    /* NAV */
     nav {
       position: sticky;
       top: 0;
@@ -38,357 +27,276 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 max(24px, calc((100vw - 960px) / 2));
-      height: 56px;
-      background: rgba(13,17,23,0.82);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--line);
+      padding: 0 max(28px, calc((100vw - 1020px) / 2));
+      height: 52px;
+      background: rgba(11, 11, 13, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
     .nav-logo {
-      font-size: 1.05rem;
-      font-weight: 700;
+      font-size: 1rem;
+      font-weight: 800;
       letter-spacing: -0.02em;
       color: #fff;
       text-decoration: none;
     }
 
-    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
 
     .nav-lang {
       font-size: 0.82rem;
       font-weight: 600;
-      color: var(--muted);
+      color: rgba(255,255,255,0.35);
       text-decoration: none;
-      padding: 5px 10px;
-      border-radius: 8px;
       transition: color 150ms;
     }
-    .nav-lang:hover { color: #fff; }
+    .nav-lang:hover { color: rgba(255,255,255,0.75); }
 
-    .btn-dl {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: 10px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.88rem;
+    .nav-dl {
+      padding: 7px 16px;
+      background: #fff;
+      color: #111;
+      font-size: 0.84rem;
       font-weight: 700;
+      border-radius: 8px;
       text-decoration: none;
-      transition: opacity 150ms, transform 150ms;
+      letter-spacing: -0.01em;
+      transition: opacity 150ms;
     }
-    .btn-dl:hover { opacity: 0.88; transform: translateY(-1px); }
+    .nav-dl:hover { opacity: 0.85; }
 
-    /* ── HERO ── */
+    /* HERO */
     .hero {
-      text-align: center;
-      padding: 96px 24px 80px;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(108,111,245,0.28), transparent),
-        var(--ink);
+      background: #0b0b0d;
+      padding: 72px max(28px, calc((100vw - 1020px) / 2));
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 56px;
+      align-items: center;
+      min-height: 520px;
     }
 
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(108,111,245,0.4);
-      background: rgba(108,111,245,0.12);
-      color: #a5a8ff;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      margin-bottom: 28px;
-    }
-    .hero-badge .pulse {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #6ee7b7;
-      box-shadow: 0 0 6px #6ee7b7;
+    .hero-text {}
+
+    .hero-version {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
     }
 
     .hero h1 {
-      font-size: clamp(2.6rem, 7vw, 5rem);
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
       font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.04;
-      margin-bottom: 20px;
-      background: linear-gradient(160deg, #fff 40%, rgba(255,255,255,0.55));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero p {
-      font-size: clamp(1rem, 2.2vw, 1.2rem);
-      color: var(--muted);
-      line-height: 1.65;
-      max-width: 520px;
-      margin: 0 auto 36px;
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 64px;
-    }
-
-    .btn-hero {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 28px;
-      border-radius: 14px;
-      font-size: 1rem;
-      font-weight: 700;
-      text-decoration: none;
-      transition: opacity 150ms, transform 150ms, box-shadow 150ms;
-    }
-    .btn-hero:hover { opacity: 0.9; transform: translateY(-2px); }
-
-    .btn-hero.primary {
-      background: var(--accent);
+      letter-spacing: -0.035em;
+      line-height: 1.06;
       color: #fff;
-      box-shadow: 0 8px 30px var(--accent-glow);
-    }
-    .btn-hero.primary:hover { box-shadow: 0 12px 40px var(--accent-glow); }
-
-    .hero-meta {
-      font-size: 0.82rem;
-      color: var(--muted);
-      padding: 12px 18px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--line);
+      margin-bottom: 18px;
     }
 
-    /* ── APP SCREENSHOT ── */
-    .screenshot-wrap {
-      max-width: 780px;
-      margin: 0 auto;
-      position: relative;
+    .hero-sub {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.38);
+      line-height: 1.75;
+      margin-bottom: 38px;
+      max-width: 380px;
     }
+
+    .hero-sub code {
+      font-size: 0.88em;
+      background: rgba(255,255,255,0.1);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #fff;
+      color: #111;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border-radius: 9px;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      transition: opacity 150ms, transform 150ms;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .hero-req {
+      display: block;
+      margin-top: 13px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* SCREENSHOT */
+    .hero-shot { position: relative; }
 
     .window-chrome {
-      background: #1e2029;
-      border-radius: 14px 14px 0 0;
-      padding: 12px 16px 0;
+      background: #1c1c20;
+      border-radius: 11px 11px 0 0;
+      padding: 9px 13px 0;
       display: flex;
       align-items: center;
-      gap: 7px;
-      border: 1px solid rgba(255,255,255,0.1);
+      gap: 6px;
+      border: 1px solid rgba(255,255,255,0.07);
       border-bottom: none;
     }
-    .dot { width: 12px; height: 12px; border-radius: 50%; }
-    .dot.red { background: #ff5f57; }
-    .dot.yellow { background: #febc2e; }
-    .dot.green { background: #28c840; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.r { background: #ff5f57; }
+    .dot.y { background: #febc2e; }
+    .dot.g { background: #28c840; }
 
-    .screenshot-wrap img {
+    .hero-shot img {
       display: block;
       width: 100%;
-      border-radius: 0 0 14px 14px;
-      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0 0 11px 11px;
+      border: 1px solid rgba(255,255,255,0.07);
       border-top: none;
     }
 
-    .screenshot-glow {
-      position: absolute;
-      inset: 20% 10% -10%;
-      background: radial-gradient(ellipse, var(--accent-glow), transparent 70%);
-      z-index: -1;
-      filter: blur(40px);
+    /* ABOUT */
+    .about {
+      padding: 72px max(28px, calc((100vw - 680px) / 2));
+      background: #F9F8F5;
+      border-top: 1px solid #EDECEA;
     }
 
-    /* ── FEATURES ── */
+    .about p {
+      font-size: 1.12rem;
+      line-height: 1.8;
+      color: #2C2C2C;
+    }
+
+    .about p + p { margin-top: 18px; }
+
+    .about-from {
+      display: block;
+      margin-top: 28px;
+      font-size: 0.82rem;
+      color: #AEABA6;
+    }
+
+    /* FEATURES */
     .features {
-      background: var(--surface);
-      color: var(--text);
-      padding: 96px 24px;
+      padding: 72px max(28px, calc((100vw - 680px) / 2));
+      background: #fff;
+      border-top: 1px solid #EBEBEB;
     }
 
-    .section-label {
-      text-align: center;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      margin-bottom: 56px;
-    }
-
-    .features-grid {
+    .feat-list {
+      list-style: none;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      max-width: 960px;
-      margin: 0 auto;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px 56px;
     }
 
-    .feat-card {
-      background: var(--card);
-      border: 1px solid rgba(0,0,0,0.07);
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-      transition: transform 200ms, box-shadow 200ms;
-    }
-    .feat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .feat-list li { display: flex; flex-direction: column; gap: 6px; }
 
-    .feat-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      background: rgba(108,111,245,0.1);
+    .fl-title {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: #111;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      margin-bottom: 16px;
+      gap: 9px;
+    }
+    .fl-title::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #4F46E5;
+      flex-shrink: 0;
     }
 
-    .feat-card h3 {
+    .fl-desc {
+      font-size: 0.88rem;
+      color: #777;
+      line-height: 1.65;
+      padding-left: 14px;
+    }
+
+    /* CREDITS */
+    .credits {
+      padding: 56px max(28px, calc((100vw - 680px) / 2));
+      background: #F2F1EC;
+      border-top: 1px solid #E5E3DC;
+    }
+
+    .credits p {
+      font-size: 0.97rem;
+      line-height: 1.8;
+      color: #555;
+    }
+
+    .credits a {
+      color: #4F46E5;
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+    }
+    .credits code {
+      font-size: 0.88em;
+      background: rgba(0,0,0,0.06);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    /* CHANGELOG */
+    .changelog {
+      padding: 72px max(28px, calc((100vw - 680px) / 2));
+      background: #fff;
+      border-top: 1px solid #EBEBEB;
+    }
+
+    .changelog h2 {
       font-size: 1rem;
       font-weight: 700;
-      color: var(--text);
-      margin-bottom: 8px;
       letter-spacing: -0.01em;
+      margin-bottom: 28px;
+      color: #111;
     }
 
-    .feat-card p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.65;
-    }
-
-    /* ── STEPS ── */
-    .steps {
-      background: var(--ink);
-      padding: 96px 24px;
-      text-align: center;
-    }
-    .steps .section-title { color: #fff; }
-
-    .steps-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 0;
-      max-width: 760px;
-      margin: 0 auto;
-    }
-
-    .step {
-      flex: 1;
-      padding: 0 20px;
-      position: relative;
-    }
-
-    .step-num {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.9rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 14px;
-    }
-
-    .step-connector {
-      position: absolute;
-      top: 19px;
-      left: calc(50% + 20px);
-      right: calc(-50% + 20px);
-      height: 1px;
-      background: rgba(255,255,255,0.12);
-    }
-    .step:last-child .step-connector { display: none; }
-
-    .step h3 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .step p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
-
-    /* ── CTA ── */
-    .cta {
-      background: var(--ink2);
-      padding: 80px 24px;
-      text-align: center;
-      border-top: 1px solid var(--line);
-    }
-
-    .cta h2 {
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 12px;
-    }
-    .cta p { color: var(--muted); margin-bottom: 32px; font-size: 1rem; }
-
-    /* ── CHANGELOG ── */
-    .changelog {
-      background: var(--surface);
-      color: var(--text);
-      padding: 80px 24px;
-    }
-    .changelog-inner {
-      max-width: 680px;
-      margin: 0 auto;
-    }
     .cl-row {
       display: grid;
-      grid-template-columns: 100px 1fr;
+      grid-template-columns: 84px 1fr;
       gap: 0 24px;
-      padding: 20px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 18px 0;
+      border-bottom: 1px solid #F2F2F2;
     }
     .cl-row:last-child { border-bottom: none; }
     .cl-row:first-child { padding-top: 0; }
-    .cl-v { font-size: 0.85rem; font-weight: 700; color: var(--accent); }
-    .cl-d { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
-    .cl-t { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
-    .cl-b { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+    .cl-v { font-size: 0.8rem; font-weight: 700; color: #4F46E5; }
+    .cl-d { font-size: 0.72rem; color: #BDBDBD; margin-top: 3px; }
+    .cl-t { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; color: #111; }
+    .cl-b { font-size: 0.84rem; color: #888; line-height: 1.6; }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer {
-      background: var(--ink);
-      padding: 28px 24px;
-      text-align: center;
-      border-top: 1px solid var(--line);
-      font-size: 0.82rem;
-      color: var(--muted);
+      background: #0b0b0d;
+      padding: 26px max(28px, calc((100vw - 680px) / 2));
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.2);
+      border-top: 1px solid rgba(255,255,255,0.05);
     }
-    footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid rgba(139,149,168,0.3); }
-    footer a:hover { color: #fff; }
+    footer a { color: rgba(255,255,255,0.3); text-decoration: none; text-underline-offset: 3px; }
+    footer a:hover { color: rgba(255,255,255,0.65); }
 
-    /* ── RESPONSIVE ── */
+    /* RESPONSIVE */
     @media (max-width: 720px) {
-      .hero { padding: 72px 24px 56px; }
-      .features-grid { grid-template-columns: 1fr; }
-      .steps-row { flex-direction: column; align-items: center; gap: 32px; }
-      .step-connector { display: none; }
-      .window-chrome { border-radius: 10px 10px 0 0; }
-      .screenshot-wrap img { border-radius: 0 0 10px 10px; }
+      .hero { grid-template-columns: 1fr; gap: 36px; min-height: auto; }
+      .hero-shot { order: -1; }
+      .hero-sub { max-width: 100%; }
+      .feat-list { grid-template-columns: 1fr; gap: 28px; }
     }
   </style>
 </head>
@@ -399,136 +307,97 @@
     <a class="nav-logo" href="#">Cursie</a>
     <div class="nav-right">
       <a class="nav-lang" href="./ko/index.html">한국어</a>
-      <a class="btn-dl" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">Download</a>
+      <a class="nav-dl" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">Download</a>
     </div>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-badge">
-      <span class="pulse"></span>
-      v1.0.3 — Latest Release
+    <div class="hero-text">
+      <span class="hero-version">v1.0.3</span>
+      <h1>Your cursor<br>should feel<br>like yours.</h1>
+      <p class="hero-sub">
+        Load Windows <code>.cur</code> and <code>.ani</code> cursor packs and apply them straight to your Mac system cursors.
+      </p>
+      <a class="btn-primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">Download — Free</a>
+      <span class="hero-req">macOS 13 Ventura or later · Apple Silicon &amp; Intel</span>
     </div>
-    <h1>Dress your Mac cursor<br>in any Windows skin.</h1>
-    <p>Load <code style="font-family:monospace;font-size:0.9em;background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:5px;">.cur</code> and <code style="font-family:monospace;font-size:0.9em;background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:5px;">.ani</code> Windows cursor packs, preview every role, and apply the theme directly to macOS — no App Store, no sandbox.</p>
-
-    <div class="hero-actions">
-      <a class="btn-hero primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">
-        Download Cursie — Free
-      </a>
-      <span class="hero-meta">macOS 13 Ventura or later · Apple Silicon &amp; Intel</span>
-    </div>
-
-    <div class="screenshot-wrap">
+    <div class="hero-shot">
       <div class="window-chrome">
-        <span class="dot red"></span>
-        <span class="dot yellow"></span>
-        <span class="dot green"></span>
+        <span class="dot r"></span>
+        <span class="dot y"></span>
+        <span class="dot g"></span>
       </div>
-      <img src="./assets/capeforge-preview.png" alt="Cursie app showing a pixel art cursor mapped to macOS cursor roles">
-      <div class="screenshot-glow"></div>
+      <img src="./assets/capeforge-preview.png" alt="Cursie app showing cursor roles mapped from a Windows cursor pack">
     </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <p>
+      I wanted to use a Windows cursor pack on my Mac. Turns out there wasn't a clean way to do that.
+    </p>
+    <p>
+      So I made Cursie. Drop in a cursor folder, see every role mapped out, and hit apply. That's the whole thing.
+    </p>
+    <span class="about-from">— kwd421</span>
   </section>
 
   <!-- FEATURES -->
   <section class="features">
-    <p class="section-label">Features</p>
-    <h2 class="section-title">Everything you need,<br>nothing you don't.</h2>
-
-    <div class="features-grid">
-      <div class="feat-card">
-        <div class="feat-icon">👁</div>
-        <h3>Live preview</h3>
-        <p>See every cursor before you commit. Preview at actual size and large preview side by side.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">⚡️</div>
-        <h3>One-click apply</h3>
-        <p>Applies the theme straight to macOS system cursors. Restores defaults with one click.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🖱</div>
-        <h3>Drag &amp; drop</h3>
-        <p>Drag a cursor folder or a single file straight onto the app. Swap individual roles without starting over.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🔄</div>
-        <h3>Auto-update</h3>
-        <p>Built-in Sparkle updater keeps Cursie current. New versions install in seconds right inside the app.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="steps">
-    <p class="section-label" style="color:#a5a8ff;">How it works</p>
-    <h2 class="section-title">Three steps to a new cursor.</h2>
-    <div class="steps-row">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-connector"></div>
-        <h3>Choose a folder</h3>
-        <p>Pick any folder containing <code style="font-size:0.85em;background:rgba(255,255,255,0.1);padding:1px 5px;border-radius:4px;">.cur</code> or <code style="font-size:0.85em;background:rgba(255,255,255,0.1);padding:1px 5px;border-radius:4px;">.ani</code> files from your cursor pack.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-connector"></div>
-        <h3>Preview &amp; adjust</h3>
-        <p>Cursie maps roles automatically. Swap any role manually if needed.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-connector"></div>
-        <h3>Apply to system</h3>
-        <p>Hit <em>Apply to System Cursors</em> and your new theme is live immediately.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta">
-    <h2>Ready to dress up your cursor?</h2>
-    <p>Free download. No account needed.</p>
-    <a class="btn-hero primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">Download Cursie</a>
+    <ul class="feat-list">
+      <li>
+        <span class="fl-title">Live preview</span>
+        <span class="fl-desc">Every role mapped and visible before you apply. Actual size and zoomed side by side.</span>
+      </li>
+      <li>
+        <span class="fl-title">One-click apply</span>
+        <span class="fl-desc">Replaces your system cursors instantly. One click to restore defaults if you change your mind.</span>
+      </li>
+      <li>
+        <span class="fl-title">Drag &amp; drop</span>
+        <span class="fl-desc">Drop a folder or file straight onto the app. Swap individual roles without starting over.</span>
+      </li>
+      <li>
+        <span class="fl-title">Auto-update</span>
+        <span class="fl-desc">Updates download and install inside the app. No manual trips to GitHub.</span>
+      </li>
+    </ul>
   </section>
 
   <!-- CREDITS -->
-  <section style="background:#f5f5f7;padding:64px 24px;text-align:center;">
-    <p class="section-label">Standing on the shoulders of giants</p>
-    <p style="max-width:560px;margin:20px auto 0;font-size:1.05rem;line-height:1.7;color:#3a3a4a;">
-      Cursie would not exist without <a href="https://github.com/alexzielenski/Mousecape" target="_blank" rel="noopener" style="color:#5b5fcf;text-decoration:none;border-bottom:2px solid #5b5fcf;">Mousecape</a>
-      — Alex Zielenski's open-source cursor manager that pioneered <code style="font-size:0.9em;background:rgba(0,0,0,0.06);padding:1px 6px;border-radius:4px;">.cape</code> themes on macOS.
-      This project is built with deep respect for that work.
+  <section class="credits">
+    <p>
+      Cursie wouldn't exist without <a href="https://github.com/alexzielenski/Mousecape" target="_blank" rel="noopener">Mousecape</a> by Alex Zielenski —
+      the open-source cursor manager that pioneered <code>.cape</code> themes on macOS.
+      Standing on the shoulders of that work.
     </p>
   </section>
 
   <!-- CHANGELOG -->
   <section class="changelog">
-    <div class="changelog-inner">
-      <p class="section-label">Changelog</p>
-      <h2 class="section-title" style="font-size:1.6rem; margin-bottom:32px;">What's new</h2>
-      <div class="cl-row">
-        <div><div class="cl-v">v1.0.3</div><div class="cl-d">Jun 2026</div></div>
-        <div><div class="cl-t">App renamed to Cursie · Auto-update · New icon</div><p class="cl-b">Applies cursor themes directly to macOS system cursors. Added Sparkle auto-update. New app icon and improved cursor preview.</p></div>
-      </div>
-      <div class="cl-row">
-        <div><div class="cl-v">v1.0.2</div><div class="cl-d">May 2026</div></div>
-        <div><div class="cl-t">Default cursor preview fix</div><p class="cl-b">Recentered the bundled default arrow cursor. Fixed preview appearing slightly shifted.</p></div>
-      </div>
-      <div class="cl-row">
-        <div><div class="cl-v">v1.0.1</div><div class="cl-d">Apr 2026</div></div>
-        <div><div class="cl-t">Animated cursor compatibility</div><p class="cl-b">Fixed red dot issue in Mousecape exports. Improved 24+ frame animation downsampling.</p></div>
-      </div>
-      <div class="cl-row">
-        <div><div class="cl-v">v1.0.0</div><div class="cl-d">Mar 2026</div></div>
-        <div><div class="cl-t">Initial release</div><p class="cl-b">Load Windows cursor packs, preview roles, export as .cape for Mousecape.</p></div>
-      </div>
+    <h2>What's changed</h2>
+    <div class="cl-row">
+      <div><div class="cl-v">v1.0.3</div><div class="cl-d">Jun 2026</div></div>
+      <div><div class="cl-t">App renamed to Cursie · Auto-update · New icon</div><p class="cl-b">Applies cursor themes directly to macOS system cursors. Added Sparkle auto-update. New app icon and improved cursor preview.</p></div>
+    </div>
+    <div class="cl-row">
+      <div><div class="cl-v">v1.0.2</div><div class="cl-d">May 2026</div></div>
+      <div><div class="cl-t">Default cursor preview fix</div><p class="cl-b">Recentered the bundled default arrow cursor. Fixed preview appearing slightly shifted.</p></div>
+    </div>
+    <div class="cl-row">
+      <div><div class="cl-v">v1.0.1</div><div class="cl-d">Apr 2026</div></div>
+      <div><div class="cl-t">Animated cursor compatibility</div><p class="cl-b">Fixed red dot issue in Mousecape exports. Improved 24+ frame animation downsampling.</p></div>
+    </div>
+    <div class="cl-row">
+      <div><div class="cl-v">v1.0.0</div><div class="cl-d">Mar 2026</div></div>
+      <div><div class="cl-t">Initial release</div><p class="cl-b">Load Windows cursor packs, preview roles, export as .cape for Mousecape.</p></div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <a href="./privacy.html">Privacy Policy</a> &nbsp;·&nbsp; &copy; 2026 Cursie
+    <a href="./privacy.html">Privacy Policy</a> · © 2026 Cursie
   </footer>
 
 </body>
