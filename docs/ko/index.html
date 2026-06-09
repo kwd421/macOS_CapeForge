@@ -19,42 +19,44 @@
 
     /* NAV */
     nav {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 max(24px, calc((100vw - 1024px) / 2));
-      height: 48px;
-      background: rgba(0, 0, 0, 0.78);
+      padding: 0 max(24px, calc((100vw - 980px) / 2));
+      height: 44px;
+      background: rgba(0, 0, 0, 0.72);
       backdrop-filter: saturate(180%) blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
     }
 
     .nav-logo {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 600;
       letter-spacing: -0.01em;
-      color: #f5f5f7;
+      color: rgba(255,255,255,0.85);
       text-decoration: none;
     }
 
     .nav-right { display: flex; align-items: center; gap: 20px; }
 
     .nav-lang {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.5);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
       text-decoration: none;
       transition: color 120ms;
     }
-    .nav-lang:hover { color: rgba(255,255,255,0.85); }
+    .nav-lang:hover { color: rgba(255,255,255,0.8); }
 
     .nav-dl {
-      padding: 6px 16px;
+      padding: 5px 14px;
       background: #0071e3;
       color: #fff;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
       border-radius: 980px;
       text-decoration: none;
@@ -64,36 +66,39 @@
 
     /* HERO */
     .hero {
+      min-height: 100svh;
       background: #000;
-      padding: 96px max(24px, calc((100vw - 1024px) / 2)) 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
+      padding: 140px max(32px, calc((100vw - 860px) / 2)) 0;
     }
 
-    .hero-chip {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: #86868b;
-      letter-spacing: 0.04em;
+    .hero-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
+      color: #6e6e73;
       margin-bottom: 20px;
     }
 
     .hero h1 {
-      font-size: clamp(2.8rem, 6vw, 5.2rem);
+      font-size: clamp(3.2rem, 7.5vw, 7rem);
       font-weight: 700;
       letter-spacing: -0.04em;
-      line-height: 1.05;
+      line-height: 1.03;
       color: #f5f5f7;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
     }
 
     .hero-sub {
-      font-size: clamp(1rem, 1.8vw, 1.25rem);
+      font-size: clamp(0.95rem, 1.5vw, 1.15rem);
       color: #86868b;
-      line-height: 1.6;
-      max-width: 520px;
-      margin: 0 auto 36px;
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 40px;
     }
 
     .hero-sub code {
@@ -101,45 +106,50 @@
       background: rgba(255,255,255,0.1);
       padding: 1px 6px;
       border-radius: 4px;
-      font-family: "SF Mono", monospace;
-      color: rgba(255,255,255,0.6);
+      font-family: monospace;
+      color: rgba(255,255,255,0.55);
     }
 
-    .btn-cta {
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 80px;
+    }
+
+    .btn-primary {
       display: inline-block;
-      padding: 12px 28px;
+      padding: 13px 28px;
       background: #0071e3;
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 500;
       border-radius: 980px;
       text-decoration: none;
       transition: background 120ms;
     }
-    .btn-cta:hover { background: #0077ed; }
+    .btn-primary:hover { background: #0077ed; }
 
-    .hero-req {
-      display: block;
-      margin-top: 14px;
+    .hero-meta {
       font-size: 0.72rem;
       color: #515154;
     }
 
     .hero-shot {
-      margin-top: 64px;
-      max-width: 860px;
-      margin-left: auto;
-      margin-right: auto;
+      width: 100%;
+      max-width: 820px;
       position: relative;
     }
 
     .hero-shot::before {
       content: '';
       position: absolute;
-      inset: 0 5% -20%;
-      background: radial-gradient(ellipse at 50% 60%, rgba(79,70,229,0.25), transparent 65%);
+      inset: -10% 0 -30%;
+      background: radial-gradient(ellipse at 50% 40%, rgba(0, 113, 227, 0.18), transparent 60%);
       z-index: 0;
-      filter: blur(24px);
+      pointer-events: none;
     }
 
     .hero-shot img {
@@ -153,7 +163,7 @@
     /* FEATURES */
     .features {
       background: #f5f5f7;
-      padding: 80px max(24px, calc((100vw - 960px) / 2));
+      padding: 100px max(24px, calc((100vw - 960px) / 2));
     }
 
     .feat-list {
@@ -165,52 +175,50 @@
 
     .feat-list li {
       background: #fff;
-      border-radius: 18px;
-      padding: 40px 44px;
+      border-radius: 20px;
+      padding: 52px 52px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 14px;
     }
 
     .feat-num {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: #6e6e73;
     }
 
     .fl-title {
-      font-size: 1.35rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      letter-spacing: -0.025em;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
       color: #1d1d1f;
     }
 
     .fl-desc {
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       color: #6e6e73;
-      line-height: 1.65;
+      line-height: 1.7;
     }
 
     /* CREDITS */
     .credits {
-      padding: 56px max(24px, calc((100vw - 680px) / 2));
+      padding: 80px max(24px, calc((100vw - 640px) / 2));
       background: #fff;
       border-top: 1px solid #d2d2d7;
     }
 
     .credits p {
-      font-size: 0.92rem;
-      line-height: 1.8;
+      font-size: 0.95rem;
+      line-height: 1.85;
       color: #6e6e73;
       text-align: center;
     }
 
-    .credits a {
-      color: #0071e3;
-      text-decoration: none;
-    }
+    .credits a { color: #0071e3; text-decoration: none; }
     .credits a:hover { text-decoration: underline; }
 
     .credits code {
@@ -218,44 +226,44 @@
       background: #f5f5f7;
       padding: 1px 5px;
       border-radius: 4px;
-      font-family: "SF Mono", monospace;
-      color: #1d1d1f;
+      font-family: monospace;
     }
 
     /* CHANGELOG */
     .changelog {
-      padding: 72px max(24px, calc((100vw - 680px) / 2));
+      padding: 80px max(24px, calc((100vw - 640px) / 2));
       background: #f5f5f7;
       border-top: 1px solid #d2d2d7;
     }
 
     .changelog h2 {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      letter-spacing: -0.01em;
-      margin-bottom: 28px;
-      color: #1d1d1f;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #6e6e73;
+      margin-bottom: 32px;
     }
 
     .cl-row {
       display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 0 24px;
-      padding: 18px 0;
+      grid-template-columns: 72px 1fr;
+      gap: 0 28px;
+      padding: 20px 0;
       border-bottom: 1px solid #d2d2d7;
     }
     .cl-row:last-child { border-bottom: none; }
     .cl-row:first-child { padding-top: 0; }
     .cl-v { font-size: 0.78rem; font-weight: 600; color: #0071e3; }
-    .cl-d { font-size: 0.7rem; color: #86868b; margin-top: 3px; }
-    .cl-t { font-weight: 600; font-size: 0.88rem; margin-bottom: 4px; color: #1d1d1f; }
-    .cl-b { font-size: 0.82rem; color: #86868b; line-height: 1.6; }
+    .cl-d { font-size: 0.68rem; color: #86868b; margin-top: 4px; }
+    .cl-t { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; color: #1d1d1f; }
+    .cl-b { font-size: 0.82rem; color: #86868b; line-height: 1.65; }
 
     /* FOOTER */
     footer {
       background: #000;
-      padding: 24px max(24px, calc((100vw - 680px) / 2));
-      font-size: 0.75rem;
+      padding: 28px max(24px, calc((100vw - 640px) / 2));
+      font-size: 0.72rem;
       color: #515154;
       border-top: 1px solid rgba(255,255,255,0.06);
     }
@@ -263,9 +271,20 @@
     footer a:hover { color: #86868b; }
 
     /* RESPONSIVE */
-    @media (max-width: 700px) {
-      .hero { padding-bottom: 0; }
+    @media (max-width: 680px) {
+      .hero {
+        padding-top: 100px;
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-bottom: 0;
+      }
+      .hero h1 { font-size: 3rem; letter-spacing: -0.035em; }
+      .hero-actions { flex-direction: column; align-items: center; gap: 14px; }
+      .hero-meta { text-align: center; }
       .feat-list { grid-template-columns: 1fr; }
+      .feat-list li { padding: 40px 32px; }
+      .features { padding: 72px 20px; }
+      .changelog, .credits { padding-left: 20px; padding-right: 20px; }
     }
   </style>
 </head>
@@ -282,14 +301,15 @@
 
   <!-- HERO -->
   <section class="hero">
-    <span class="hero-chip">v1.0.3 — 무료</span>
+    <span class="hero-label">무료 Mac 앱</span>
     <h1>커서도<br>내 취향대로.</h1>
     <p class="hero-sub">
       Windows <code>.cur</code>, <code>.ani</code> 커서팩을 불러와 macOS 시스템 커서에 바로 적용합니다.
     </p>
-    <a class="btn-cta" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">무료 다운로드</a>
-    <span class="hero-req">macOS 15 Sequoia 이상 · Apple Silicon &amp; Intel · 무료</span>
-
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.dmg">무료 다운로드</a>
+      <span class="hero-meta">macOS 15 Sequoia 이상 · Apple Silicon &amp; Intel</span>
+    </div>
     <div class="hero-shot">
       <img src="../assets/capeforge-preview.png" alt="커서 역할이 매핑된 Cursie 앱 화면">
     </div>
