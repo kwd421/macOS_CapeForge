@@ -2,12 +2,17 @@ import AppKit
 import Foundation
 import UniformTypeIdentifiers
 
-struct CursorFrame {
+// @unchecked Sendable: these are immutable value types. The only non-Sendable
+// member is NSImage, which we treat as read-only once a theme is built — it is
+// rendered (drawn into bitmap contexts) but never mutated. Marking them Sendable
+// lets a fully-built theme cross into the background apply task so the heavy
+// rendering no longer blocks the main thread.
+struct CursorFrame: @unchecked Sendable {
     let image: NSImage
     let delay: TimeInterval
 }
 
-struct CursorAnimation {
+struct CursorAnimation: @unchecked Sendable {
     let frames: [CursorFrame]
     let hotspot: CGPoint
     let canvasSize: CGSize
@@ -130,7 +135,7 @@ struct CursorAssignment: Identifiable {
     var id: CursorRole { role }
 }
 
-struct CursorTheme {
+struct CursorTheme: @unchecked Sendable {
     let animations: [CursorRole: CursorAnimation]
     let supplementalAnimations: [SupplementalCursorRole: CursorAnimation]
 
@@ -646,57 +651,67 @@ final class CursorController: ObservableObject {
         isApplyingSystemCursors = true
         systemApplyProgress = .preparing
 
-        Task { @MainActor in
-            await Task.yield()
+        // Resolve the theme and gather parameters on the main actor (this reads
+        // @Published state and the loaded cursor files), then hand everything to a
+        // background task. The expensive work — image rendering in prepareApply and
+        // the Mousecape `ps` conflict check — must NOT run on the main thread, or
+        // the UI freezes for the duration of the apply.
+        let resolution: (theme: CursorTheme, filesByRole: [CursorRole: URL], fallbackRoles: Set<CursorRole>)
+        let executableURL: URL
+        do {
+            resolution = try loadTheme()
+            guard let executable = Bundle.main.executableURL else {
+                throw CursorError.systemCursorApplyFailed(Localized.string("error.systemApplyExecutableMissing"))
+            }
+            executableURL = executable
+        } catch {
+            isApplyingSystemCursors = false
+            setStatus(.systemApplyFailure(error.localizedDescription))
+            presentError(error.localizedDescription)
+            return
+        }
 
+        let service = cursorSystemApplyService
+        let theme = resolution.theme
+        let sizeMultiplier = exportSizeMultiplier
+        let author = defaultAuthorName()
+        let bundleIdentifier = Bundle.main.bundleIdentifier
+
+        systemApplyProgress = .rendering
+
+        Task.detached { [service, theme, sizeMultiplier, author, bundleIdentifier, executableURL] in
             do {
-                systemApplyProgress = .rendering
-                let resolution = try loadTheme()
-                guard let executableURL = Bundle.main.executableURL else {
-                    throw CursorError.systemCursorApplyFailed(Localized.string("error.systemApplyExecutableMissing"))
-                }
-                let service = cursorSystemApplyService
                 let prepared = try service.prepareApply(
-                    theme: resolution.theme,
-                    sizeMultiplier: exportSizeMultiplier,
-                    author: defaultAuthorName(),
-                    bundleIdentifier: Bundle.main.bundleIdentifier,
+                    theme: theme,
+                    sizeMultiplier: sizeMultiplier,
+                    author: author,
+                    bundleIdentifier: bundleIdentifier,
                     executableURL: executableURL
                 )
-                systemApplyProgress = .registering
-
-                Task.detached { [service, prepared] in
-                    do {
-                        let result = try service.applyPrepared(prepared) { progress in
-                            Task { @MainActor in
-                                self.systemApplyProgress = progress
-                            }
-                        }
-                        await MainActor.run {
-                            self.systemApplyProgress = SystemApplyProgress(
-                                titleKey: "systemApply.progressTitle",
-                                detailKey: "systemApply.progressDone",
-                                fraction: 1.0
-                            )
-                            self.isApplyingSystemCursors = false
-                            if let warning = result.agentWarning {
-                                self.setStatus(.systemApplyWarning(warning))
-                            } else {
-                                self.setStatus(.systemApplySuccess)
-                            }
-                        }
-                    } catch {
-                        await MainActor.run {
-                            self.isApplyingSystemCursors = false
-                            self.setStatus(.systemApplyFailure(error.localizedDescription))
-                            self.presentError(error.localizedDescription)
-                        }
+                let result = try service.applyPrepared(prepared) { progress in
+                    Task { @MainActor in
+                        self.systemApplyProgress = progress
+                    }
+                }
+                await MainActor.run {
+                    self.systemApplyProgress = SystemApplyProgress(
+                        titleKey: "systemApply.progressTitle",
+                        detailKey: "systemApply.progressDone",
+                        fraction: 1.0
+                    )
+                    self.isApplyingSystemCursors = false
+                    if let warning = result.agentWarning {
+                        self.setStatus(.systemApplyWarning(warning))
+                    } else {
+                        self.setStatus(.systemApplySuccess)
                     }
                 }
             } catch {
-                isApplyingSystemCursors = false
-                setStatus(.systemApplyFailure(error.localizedDescription))
-                presentError(error.localizedDescription)
+                await MainActor.run {
+                    self.isApplyingSystemCursors = false
+                    self.setStatus(.systemApplyFailure(error.localizedDescription))
+                    self.presentError(error.localizedDescription)
+                }
             }
         }
     }

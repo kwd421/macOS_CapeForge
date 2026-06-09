@@ -566,7 +566,6 @@ struct CursorCapeBuilder {
 
 protocol SystemCursorBridge: AnyObject {
     func resetAllCursors() throws
-    func backupAllCursors() throws
     func register(_ registration: CursorRegistration, activatesImmediately: Bool) throws
     func systemDefinedCursorNames() -> [String]
     func setDockCursorOverride(_ enabled: Bool) throws
@@ -598,7 +597,6 @@ final class SystemCursorApplicator {
 
     func apply(_ plan: CursorApplyPlan) throws {
         try bridge.resetAllCursors()
-        try bridge.backupAllCursors()
 
         let batches = Self.registrationBatches(
             for: plan,
@@ -781,11 +779,6 @@ final class PrivateSystemCursorBridge: SystemCursorBridge {
         UnsafeMutablePointer<Int>,
         UnsafeMutablePointer<Double>
     ) -> Int32
-    private typealias CursorDataSizeFunction = @convention(c) (
-        UInt32,
-        UnsafePointer<CChar>,
-        UnsafeMutablePointer<Int>
-    ) -> Int32
     private typealias RemoveRegisteredCursorFunction = @convention(c) (
         UInt32,
         UnsafePointer<CChar>,
@@ -800,7 +793,6 @@ final class PrivateSystemCursorBridge: SystemCursorBridge {
     private let registerCursorWithImages: RegisterCursorWithImagesFunction
     private let copyRegisteredCursorImages: CopyRegisteredCursorImagesFunction
     private let coreCursorCopyImages: CoreCursorCopyImagesFunction
-    private let getRegisteredCursorDataSize: CursorDataSizeFunction
     private let removeRegisteredCursorFunction: RemoveRegisteredCursorFunction
     private let unregisterAll: UnregisterAllFunction
     private let setCoreCursor: SetSystemCursorFunction
@@ -812,7 +804,6 @@ final class PrivateSystemCursorBridge: SystemCursorBridge {
         registerCursorWithImages = try Self.symbol("CGSRegisterCursorWithImages", as: RegisterCursorWithImagesFunction.self)
         copyRegisteredCursorImages = try Self.symbol("CGSCopyRegisteredCursorImages", as: CopyRegisteredCursorImagesFunction.self)
         coreCursorCopyImages = try Self.symbol("CoreCursorCopyImages", as: CoreCursorCopyImagesFunction.self)
-        getRegisteredCursorDataSize = try Self.symbol("CGSGetRegisteredCursorDataSize", as: CursorDataSizeFunction.self)
         removeRegisteredCursorFunction = try Self.symbol("CGSRemoveRegisteredCursor", as: RemoveRegisteredCursorFunction.self)
         unregisterAll = try Self.symbol("CoreCursorUnregisterAll", as: UnregisterAllFunction.self)
         setCoreCursor = try Self.symbol("CoreCursorSet", as: SetSystemCursorFunction.self)
@@ -854,16 +845,6 @@ final class PrivateSystemCursorBridge: SystemCursorBridge {
         }
 
         try setDockCursorOverride(false)
-    }
-
-    func backupAllCursors() throws {
-        for identifier in SystemCursorNameCatalog.backupTargets(systemCursorNames: systemDefinedCursorNames()) {
-            guard isCursorRegistered(identifier) else { continue }
-            let backup = backupIdentifier(for: identifier)
-            guard !isCursorRegistered(backup) else { continue }
-            guard let payload = copyPayload(for: identifier) else { continue }
-            try registerPayload(payload, identifier: backup, instantly: false)
-        }
     }
 
     func register(_ registration: CursorRegistration, activatesImmediately: Bool) throws {
@@ -1000,14 +981,6 @@ final class PrivateSystemCursorBridge: SystemCursorBridge {
             throw CursorError.unsupportedCursorPayload
         }
         return image
-    }
-
-    private func isCursorRegistered(_ identifier: String) -> Bool {
-        var dataSize = 0
-        let code = identifier.withCString {
-            getRegisteredCursorDataSize(mainConnection(), $0, &dataSize)
-        }
-        return code == 0 && dataSize > 0
     }
 
     private func backupIdentifier(for identifier: String) -> String {

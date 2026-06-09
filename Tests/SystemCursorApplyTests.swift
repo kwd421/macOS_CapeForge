@@ -277,7 +277,6 @@ struct SystemCursorApplicatorTests {
 
         #expect(bridge.events == [
             .resetAllCursors,
-            .backupAllCursors,
             .register("com.apple.coregraphics.Arrow", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.coregraphics.ArrowCtx", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.tahoe.cursor.Arrow", frameCount: 1, representationCount: 1, activatesImmediately: true),
@@ -311,7 +310,6 @@ struct SystemCursorApplicatorTests {
         }
         #expect(bridge.events == [
             .resetAllCursors,
-            .backupAllCursors,
             .register("com.apple.coregraphics.Arrow", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.coregraphics.ArrowCtx", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.tahoe.cursor.Arrow", frameCount: 1, representationCount: 1, activatesImmediately: true),
@@ -346,7 +344,6 @@ struct SystemCursorApplicatorTests {
 
         #expect(bridge.events == [
             .resetAllCursors,
-            .backupAllCursors,
             .register("com.apple.coregraphics.IBeam", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.coregraphics.IBeamXOR", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.tahoe.cursor.IBeam", frameCount: 1, representationCount: 1, activatesImmediately: true),
@@ -386,7 +383,6 @@ struct SystemCursorApplicatorTests {
 
         #expect(bridge.events == [
             .resetAllCursors,
-            .backupAllCursors,
             .register("com.apple.coregraphics.Arrow", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.coregraphics.ArrowCtx", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.tahoe.cursor.ArrowS", frameCount: 1, representationCount: 1, activatesImmediately: true),
@@ -415,7 +411,6 @@ struct SystemCursorApplicatorTests {
 
         #expect(bridge.events == [
             .resetAllCursors,
-            .backupAllCursors,
             .register("com.apple.cursor.33", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.cursor.37", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.coregraphics.Arrow", frameCount: 1, representationCount: 1, activatesImmediately: true),
@@ -446,7 +441,6 @@ struct SystemCursorApplicatorTests {
         }
         #expect(bridge.events == [
             .resetAllCursors,
-            .backupAllCursors,
             .register("com.apple.cursor.33", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .register("com.apple.cursor.37", frameCount: 1, representationCount: 1, activatesImmediately: true),
             .resetAllCursors
@@ -850,7 +844,6 @@ private final class RecordingSystemCursorApplying: SystemCursorApplying {
 private final class RecordingCursorBridge: SystemCursorBridge {
     enum Event: Equatable {
         case resetAllCursors
-        case backupAllCursors
         case register(String, frameCount: Int, representationCount: Int, activatesImmediately: Bool)
         case setDockCursorOverride(Bool)
     }
@@ -861,10 +854,6 @@ private final class RecordingCursorBridge: SystemCursorBridge {
 
     func resetAllCursors() throws {
         events.append(.resetAllCursors)
-    }
-
-    func backupAllCursors() throws {
-        events.append(.backupAllCursors)
     }
 
     func register(_ registration: CursorRegistration, activatesImmediately: Bool) throws {

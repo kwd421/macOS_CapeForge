@@ -220,9 +220,15 @@ struct CursorAgentManager {
         process.standardOutput = pipe
         process.standardError = pipe
         try process.run()
+
+        // Drain the pipe BEFORE waiting for exit. launchctl (e.g. `print`) can
+        // emit more than the OS pipe buffer (~64 KB); if we waitUntilExit() first
+        // the child blocks writing to a full pipe while we block waiting for it —
+        // a permanent deadlock. readDataToEndOfFile() consumes output as it
+        // arrives and returns once the child closes the pipe on exit.
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
         process.waitUntilExit()
 
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(data: data, encoding: .utf8) ?? ""
         guard process.terminationStatus == 0 else {
             throw CursorError.systemCursorApplyFailed("launchctl \(arguments.joined(separator: " ")) failed: \(output)")
@@ -257,10 +263,18 @@ struct MousecapeConflictChecker: CursorApplyConflictChecking {
 
         let pipe = Pipe()
         process.standardOutput = pipe
-        process.standardError = Pipe()
+        process.standardError = FileHandle.nullDevice
 
+        let data: Data
         do {
             try process.run()
+            // Drain stdout BEFORE waitUntilExit(). `ps -axo pid=,comm=` prints the
+            // full executable path per process; on a machine running many processes
+            // the output easily exceeds the OS pipe buffer (~64 KB). Waiting for exit
+            // first would let `ps` block on a full pipe while we block waiting for it,
+            // freezing the caller forever. (This runs on the main actor during
+            // prepareApply, so the deadlock froze the whole UI.)
+            data = pipe.fileHandleForReading.readDataToEndOfFile()
             process.waitUntilExit()
         } catch {
             return nil
@@ -270,7 +284,6 @@ struct MousecapeConflictChecker: CursorApplyConflictChecking {
             return nil
         }
 
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
         guard let output = String(data: data, encoding: .utf8) else {
             return nil
         }
