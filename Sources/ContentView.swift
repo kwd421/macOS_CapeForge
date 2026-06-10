@@ -68,8 +68,8 @@ struct SettingsView: View {
     var body: some View {
         let _ = localization.selectedLanguage
         ZStack {
-            VStack(spacing: 0) {
-                NavigationSplitView {
+            VStack(spacing: 8) {
+                HStack(spacing: 8) {
                     ScrollViewReader { proxy in
                         List(selection: $selection) {
                             ForEach(CursorRole.allCases) { role in
@@ -115,8 +115,18 @@ struct SettingsView: View {
                                 }
                             }
                         }
-                        .frame(minWidth: 230)
-                        .navigationTitle(Localized.string("app.cursors"))
+                        .listStyle(.sidebar)
+                        .scrollContentBackground(.hidden)
+                        // Clear the traffic lights, which float over the top of this card.
+                        .padding(.top, 26)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(Color.primary.opacity(0.05))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
+                                )
+                        )
                         .onSelectionChange(of: selection) { newValue in
                             guard let newValue else { return }
                             scrollSidebar(to: newValue, proxy: proxy)
@@ -127,30 +137,34 @@ struct SettingsView: View {
                             }
                         }
                     }
-                } detail: {
-                    switch selection {
-                    case .primary(let role):
-                        if let assignment = controller.assignment(for: role) {
-                            CursorRoleDetailView(controller: controller, assignment: assignment)
-                        } else {
+                    .frame(width: 250)
+
+                    Group {
+                        switch selection {
+                        case .primary(let role):
+                            if let assignment = controller.assignment(for: role) {
+                                CursorRoleDetailView(controller: controller, assignment: assignment)
+                            } else {
+                                EmptySelectionView()
+                            }
+                        case .supplemental(let role):
+                            SupplementalCursorRoleDetailView(controller: controller, assignment: controller.supplementalAssignment(for: role))
+                        case nil:
                             EmptySelectionView()
                         }
-                    case .supplemental(let role):
-                        SupplementalCursorRoleDetailView(controller: controller, assignment: controller.supplementalAssignment(for: role))
-                    case nil:
-                        EmptySelectionView()
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                Divider()
                 SystemApplySection(controller: controller)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 10)
             }
+            .padding(8)
+            .background(Color(nsColor: .windowBackgroundColor))
 
             if controller.isApplyingSystemCursors {
                 ApplyingOverlay(progress: controller.systemApplyProgress)
             }
         }
+        .ignoresSafeArea()
         .frame(minWidth: 860, minHeight: 620)
         .alert(item: $controller.activeAlert) { alert in
             Alert(
@@ -400,8 +414,7 @@ struct SystemApplySection: View {
 
     var body: some View {
         let _ = localization.selectedLanguage
-        GroupBox {
-            HStack(alignment: .center, spacing: 12) {
+        HStack(alignment: .center, spacing: 12) {
                 VStack(alignment: .leading, spacing: 10) {
                     Button {
                         controller.openPointerSettings()
@@ -430,12 +443,17 @@ struct SystemApplySection: View {
                 .focusable(false)
                 .disabled(controller.isApplyingSystemCursors)
             }
-            .padding(.horizontal, LayoutMetrics.cardHorizontalPadding)
-            .padding(.vertical, 8)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .leading)
-        } label: {
-            EmptyView()
-        }
+            .background(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.primary.opacity(0.05))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
+                    )
+            )
     }
 
 }
