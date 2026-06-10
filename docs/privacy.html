@@ -3,123 +3,131 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cape Forge Privacy Policy</title>
+  <title>Cursie Privacy Policy</title>
   <style>
-    :root {
-      color-scheme: light;
-      --bg: #f6f8fc;
-      --card: rgba(255, 255, 255, 0.92);
-      --text: #182236;
-      --muted: #5f6d85;
-      --line: rgba(24, 34, 54, 0.12);
-      --accent: #1b7af3;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    * { box-sizing: border-box; }
+    :root {
+      --ink: #3a3550;
+      --ink-soft: #6f6890;
+      --grape: #8b5cf6;
+      --grape-deep: #7c3aed;
+    }
 
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(27, 122, 243, 0.15), transparent 26rem),
-        var(--bg);
-      color: var(--text);
+      font-family: -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(120% 80% at 50% 0%, #fbe6f3 0%, #e9ddfb 38%, #dcecfd 70%, #ffffff 100%);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
+
+    nav {
+      height: 52px;
+      display: flex; align-items: center;
+      padding: 0 max(24px, calc((100vw - 1000px) / 2));
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(140,120,200,0.12);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .nav-brand img { width: 26px; height: 26px; border-radius: 7px; }
+    .nav-brand span { font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
 
     main {
-      width: min(840px, calc(100vw - 32px));
+      width: min(720px, calc(100vw - 48px));
       margin: 0 auto;
-      padding: 44px 0 72px;
-    }
-
-    article {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 32px;
-      box-shadow: 0 18px 50px rgba(24, 34, 54, 0.08);
-    }
-
-    h1 {
-      margin: 0 0 14px;
-      font-size: clamp(2.1rem, 5vw, 3.4rem);
-      letter-spacing: -0.04em;
-      line-height: 1.05;
-    }
-
-    h2 {
-      margin: 28px 0 10px;
-      font-size: 1.1rem;
-      letter-spacing: -0.02em;
-    }
-
-    p, li {
-      font-size: 1rem;
-      line-height: 1.7;
-      color: var(--muted);
-    }
-
-    ul {
-      padding-left: 18px;
-      margin: 10px 0 0;
-    }
-
-    .back {
-      display: inline-flex;
-      margin-top: 24px;
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
+      padding: 56px 0 80px;
     }
 
     .updated {
-      color: var(--muted);
+      font-size: 0.78rem; color: var(--ink-soft); margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800; letter-spacing: -0.04em; line-height: 1.1;
+      margin-bottom: 20px; color: var(--ink);
+    }
+
+    h2 {
+      font-size: 1rem; font-weight: 700; letter-spacing: -0.01em;
+      color: var(--ink); margin: 36px 0 10px;
+    }
+
+    p {
+      font-size: 0.97rem; line-height: 1.75; color: var(--ink-soft);
+      margin-bottom: 12px;
+    }
+
+    ul {
+      padding-left: 20px; margin: 0;
+    }
+    li {
+      font-size: 0.97rem; line-height: 1.75; color: var(--ink-soft);
       margin-bottom: 4px;
+    }
+
+    a { color: var(--grape); text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+
+    .back {
+      display: inline-block; margin-top: 44px;
+      font-size: 0.9rem;
+    }
+
+    hr {
+      border: none; border-top: 1px solid rgba(140,120,200,0.18);
+      margin: 36px 0;
     }
   </style>
 </head>
 <body>
+
+  <nav>
+    <a class="nav-brand" href="./index.html">
+      <img src="./assets/app-icon.png" alt="Cursie icon">
+      <span>Cursie</span>
+    </a>
+  </nav>
+
   <main>
-    <article>
-      <p class="updated">Last updated: March 28, 2026</p>
-      <h1>Cape Forge Privacy Policy</h1>
-      <p>
-        Cape Forge processes files locally on the user’s device.
-        The app does not create accounts, does not upload files to external servers,
-        and does not collect personal information for analytics or advertising.
-      </p>
+    <p class="updated">Last updated: June 10, 2026</p>
+    <h1>Privacy Policy</h1>
+    <p>
+      Cursie processes everything locally on your device.
+      The app does not create accounts, does not upload files to external servers,
+      and does not collect personal information for analytics or advertising.
+    </p>
 
-      <h2>Information Cape Forge accesses</h2>
-      <ul>
-        <li>Folders explicitly chosen by the user for reading cursor files</li>
-        <li>A local applied cursor theme file stored under the user's Application Support folder after applying system cursors</li>
-        <li>A user LaunchAgent plist stored under the user's LaunchAgents folder to keep the applied cursor theme active</li>
-      </ul>
+    <hr>
 
-      <h2>How the app uses that information</h2>
-      <ul>
-        <li>To read <code>.ani</code> and <code>.cur</code> files selected by the user</li>
-        <li>To preview cursor mappings inside the app</li>
-        <li>To apply the selected cursor theme to macOS system cursors when the user chooses Apply</li>
-        <li>To restore default macOS cursors and remove Cape Forge's background cursor agent when the user chooses Restore Defaults</li>
-      </ul>
+    <h2>What Cursie accesses</h2>
+    <ul>
+      <li>Folders explicitly chosen by you for reading cursor files</li>
+      <li>A local applied cursor theme file stored in your Application Support folder after applying system cursors</li>
+      <li>A LaunchAgent plist stored in your LaunchAgents folder to keep the applied cursor theme active across reboots</li>
+    </ul>
 
-      <h2>What Cape Forge does not do</h2>
-      <ul>
-        <li>It does not collect personal information</li>
-        <li>It does not track users across apps or websites</li>
-        <li>It does not upload cursor files or exported files to remote servers</li>
-        <li>It does not apply or restore system cursors without an explicit user action in the app</li>
-      </ul>
+    <h2>How Cursie uses that information</h2>
+    <ul>
+      <li>To read <code style="font-family:monospace;font-size:0.88em;background:rgba(124,58,237,0.09);padding:1px 6px;border-radius:5px;color:var(--grape-deep)">.ani</code> and <code style="font-family:monospace;font-size:0.88em;background:rgba(124,58,237,0.09);padding:1px 6px;border-radius:5px;color:var(--grape-deep)">.cur</code> files you select</li>
+      <li>To preview cursor mappings inside the app</li>
+      <li>To apply the selected cursor theme to macOS system cursors when you tap Apply</li>
+      <li>To remove the cursor agent and restore macOS defaults when you choose Restore Defaults</li>
+    </ul>
 
-      <h2>Contact</h2>
-      <p>
-        If you have questions about this policy, contact:
-        <a href="mailto:tonistark@naver.com">tonistark@naver.com</a>
-      </p>
+    <h2>What Cursie does not do</h2>
+    <ul>
+      <li>Does not collect personal information</li>
+      <li>Does not track you across apps or websites</li>
+      <li>Does not upload cursor files or any other data to remote servers</li>
+      <li>Does not apply or change system cursors without an explicit action from you</li>
+    </ul>
 
-      <a class="back" href="./index.html">Back to support</a>
-    </article>
+    <a class="back" href="./index.html">← Back to Cursie</a>
   </main>
+
 </body>
 </html>
