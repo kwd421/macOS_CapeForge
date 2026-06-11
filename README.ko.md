@@ -1,16 +1,16 @@
-# Cape Forge
+# Cursie
 
 [English README](README.md)
 
-Cape Forge는 Windows 커서 파일과 커서팩(`.cur`, `.ani`)을 불러와 미리보고, macOS 시스템 커서 테마로 직접 적용하는 앱입니다.
+Cursie는 Windows 커서 파일과 커서팩(`.cur`, `.ani`)을 불러와 미리보고, macOS 시스템 커서 테마로 직접 적용하는 앱입니다.
 
-![Cape Forge 미리보기](docs/assets/capeforge-preview.png)
+![Cursie 미리보기](docs/assets/ko-preview.png)
 
-위 이미지는 Cape Forge에 커서팩을 불러온 적용 예시입니다. 예시에 사용된 멋진 픽셀 마우스 커서를 만들어준 **blz**에게 감사드립니다. 출처: [BLZ_pixel on X](https://x.com/BLZ_pixel/status/1873630058981835066)
+위 이미지는 Cursie에 커서팩을 불러온 적용 예시입니다. 예시에 사용된 멋진 픽셀 마우스 커서를 만들어준 **blz**에게 감사드립니다. 출처: [BLZ_pixel on X](https://x.com/BLZ_pixel/status/1873630058981835066)
 
 ## 중요한 시스템 커서 안내
 
-Cape Forge는 선택한 커서 세트를 macOS 시스템 커서에 직접 적용합니다. 이 빌드는 Mac App Store가 아닌 직접 배포용입니다.
+Cursie는 선택한 커서 세트를 macOS 시스템 커서에 직접 적용합니다. 이 빌드는 Mac App Store가 아닌 직접 배포용입니다.
 
 포인터 색상이 이상해 보이면 앱의 `포인터 기본값 복구 열기`를 누른 뒤 macOS 포인터 설정에서 `Reset Colors`를 사용하세요.
 
@@ -29,7 +29,7 @@ Cape Forge는 선택한 커서 세트를 macOS 시스템 커서에 직접 적용
 
 ## 사용 방법
 
-1. Cape Forge를 엽니다.
+1. Cursie를 엽니다.
 2. `폴더 선택...`을 눌러 `.cur` 또는 `.ani` 파일이 들어 있는 폴더를 선택합니다.
 3. 왼쪽 목록에서 자동 매핑된 커서 역할을 확인합니다.
 4. 필요하면 역할을 선택한 뒤 `커서 파일 변경...`으로 직접 교체합니다.

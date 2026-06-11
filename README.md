@@ -1,16 +1,16 @@
-# Cape Forge
+# Cursie
 
 [한국어 README](README.ko.md)
 
-Cape Forge is a macOS app that loads Windows cursor files and cursor packs (`.cur`, `.ani`), previews them, and applies them directly as a macOS system cursor theme.
+Cursie is a macOS app that loads Windows cursor files and cursor packs (`.cur`, `.ani`), previews them, and applies them directly as a macOS system cursor theme.
 
-![Cape Forge preview](docs/assets/capeforge-preview.png)
+![Cursie preview](docs/assets/capeforge-preview.png)
 
-The screenshot above is an example of Cape Forge with a custom cursor pack loaded. Special thanks to **blz** for creating the wonderful pixel cursor artwork used in this example. Source: [BLZ_pixel on X](https://x.com/BLZ_pixel/status/1873630058981835066)
+The screenshot above is an example of Cursie with a custom cursor pack loaded. Special thanks to **blz** for creating the wonderful pixel cursor artwork used in this example. Source: [BLZ_pixel on X](https://x.com/BLZ_pixel/status/1873630058981835066)
 
 ## Important System Cursor Notice
 
-Cape Forge applies the selected cursor set directly to macOS system cursors. This build is intended for direct distribution outside the Mac App Store.
+Cursie applies the selected cursor set directly to macOS system cursors. This build is intended for direct distribution outside the Mac App Store.
 
 If your pointer colors look wrong, use `Open Pointer Reset` in the app and press `Reset Colors` in macOS Pointer settings.
 
@@ -29,7 +29,7 @@ If your pointer colors look wrong, use `Open Pointer Reset` in the app and press
 
 ## How To Use
 
-1. Open Cape Forge.
+1. Open Cursie.
 2. Click `Choose Folder...` and select a folder that contains `.cur` or `.ani` files.
 3. Review the mapped cursor roles in the sidebar.
 4. If needed, select a role and click `Change Cursor File...` to replace it manually.
