@@ -82,14 +82,13 @@ struct CursorAgentManager {
         let data = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
         try data.write(to: launchAgentURL, options: .atomic)
 
-        do {
-            try stopLaunchAgent()
-            _ = try runLaunchctl(["bootstrap", launchctlDomain, launchAgentURL.path])
-            _ = try runLaunchctl(["kickstart", "-k", launchctlServicePath])
-        } catch {
-            try? removeLaunchAgentPlist()
-            throw error
-        }
+        // Remove any previously loaded instance so launchd picks up the refreshed
+        // plist at the next login. We intentionally do NOT bootstrap/kickstart the
+        // agent here: the foreground apply already set the system cursor, so running
+        // the agent now would only spawn a background process that briefly shows a
+        // Dock icon and reads as "running in the background." The agent just needs to
+        // run at the NEXT login, which RunAtLoad handles when launchd loads this plist.
+        try? stopLaunchAgent()
     }
 
     func verifyLaunchAgentReady(timeout: TimeInterval) throws {
