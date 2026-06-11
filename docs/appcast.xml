@@ -8,13 +8,25 @@
     <description>Updates for Cursie</description>
     <language>en</language>
     <item>
+      <title>Cursie 1.0.4</title>
+      <sparkle:version>4</sparkle:version>
+      <sparkle:shortVersionString>1.0.4</sparkle:shortVersionString>
+      <pubDate>Wed, 11 Jun 2026 18:30:00 +0900</pubDate>
+      <sparkle:releaseNotesLink>https://kwd421.github.io/macOS_Cursie/releases/1.0.4.html</sparkle:releaseNotesLink>
+      <enclosure
+        url="https://github.com/kwd421/macOS_Cursie/releases/download/v1.0.4/Cursie.zip"
+        sparkle:edSignature="LMjPRqvm6lkyJWInkjTo7TBdvY10uSXQna7/+vXmEfMlNtb3Q9AIJvO0rBlD5kc+Pouoqt5ttFWei6iBFD/zDg=="
+        length="4904685"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Cursie 1.0.3</title>
       <sparkle:version>3</sparkle:version>
       <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
       <pubDate>Tue, 09 Jun 2026 01:24:00 +0900</pubDate>
-      <sparkle:releaseNotesLink>https://kwd421.github.io/macOS_CapeForge/releases/1.0.3.html</sparkle:releaseNotesLink>
+      <sparkle:releaseNotesLink>https://kwd421.github.io/macOS_Cursie/releases/1.0.3.html</sparkle:releaseNotesLink>
       <enclosure
-        url="https://github.com/kwd421/macOS_CapeForge/releases/download/v1.0.3/Cursie.zip"
+        url="https://github.com/kwd421/macOS_Cursie/releases/download/v1.0.3/Cursie.zip"
         sparkle:edSignature="Ifs1VdJ1tOsNsfB8C0nkNUcl45SZUfrC+sDPQYNHXNHO0rca48/Za99uEmORr7zitPR8izX+3bRmAq6O7YRkCA=="
         length="4851291"
         type="application/octet-stream" />
