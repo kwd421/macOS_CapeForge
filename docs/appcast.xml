@@ -8,6 +8,18 @@
     <description>Updates for Cursie</description>
     <language>en</language>
     <item>
+      <title>Cursie 1.0.6</title>
+      <sparkle:version>6</sparkle:version>
+      <sparkle:shortVersionString>1.0.6</sparkle:shortVersionString>
+      <pubDate>Wed, 11 Jun 2026 19:10:00 +0900</pubDate>
+      <sparkle:releaseNotesLink>https://kwd421.github.io/macOS_Cursie/releases/1.0.6.html</sparkle:releaseNotesLink>
+      <enclosure
+        url="https://github.com/kwd421/macOS_Cursie/releases/download/v1.0.6/Cursie.zip"
+        sparkle:edSignature="DBu1WWmIOcf/cvq6WjtcFImBy7QDHEOfyFyakYwY0PsZgeUWLTq3Kyvul7ImGo0Ocf/uGKAM9+jOJVc8vKbMCQ=="
+        length="4903855"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Cursie 1.0.5</title>
       <sparkle:version>5</sparkle:version>
       <sparkle:shortVersionString>1.0.5</sparkle:shortVersionString>
